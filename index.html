@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CMB from Spherical Harmonics</title>
+    <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+
+<div id="header">
+
+    <img class="logo" src="media/Simons_logo_small.gif">
+
+    <div id="titleBlock">
+        <h1>CMB simulation with Spherical Harmonics</h1>
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+
+    </div>
+
+</div>
+
+<body>
+
+<div id="canvasRow">
+    <div class="panel">
+        <h2>Single mode Y<sub>ℓm</sub></h2>
+        <div id="orbitalViewer"></div>
+    </div>
+
+    <div class="panel">
+        <h2>Accumulated sky</h2>
+        <canvas id="cmbCanvas" width="500" height="250"></canvas>
+    </div>
+</div>
+
+<div id="controls">
+    <label>
+        Maximum ℓ:
+        <input id="lmaxSlider" type="range" min="1" max="30" value="8">
+        <span id="lmaxValue">8</span>
+    </label>
+
+    <label>
+        m:
+        <input id="mSlider" type="range" min="0" max="1" value="0">
+        <span id="mValue">0</span>
+    </label>
+
+    <label>
+        <input id="singleEllCheckbox" type="checkbox">
+        Show only current ℓ
+    </label>
+    <button id="newSeedButton">New random universe</button>
+</div>
+
+<p>
+    This map is built by randomly adding spherical-harmonic-like modes up to the selected maximum ℓ.
+</p>
+
+<footer>
+    Built using Planck CMB power spectrum data.<br>
+</footer>
+
+<script src="cmb_harmonics.js"></script>
+</body>
+</html>
