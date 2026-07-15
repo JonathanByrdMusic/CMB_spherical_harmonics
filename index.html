@@ -31,30 +31,47 @@
     </div>
 
     <div class="panel">
-        <h2>Accumulated sky</h2>
+        <h2 id="skyTitle">Accumulated sky</h2>
         <canvas id="cmbCanvas" width="500" height="250"></canvas>
     </div>
 </div>
 
-<div id="controls">
-    <label>
-        Maximum &ell;:
-        <input id="lmaxSlider" type="range" min="1" max="30" value="8">
-        <span id="lmaxValue">8</span>
+<div id="controlsRow">
+
+    <div class="controlColumn leftControls">
+
+    <label class="controlItem">
+        <span class="controlLabel">Maximum &ell;:</span>
+        <input id="lmaxSlider" type="range" min="1" max="30" value="1">
+        <span id="lmaxValue">1</span>
     </label>
 
-    <label>
-        m:
+    <label class="controlItem">
+        <span class="controlLabel">m:</span>
         <input id="mSlider" type="range" min="0" max="1" value="0">
         <span id="mValue">0</span>
     </label>
 
-    <label>
-        <input id="singleEllCheckbox" type="checkbox">
-        Show only current &ell;
-    </label>
-    <button id="newSeedButton">New random universe</button>
 </div>
+
+    <div class="controlColumn rightControls">
+
+    <label class="controlItem checkboxItem">
+        <input id="singleEllCheckbox" type="checkbox">
+        Show only current ℓ
+    </label>
+
+    <button id="buildUniverseButton">
+        Build universe
+    </button>
+
+    <button id="newSeedButton">
+        New random universe
+    </button>
+
+</div>
+
+<div>
 
 <p>
     This map is built by randomly adding spherical-harmonic-like modes up to the selected maximum &ell;.

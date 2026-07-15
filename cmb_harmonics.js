@@ -16,6 +16,15 @@ const newSeedButton = document.getElementById("newSeedButton");
 const mSlider = document.getElementById("mSlider");
 const mValue = document.getElementById("mValue");
 
+const buildUniverseButton =
+    document.getElementById("buildUniverseButton");
+
+const skyTitle =
+    document.getElementById("skyTitle");
+
+let buildTimer = null;
+let buildIsRunning = false;
+
 let seed = 12345;
 let modeMaps = [];
 let coefficients = [];
@@ -138,6 +147,67 @@ function colorMap(v) {
     return [r, g, b];
 }
 
+function orbitalColorMap(v) {
+
+    v = Math.max(-1, Math.min(1, v));
+
+    // Rich ultramarine
+    const cold = [0.00, 0.18, 0.95];
+
+    // Warm cream near the nodal surface
+    const neutral = [1.00, 0.88, 0.58];
+
+    // Vivid orange
+    const hot = [1.00, 0.38, 0.00];
+
+    let start;
+    let end;
+    let t;
+
+    if (v < 0) {
+        start = cold;
+        end = neutral;
+        t = v + 1;
+    } else {
+        start = neutral;
+        end = hot;
+        t = v;
+    }
+
+    return [
+        start[0] + (end[0] - start[0]) * t,
+        start[1] + (end[1] - start[1]) * t,
+        start[2] + (end[2] - start[2]) * t
+    ];
+}
+
+function setupOrbitalViewer() {
+
+    orbitalScene = new THREE.Scene();
+
+    orbitalCamera = new THREE.PerspectiveCamera(
+        35,
+        orbitalViewer.clientWidth / orbitalViewer.clientHeight,
+        0.1,
+        100
+    );
+
+    orbitalCamera.position.z = 5;
+
+    orbitalRenderer = new THREE.WebGLRenderer({ antialias: true });
+    orbitalRenderer.setSize(orbitalViewer.clientWidth, orbitalViewer.clientHeight);
+    orbitalRenderer.setClearColor(0x000000);
+
+    orbitalViewer.appendChild(orbitalRenderer.domElement);
+
+    let light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(2, 2, 3);
+    orbitalScene.add(light);
+
+    let ambient = new THREE.AmbientLight(0xffffff, 1.7);
+    orbitalScene.add(ambient);
+}
+
 function drawOrbital() {
 
     if (!orbitalRenderer) return;
@@ -160,10 +230,23 @@ function drawOrbital() {
     let thetaSteps = 80;
     let phiSteps = 160;
 
-    // First pass: find the largest absolute Y_lm value.
-    // This lets us normalize the colors across the full blue-to-orange range.
     let maxAbsY = 0;
 
+for (let i = 0; i <= thetaSteps; i++) {
+    let theta = Math.PI * i / thetaSteps;
+
+    for (let j = 0; j <= phiSteps; j++) {
+        let phi = 2 * Math.PI * j / phiSteps;
+        let y = sphericalHarmonicReal(l, m, theta, phi);
+
+        maxAbsY = Math.max(maxAbsY, Math.abs(y));
+    }
+}
+
+if (maxAbsY === 0) {
+    maxAbsY = 1;
+}
+
     for (let i = 0; i <= thetaSteps; i++) {
         let theta = Math.PI * i / thetaSteps;
 
@@ -172,26 +255,6 @@ function drawOrbital() {
 
             let y = sphericalHarmonicReal(l, m, theta, phi);
 
-            if (Math.abs(y) > maxAbsY) {
-                maxAbsY = Math.abs(y);
-            }
-        }
-    }
-
-    if (maxAbsY === 0) {
-        maxAbsY = 1;
-    }
-
-    // Second pass: build the 3D surface and assign matching colors.
-    for (let i = 0; i <= thetaSteps; i++) {
-        let theta = Math.PI * i / thetaSteps;
-
-        for (let j = 0; j <= phiSteps; j++) {
-            let phi = 2 * Math.PI * j / phiSteps;
-
-            let y = sphericalHarmonicReal(l, m, theta, phi);
-
-            // Shape is based on the magnitude of Y_lm.
             let r = 0.45 + 1.5 * Math.abs(y);
 
             let x3 = r * Math.sin(theta) * Math.cos(phi);
@@ -200,15 +263,14 @@ function drawOrbital() {
 
             vertices.push(x3, y3, z3);
 
-            // Color is based on the signed value of Y_lm.
-            let normalizedY = y / maxAbsY;
-            let rgb = colorMap(normalizedY);
+            let normalizedY = Math.tanh(3 * y);
+let rgb = orbitalColorMap(normalizedY);
 
-            colors.push(
-                rgb[0] / 255,
-                rgb[1] / 255,
-                rgb[2] / 255
-            );
+colors.push(
+    rgb[0],
+    rgb[1],
+    rgb[2]
+);
         }
     }
 
@@ -236,17 +298,18 @@ function drawOrbital() {
     geometry.computeVertexNormals();
 
     let material = new THREE.MeshPhongMaterial({
-        vertexColors: true,
-        shininess: 60,
-        side: THREE.DoubleSide
-    });
+    vertexColors: true,
+    shininess: 100,
+    side: THREE.DoubleSide
+});
 
     orbitalMesh = new THREE.Mesh(geometry, material);
     orbitalMesh.rotation.x = 0.35;
     orbitalMesh.rotation.y = -0.6;
 
     orbitalScene.add(orbitalMesh);
-    orbitalRenderer.render(orbitalScene, orbitalCamera);
+
+orbitalRenderer.render(orbitalScene, orbitalCamera);
 }
 
 // -----------------------------
@@ -260,8 +323,11 @@ function buildMaskAndCoordinates() {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
 
+            // Normalize the canvas to an ellipse:
+            // nx runs approximately from -1 to +1
+            // ny runs approximately from -1 to +1
             let nx = (x - width / 2) / (width / 2);
-            let ny = (y - height / 2) / (height / 2);
+            let ny = (height / 2 - y) / (height / 2);
 
             let inside = (nx * nx + ny * ny) <= 1;
 
@@ -272,8 +338,65 @@ function buildMaskAndCoordinates() {
                 continue;
             }
 
-            let phi = Math.PI * nx;
-            let theta = Math.PI * (ny + 1) / 2;
+            /*
+             * Inverse Mollweide projection
+             *
+             * Canvas coordinates correspond to:
+             *
+             * X = 2√2 nx
+             * Y = √2 ny
+             *
+             * Since Y = √2 sin(gamma),
+             * gamma = asin(ny).
+             */
+
+            let gamma = Math.asin(
+                Math.max(-1, Math.min(1, ny))
+            );
+
+            /*
+             * Recover latitude:
+             *
+             * sin(latitude)
+             *     = [2gamma + sin(2gamma)] / pi
+             */
+
+            let sinLatitude =
+                (2 * gamma + Math.sin(2 * gamma)) / Math.PI;
+
+            sinLatitude = Math.max(
+                -1,
+                Math.min(1, sinLatitude)
+            );
+
+            let latitude = Math.asin(sinLatitude);
+
+            /*
+             * Recover longitude:
+             *
+             * longitude = pi nx / cos(gamma)
+             */
+
+            let cosGamma = Math.cos(gamma);
+            let longitude;
+
+            if (Math.abs(cosGamma) < 1e-10) {
+                // At the poles, longitude is physically irrelevant.
+                longitude = 0;
+            } else {
+                longitude = Math.PI * nx / cosGamma;
+            }
+
+            // Numerical protection near the curved boundary.
+            longitude = Math.max(
+                -Math.PI,
+                Math.min(Math.PI, longitude)
+            );
+
+            // sphericalHarmonicReal() expects colatitude theta:
+            // theta = 0 at the north pole and pi at the south pole.
+            let theta = Math.PI / 2 - latitude;
+            let phi = longitude;
 
             mask[i] = {
                 theta: theta,
@@ -297,8 +420,6 @@ function precomputeModes() {
 
             let arr = new Float64Array(width * height);
 
-            let maxAbs = 0;
-
             for (let i = 0; i < width * height; i++) {
 
                 if (mask[i] === null) {
@@ -309,20 +430,12 @@ function precomputeModes() {
                 let theta = mask[i].theta;
                 let phi = mask[i].phi;
 
-                let value = sphericalHarmonicReal(l, m, theta, phi);
-
-                arr[i] = value;
-
-                if (Math.abs(value) > maxAbs) {
-                    maxAbs = Math.abs(value);
-                }
-            }
-
-            // Normalize each mode image so no single mode dominates
-            if (maxAbs > 0) {
-                for (let i = 0; i < arr.length; i++) {
-                    arr[i] /= maxAbs;
-                }
+                arr[i] = sphericalHarmonicReal(
+                    l,
+                    m,
+                    theta,
+                    phi
+                );
             }
 
             ellModes.push({
@@ -347,15 +460,25 @@ function generateCoefficients() {
     for (let l = 1; l <= maxLPrecomputed; l++) {
 
         let ellCoeffs = [];
-        let power = planckPower[l] || 0;
 
-        // Planck data does not include ℓ = 1 because the observed dipole is removed.
-        // Add a teaching-only dipole so ℓ = 1 is visible.
+        // Planck table stores D_l
+        let Dl = planckPower[l] || 0;
+
+        // Convert to C_l
+        let Cl = 0;
+
+        if (l > 0) {
+            Cl = (2 * Math.PI * Dl) / (l * (l + 1));
+        }
+
+        // Planck removes the observed dipole, so borrow the quadrupole
+        // simply so ℓ = 1 has a visible amplitude.
         if (l === 1) {
-            power = planckPower[2] || 1;
-}
+            let D2 = planckPower[2] || 1;
+            Cl = (2 * Math.PI * D2) / (2 * 3);
+        }
 
-let amp = Math.sqrt(power);
+        let amp = Math.sqrt(Math.max(Cl, 0));
 
         for (let m = -l; m <= l; m++) {
             ellCoeffs.push(gaussianRandom() * amp);
@@ -369,9 +492,79 @@ let amp = Math.sqrt(power);
 // Draw
 // -----------------------------
 
-function drawSky() {
+function smoothMollweide(values, strength = 0.4) {
 
-    let lmax = parseInt(slider.value);
+    const smoothed = new Float64Array(values.length);
+
+    // Small 3 × 3 Gaussian-style kernel
+    const kernel = [
+        [1, 2, 1],
+        [2, 4, 2],
+        [1, 2, 1]
+    ];
+
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+
+            const i = y * width + x;
+
+            if (mask[i] === null) {
+                smoothed[i] = 0;
+                continue;
+            }
+
+            let weightedSum = 0;
+            let totalWeight = 0;
+
+            for (let dy = -1; dy <= 1; dy++) {
+                for (let dx = -1; dx <= 1; dx++) {
+
+                    const nx = x + dx;
+                    const ny = y + dy;
+
+                    if (
+                        nx < 0 || nx >= width ||
+                        ny < 0 || ny >= height
+                    ) {
+                        continue;
+                    }
+
+                    const ni = ny * width + nx;
+
+                    // Do not mix the black area outside the Mollweide ellipse
+                    // into the sky near its boundary.
+                    if (mask[ni] === null) {
+                        continue;
+                    }
+
+                    const weight = kernel[dy + 1][dx + 1];
+
+                    weightedSum += values[ni] * weight;
+                    totalWeight += weight;
+                }
+            }
+
+            const blurred =
+                totalWeight > 0
+                    ? weightedSum / totalWeight
+                    : values[i];
+
+            // Blend the smoothed result with the original data.
+            smoothed[i] =
+                (1 - strength) * values[i] +
+                strength * blurred;
+        }
+    }
+
+    return smoothed;
+}
+
+function drawSky(temporaryLmax = null) {
+
+    let lmax =
+        temporaryLmax === null
+            ? parseInt(slider.value)
+            : temporaryLmax;
     lmaxValue.textContent = lmax;
 
     let image = ctx.createImageData(width, height);
@@ -383,30 +576,60 @@ function drawSky() {
     let startL = singleEllCheckbox.checked ? lmax : 1;
     let endL = lmax;
 
+    let selectedM = parseInt(mSlider.value);
+
+    // First build the complete unsmoothed field.
     for (let l = startL; l <= endL; l++) {
 
         let ellModes = modeMaps[l];
         let ellCoeffs = coefficients[l];
 
-        for (let mi = 0; mi < ellModes.length; mi++) {
+        if (singleEllCheckbox.checked) {
 
-            let coeff = ellCoeffs[mi];
-            let mode = ellModes[mi].values;
+            let mi = selectedM + l;
 
-            for (let i = 0; i < values.length; i++) {
-                values[i] += coeff * mode[i];
+            if (ellModes[mi]) {
+                let mode = ellModes[mi].values;
+
+                for (let i = 0; i < values.length; i++) {
+                    values[i] += mode[i];
+                }
+            }
+
+        } else {
+
+            for (let mi = 0; mi < ellModes.length; mi++) {
+
+                let coeff = ellCoeffs[mi];
+                let mode = ellModes[mi].values;
+
+                for (let i = 0; i < values.length; i++) {
+                    values[i] += coeff * mode[i];
+                }
             }
         }
     }
 
-    for (let i = 0; i < values.length; i++) {
+    // Smooth only after every selected mode has been added.
+    let displayValues = smoothMollweide(values, 0.4);
+
+    // Find the largest displayed magnitude for the color stretch.
+    for (let i = 0; i < displayValues.length; i++) {
+
         if (mask[i] === null) continue;
-        maxAbs = Math.max(maxAbs, Math.abs(values[i]));
+
+        maxAbs = Math.max(
+            maxAbs,
+            Math.abs(displayValues[i])
+        );
     }
 
-    if (maxAbs === 0) maxAbs = 1;
+    if (maxAbs === 0) {
+        maxAbs = 1;
+    }
 
-    for (let i = 0; i < values.length; i++) {
+    // Convert the smoothed field into canvas colors.
+    for (let i = 0; i < displayValues.length; i++) {
 
         let p = 4 * i;
 
@@ -418,7 +641,7 @@ function drawSky() {
             continue;
         }
 
-        let v = values[i] / maxAbs;
+        let v = displayValues[i] / maxAbs;
         let rgb = colorMap(v);
 
         data[p] = rgb[0];
@@ -428,6 +651,60 @@ function drawSky() {
     }
 
     ctx.putImageData(image, 0, 0);
+}
+
+function startBuildUniverse() {
+
+    if (buildIsRunning) {
+        stopBuildUniverse();
+        return;
+    }
+
+    buildIsRunning = true;
+    buildUniverseButton.textContent = "Stop building";
+
+    // The animation should show the cumulative universe,
+    // not a single selected harmonic.
+    singleEllCheckbox.checked = false;
+
+    const finalL = parseInt(slider.value);
+    let currentL = 1;
+
+    function buildNextShell() {
+
+        skyTitle.textContent =
+            `Building universe: ℓ = ${currentL}`;
+
+        drawSky(currentL);
+
+        if (currentL >= finalL) {
+            stopBuildUniverse();
+            skyTitle.textContent =
+                `Accumulated sky through ℓ = ${finalL}`;
+            return;
+        }
+
+        currentL++;
+
+        buildTimer = setTimeout(
+            buildNextShell,
+            450
+        );
+    }
+
+    buildNextShell();
+}
+
+function stopBuildUniverse() {
+
+    buildIsRunning = false;
+    buildUniverseButton.textContent =
+        "Build universe";
+
+    if (buildTimer !== null) {
+        clearTimeout(buildTimer);
+        buildTimer = null;
+    }
 }
 
 function updateMSlider() {
@@ -459,6 +736,7 @@ slider.addEventListener("input", function () {
 mSlider.addEventListener("input", function() {
     mValue.textContent = mSlider.value;
     drawOrbital();
+    drawSky();
 });
 
 singleEllCheckbox.addEventListener("change", function() {
@@ -472,6 +750,11 @@ newSeedButton.addEventListener("click", function() {
     drawOrbital();
     drawSky();
 });
+
+buildUniverseButton.addEventListener(
+    "click",
+    startBuildUniverse
+);
 
 // -----------------------------
 // Initialize

@@ -61,18 +61,72 @@ canvas {
     border: 1px solid #ccc;
 }
 
-#controls {
-    margin-top: 24px;
-    font-size: 1.1em;
+#controlsRow {
     display: flex;
+    gap: 24px;
     justify-content: center;
-    align-items: center;
-    gap: 18px;
+    align-items: flex-start;
+    margin-top: 18px;
+    font-size: 1.1em;
     flex-wrap: wrap;
 }
 
+.controlColumn {
+    width: 500px;
+    max-width: 45vw;
+}
+
+.leftControls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.leftControls .controlItem {
+    display: grid;
+    grid-template-columns: 105px 300px 32px;
+    align-items: center;
+    column-gap: 8px;
+    justify-content: center;
+}
+
+.controlLabel {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 0;
+    white-space: nowrap;
+}
+
+.rightControls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+    white-space: nowrap;
+}
+
+.universeButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
 button {
-    margin-left: 24px;
+    margin-left: 0;
     padding: 8px 16px;
     font-size: 1em;
 }
@@ -92,4 +146,15 @@ footer{
     margin-top:40px;
     color:#666;
     font-size:0.9em;
+}
+
+/* ---------- Responsive adjustments ---------- */
+
+@media (max-width: 700px) {
+
+    .rightControls {
+        flex-direction: column;
+        gap: 12px;
+    }
+
 }
