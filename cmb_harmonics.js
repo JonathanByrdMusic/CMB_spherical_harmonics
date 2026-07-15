@@ -16,10 +16,6 @@ const newSeedButton = document.getElementById("newSeedButton");
 const mSlider = document.getElementById("mSlider");
 const mValue = document.getElementById("mValue");
 
-console.log("mSlider:", mSlider);
-console.log("mValue:", mValue);
-console.log("Current page URL:", window.location.href);
-
 let seed = 12345;
 let modeMaps = [];
 let coefficients = [];
@@ -142,33 +138,6 @@ function colorMap(v) {
     return [r, g, b];
 }
 
-function setupOrbitalViewer() {
-
-    orbitalScene = new THREE.Scene();
-
-    orbitalCamera = new THREE.PerspectiveCamera(
-        35,
-        orbitalViewer.clientWidth / orbitalViewer.clientHeight,
-        0.1,
-        100
-    );
-
-    orbitalCamera.position.z = 4;
-
-    orbitalRenderer = new THREE.WebGLRenderer({ antialias: true });
-    orbitalRenderer.setSize(orbitalViewer.clientWidth, orbitalViewer.clientHeight);
-    orbitalRenderer.setClearColor(0x000000);
-
-    orbitalViewer.appendChild(orbitalRenderer.domElement);
-
-    let light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(2, 2, 3);
-    orbitalScene.add(light);
-
-    let ambient = new THREE.AmbientLight(0xffffff, 0.4);
-    orbitalScene.add(ambient);
-}
-
 function drawOrbital() {
 
     if (!orbitalRenderer) return;
@@ -191,6 +160,10 @@ function drawOrbital() {
     let thetaSteps = 80;
     let phiSteps = 160;
 
+    // First pass: find the largest absolute Y_lm value.
+    // This lets us normalize the colors across the full blue-to-orange range.
+    let maxAbsY = 0;
+
     for (let i = 0; i <= thetaSteps; i++) {
         let theta = Math.PI * i / thetaSteps;
 
@@ -199,6 +172,26 @@ function drawOrbital() {
 
             let y = sphericalHarmonicReal(l, m, theta, phi);
 
+            if (Math.abs(y) > maxAbsY) {
+                maxAbsY = Math.abs(y);
+            }
+        }
+    }
+
+    if (maxAbsY === 0) {
+        maxAbsY = 1;
+    }
+
+    // Second pass: build the 3D surface and assign matching colors.
+    for (let i = 0; i <= thetaSteps; i++) {
+        let theta = Math.PI * i / thetaSteps;
+
+        for (let j = 0; j <= phiSteps; j++) {
+            let phi = 2 * Math.PI * j / phiSteps;
+
+            let y = sphericalHarmonicReal(l, m, theta, phi);
+
+            // Shape is based on the magnitude of Y_lm.
             let r = 0.45 + 1.5 * Math.abs(y);
 
             let x3 = r * Math.sin(theta) * Math.cos(phi);
@@ -207,11 +200,15 @@ function drawOrbital() {
 
             vertices.push(x3, y3, z3);
 
-            if (y >= 0) {
-                colors.push(1.0, 0.15, 0.05);
-            } else {
-                colors.push(0.0, 0.85, 0.9);
-            }
+            // Color is based on the signed value of Y_lm.
+            let normalizedY = y / maxAbsY;
+            let rgb = colorMap(normalizedY);
+
+            colors.push(
+                rgb[0] / 255,
+                rgb[1] / 255,
+                rgb[2] / 255
+            );
         }
     }
 
@@ -372,7 +369,7 @@ let amp = Math.sqrt(power);
 // Draw
 // -----------------------------
 
-function drawMap() {
+function drawSky() {
 
     let lmax = parseInt(slider.value);
     lmaxValue.textContent = lmax;
@@ -445,57 +442,6 @@ function updateMSlider() {
     mValue.textContent = mSlider.value;
 }
 
-function drawCurrentShell() {
-
-    let l = parseInt(slider.value);
-    let m = parseInt(mSlider.value);
-
-    if (!modeMaps[l]) return;
-
-    let mi = m + l;
-
-    if (!modeMaps[l][mi]) return;
-
-    let image = modeCtx.createImageData(width, height);
-    let data = image.data;
-
-    let values = new Float64Array(width * height);
-    let maxAbs = 0;
-
-    let mode = modeMaps[l][mi].values;
-
-    for (let i = 0; i < values.length; i++) {
-        values[i] = mode[i];
-        if (mask[i] !== null) {
-            maxAbs = Math.max(maxAbs, Math.abs(values[i]));
-        }
-    }
-
-    if (maxAbs === 0) maxAbs = 1;
-
-    for (let i = 0; i < values.length; i++) {
-        let p = 4 * i;
-
-        if (mask[i] === null) {
-            data[p] = 0;
-            data[p + 1] = 0;
-            data[p + 2] = 0;
-            data[p + 3] = 255;
-            continue;
-        }
-
-        let v = values[i] / maxAbs;
-        let rgb = colorMap(v);
-
-        data[p] = rgb[0];
-        data[p + 1] = rgb[1];
-        data[p + 2] = rgb[2];
-        data[p + 3] = 255;
-    }
-
-    modeCtx.putImageData(image, 0, 0);
-}
-
 // -----------------------------
 // Events
 // -----------------------------
@@ -506,7 +452,7 @@ slider.addEventListener("input", function () {
 
     updateMSlider();
     drawOrbital();
-    drawMap();
+    drawSky();
 
 });
 
@@ -517,14 +463,14 @@ mSlider.addEventListener("input", function() {
 
 singleEllCheckbox.addEventListener("change", function() {
     drawOrbital();
-    drawMap();
+    drawSky();
 });
 
 newSeedButton.addEventListener("click", function() {
     seed = Math.floor(Math.random() * 4294967296);
     generateCoefficients();
     drawOrbital();
-    drawMap();
+    drawSky();
 });
 
 // -----------------------------
@@ -585,5 +531,5 @@ loadPlanckSpectrum().then(function() {
     setupOrbitalViewer();
     updateMSlider();
     drawOrbital();
-    drawMap();
+    drawSky();
 });

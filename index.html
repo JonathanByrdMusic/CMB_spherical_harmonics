@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 
+<body>
+
 <div id="header">
 
     <img class="logo" src="media/Simons_logo_small.gif">
@@ -22,11 +24,9 @@
 
 </div>
 
-<body>
-
 <div id="canvasRow">
     <div class="panel">
-        <h2>Single mode Y<sub>ℓm</sub></h2>
+        <h2>Single mode Y<sub>&ell;m</sub></h2>
         <div id="orbitalViewer"></div>
     </div>
 
@@ -38,7 +38,7 @@
 
 <div id="controls">
     <label>
-        Maximum ℓ:
+        Maximum &ell;:
         <input id="lmaxSlider" type="range" min="1" max="30" value="8">
         <span id="lmaxValue">8</span>
     </label>
@@ -51,13 +51,13 @@
 
     <label>
         <input id="singleEllCheckbox" type="checkbox">
-        Show only current ℓ
+        Show only current &ell;
     </label>
     <button id="newSeedButton">New random universe</button>
 </div>
 
 <p>
-    This map is built by randomly adding spherical-harmonic-like modes up to the selected maximum ℓ.
+    This map is built by randomly adding spherical-harmonic-like modes up to the selected maximum &ell;.
 </p>
 
 <footer>
