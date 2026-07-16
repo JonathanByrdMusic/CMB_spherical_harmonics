@@ -24,25 +24,26 @@ const skyTitle =
 
 let buildTimer = null;
 let buildIsRunning = false;
+let sliderDrawTimer = null;
 
 let seed = 12345;
 let modeMaps = [];
 let coefficients = [];
 let mask = [];
-let planckSpectrum = [];
 let planckPower = new Float64Array(3001);
-let planckLoaded = false;
 
 const width = canvas.width;
 const height = canvas.height;
-const maxLPrecomputed = parseInt(slider.max);
+const maxL = Number(slider.max);
 
 // -----------------------------
 // Random numbers
 // -----------------------------
 
 function random() {
-    seed = (1664525 * seed + 1013904223) % 4294967296;
+    seed =
+        (Math.imul(1664525, seed) + 1013904223) >>> 0;
+
     return seed / 4294967296;
 }
 
@@ -230,23 +231,6 @@ function drawOrbital() {
     let thetaSteps = 80;
     let phiSteps = 160;
 
-    let maxAbsY = 0;
-
-for (let i = 0; i <= thetaSteps; i++) {
-    let theta = Math.PI * i / thetaSteps;
-
-    for (let j = 0; j <= phiSteps; j++) {
-        let phi = 2 * Math.PI * j / phiSteps;
-        let y = sphericalHarmonicReal(l, m, theta, phi);
-
-        maxAbsY = Math.max(maxAbsY, Math.abs(y));
-    }
-}
-
-if (maxAbsY === 0) {
-    maxAbsY = 1;
-}
-
     for (let i = 0; i <= thetaSteps; i++) {
         let theta = Math.PI * i / thetaSteps;
 
@@ -311,10 +295,6 @@ colors.push(
 
 orbitalRenderer.render(orbitalScene, orbitalCamera);
 }
-
-// -----------------------------
-// Precompute geometry + modes
-// -----------------------------
 
 function buildMaskAndCoordinates() {
 
@@ -469,7 +449,7 @@ function generateCoefficients() {
 
     coefficients = [];
 
-    for (let l = 1; l <= maxLPrecomputed; l++) {
+    for (let l = 1; l <= maxL; l++) {
 
         let ellCoeffs = [];
 
@@ -504,85 +484,17 @@ function generateCoefficients() {
 // Draw
 // -----------------------------
 
-function smoothMollweide(values, strength = 0.4) {
-
-    const smoothed = new Float64Array(values.length);
-
-    // Small 3 × 3 Gaussian-style kernel
-    const kernel = [
-        [1, 2, 1],
-        [2, 4, 2],
-        [1, 2, 1]
-    ];
-
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-
-            const i = y * width + x;
-
-            if (mask[i] === null) {
-                smoothed[i] = 0;
-                continue;
-            }
-
-            let weightedSum = 0;
-            let totalWeight = 0;
-
-            for (let dy = -1; dy <= 1; dy++) {
-                for (let dx = -1; dx <= 1; dx++) {
-
-                    const nx = x + dx;
-                    const ny = y + dy;
-
-                    if (
-                        nx < 0 || nx >= width ||
-                        ny < 0 || ny >= height
-                    ) {
-                        continue;
-                    }
-
-                    const ni = ny * width + nx;
-
-                    // Do not mix the black area outside the Mollweide ellipse
-                    // into the sky near its boundary.
-                    if (mask[ni] === null) {
-                        continue;
-                    }
-
-                    const weight = kernel[dy + 1][dx + 1];
-
-                    weightedSum += values[ni] * weight;
-                    totalWeight += weight;
-                }
-            }
-
-            const blurred =
-                totalWeight > 0
-                    ? weightedSum / totalWeight
-                    : values[i];
-
-            // Blend the smoothed result with the original data.
-            smoothed[i] =
-                (1 - strength) * values[i] +
-                strength * blurred;
-        }
-    }
-
-    return smoothed;
-}
-
 function drawSky(temporaryLmax = null) {
 
     let lmax =
         temporaryLmax === null
             ? parseInt(slider.value)
             : temporaryLmax;
-    lmaxValue.textContent = lmax;
 
     let image = ctx.createImageData(width, height);
     let data = image.data;
 
-    let values = new Float64Array(width * height);
+    let values = new Float32Array(width * height);
     let maxAbs = 0;
 
     let startL = singleEllCheckbox.checked ? lmax : 1;
@@ -622,17 +534,14 @@ function drawSky(temporaryLmax = null) {
         }
     }
 
-    // Smooth only after every selected mode has been added.
-    let displayValues = smoothMollweide(values, 0.4);
-
     // Find the largest displayed magnitude for the color stretch.
-    for (let i = 0; i < displayValues.length; i++) {
+    for (let i = 0; i < values.length; i++) {
 
         if (mask[i] === null) continue;
 
         maxAbs = Math.max(
             maxAbs,
-            Math.abs(displayValues[i])
+            Math.abs(values[i])
         );
     }
 
@@ -640,8 +549,8 @@ function drawSky(temporaryLmax = null) {
         maxAbs = 1;
     }
 
-    // Convert the smoothed field into canvas colors.
-    for (let i = 0; i < displayValues.length; i++) {
+    // Convert the field into canvas colors.
+    for (let i = 0; i < values.length; i++) {
 
         let p = 4 * i;
 
@@ -653,7 +562,7 @@ function drawSky(temporaryLmax = null) {
             continue;
         }
 
-        let v = displayValues[i] / maxAbs;
+        let v = values[i] / maxAbs;
         let rgb = colorMap(v);
 
         data[p] = rgb[0];
@@ -666,6 +575,11 @@ function drawSky(temporaryLmax = null) {
 }
 
 function startBuildUniverse() {
+
+    if (sliderDrawTimer !== null) {
+    clearTimeout(sliderDrawTimer);
+    sliderDrawTimer = null;
+}
 
     if (buildIsRunning) {
         stopBuildUniverse();
@@ -680,11 +594,12 @@ function startBuildUniverse() {
     singleEllCheckbox.checked = false;
 
     const finalL = parseInt(slider.value);
-    // Make sure all shells needed for the animation exist.
-    ensureModesThrough(finalL);
+
     let currentL = 1;
 
     function buildNextShell() {
+
+        computeModesForL(currentL);
 
         skyTitle.textContent =
             `Building universe: ℓ = ${currentL}`;
@@ -707,6 +622,13 @@ function startBuildUniverse() {
     }
 
     buildNextShell();
+}
+
+function cancelBuildIfRunning() {
+    if (buildIsRunning) {
+        stopBuildUniverse();
+        skyTitle.textContent = "Accumulated sky";
+    }
 }
 
 function stopBuildUniverse() {
@@ -753,11 +675,22 @@ function updateSliderFill(sliderElement) {
     );
 }
 
+function updateSkyTitle() {
+    if (singleEllCheckbox.checked) {
+        skyTitle.textContent =
+            `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
+    } else {
+        skyTitle.textContent =
+            `Accumulated sky through ℓ = ${slider.value}`;
+    }
+}
+
 // -----------------------------
 // Events
 // -----------------------------
 
 slider.addEventListener("input", function () {
+    cancelBuildIfRunning();
 
     lmaxValue.textContent = slider.value;
 
@@ -766,14 +699,31 @@ slider.addEventListener("input", function () {
     updateSliderFill(slider);
     updateSliderFill(mSlider);
 
-    // Calculate only newly requested ℓ values.
-    ensureModesThrough(parseInt(slider.value));
-
+    // The single orbital is inexpensive enough to update immediately.
     drawOrbital();
-    drawSky();
+
+    skyTitle.textContent =
+    `Calculating sky through ℓ = ${slider.value}`;
+
+    // Cancel any pending expensive sky calculation.
+    if (sliderDrawTimer !== null) {
+        clearTimeout(sliderDrawTimer);
+    }
+
+    // Wait until the slider has paused before computing missing modes.
+    sliderDrawTimer = setTimeout(function () {
+        const selectedL = parseInt(slider.value);
+
+        ensureModesThrough(selectedL);
+        drawSky();
+        updateSkyTitle();
+
+        sliderDrawTimer = null;
+    }, 150);
 });
 
 mSlider.addEventListener("input", function () {
+    cancelBuildIfRunning();
     mValue.textContent = mSlider.value;
     updateSliderFill(mSlider);
     drawOrbital();
@@ -781,14 +731,15 @@ mSlider.addEventListener("input", function () {
 });
 
 singleEllCheckbox.addEventListener("change", function() {
-    drawOrbital();
+    cancelBuildIfRunning();
     drawSky();
 });
 
 newSeedButton.addEventListener("click", function() {
+    cancelBuildIfRunning();
+
     seed = Math.floor(Math.random() * 4294967296);
     generateCoefficients();
-    drawOrbital();
     drawSky();
 });
 
@@ -811,7 +762,7 @@ async function loadPlanckSpectrum() {
 
     let text = await response.text();
 
-    planckSpectrum = text
+    const planckSpectrum = text
         .split("\n")
         .map(line => line.trim())
         .filter(line => line && !line.startsWith("#"))
@@ -830,9 +781,6 @@ async function loadPlanckSpectrum() {
             row.Dl >= 0
         );
 
-    console.log("Loaded Planck spectrum rows:", planckSpectrum.length);
-    console.log(planckSpectrum.slice(0, 5));
-
     // Build a fast lookup table indexed by ℓ
     for (const row of planckSpectrum) {
 
@@ -843,10 +791,6 @@ async function loadPlanckSpectrum() {
         }
     }
 
-console.log("Power at ℓ=2:", planckPower[2]);
-console.log("Power at ℓ=220:", planckPower[220]);
-
-planckLoaded = true;
 }
 
 loadPlanckSpectrum().then(function() {

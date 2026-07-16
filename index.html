@@ -2,12 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-90WMD4PJQP');
+    </script>
+
     <title>CMB from Spherical Harmonics</title>
+
     <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet"
+    >
+
     <link rel="stylesheet" href="style.css">
+
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 </head>
 
@@ -15,7 +36,12 @@
 
 <div id="header">
 
-    <img class="logo" src="media/Simons_logo_small.gif">
+    <img
+    class="logo"
+    src="media/Simons_logo_small.gif"
+    alt="Simons Observatory"
+    width="190"
+>
 
     <div id="titleBlock">
         <h1>CMB simulation with Spherical Harmonics</h1>
@@ -76,8 +102,6 @@
 
 </div>
 
-</div>
-
 <article id="explanation">
 
     <h2>Atomic Orbitals, Music, and the Early Universe</h2>
@@ -115,7 +139,7 @@
         Maybe you've heard someone online break down a song into “stems.”
         Software can separate the bass, guitar, keyboards, and vocals.
         These programs use Fourier methods to decompose complex sounds into simpler components
-        that can later be recombined to reproduce the song.
+        that can then be recombined to reproduce the song.
     </p>
 
     <p class="closing">
@@ -130,7 +154,7 @@
 </article>
 
 <footer>
-    Built using Planck CMB power spectrum data.<br>
+    Built using Planck CMB power spectrum data.
 </footer>
 
 <script src="cmb_harmonics.js"></script>
