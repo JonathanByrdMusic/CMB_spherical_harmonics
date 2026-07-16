@@ -406,46 +406,58 @@ function buildMaskAndCoordinates() {
     }
 }
 
-function precomputeModes() {
-
+function initializeModeCache() {
     buildMaskAndCoordinates();
-
     modeMaps = [];
+}
 
-    for (let l = 1; l <= maxLPrecomputed; l++) {
+function computeModesForL(l) {
 
-        let ellModes = [];
+    // Already calculated—reuse the cached result.
+    if (modeMaps[l]) {
+        return;
+    }
 
-        for (let m = -l; m <= l; m++) {
+    let ellModes = [];
 
-            let arr = new Float64Array(width * height);
+    for (let m = -l; m <= l; m++) {
 
-            for (let i = 0; i < width * height; i++) {
+        // Float32 uses half as much memory as Float64 and is
+        // more than precise enough for screen rendering.
+        let arr = new Float32Array(width * height);
 
-                if (mask[i] === null) {
-                    arr[i] = 0;
-                    continue;
-                }
+        for (let i = 0; i < width * height; i++) {
 
-                let theta = mask[i].theta;
-                let phi = mask[i].phi;
-
-                arr[i] = sphericalHarmonicReal(
-                    l,
-                    m,
-                    theta,
-                    phi
-                );
+            if (mask[i] === null) {
+                arr[i] = 0;
+                continue;
             }
 
-            ellModes.push({
-                l: l,
-                m: m,
-                values: arr
-            });
+            let theta = mask[i].theta;
+            let phi = mask[i].phi;
+
+            arr[i] = sphericalHarmonicReal(
+                l,
+                m,
+                theta,
+                phi
+            );
         }
 
-        modeMaps[l] = ellModes;
+        ellModes.push({
+            l: l,
+            m: m,
+            values: arr
+        });
+    }
+
+    modeMaps[l] = ellModes;
+}
+
+function ensureModesThrough(lmax) {
+
+    for (let l = 1; l <= lmax; l++) {
+        computeModesForL(l);
     }
 }
 
@@ -668,6 +680,8 @@ function startBuildUniverse() {
     singleEllCheckbox.checked = false;
 
     const finalL = parseInt(slider.value);
+    // Make sure all shells needed for the animation exist.
+    ensureModesThrough(finalL);
     let currentL = 1;
 
     function buildNextShell() {
@@ -719,6 +733,26 @@ function updateMSlider() {
     mValue.textContent = mSlider.value;
 }
 
+function updateSliderFill(sliderElement) {
+    const min = Number(sliderElement.min);
+    const max = Number(sliderElement.max);
+    const value = Number(sliderElement.value);
+
+    const percentage =
+        ((value - min) / (max - min)) * 100;
+
+    sliderElement.style.setProperty(
+        "--slider-background",
+        `linear-gradient(
+            to right,
+            var(--slider-color) 0%,
+            var(--slider-color) ${percentage}%,
+            #eeeeee ${percentage}%,
+            #eeeeee 100%
+        )`
+    );
+}
+
 // -----------------------------
 // Events
 // -----------------------------
@@ -728,13 +762,20 @@ slider.addEventListener("input", function () {
     lmaxValue.textContent = slider.value;
 
     updateMSlider();
+
+    updateSliderFill(slider);
+    updateSliderFill(mSlider);
+
+    // Calculate only newly requested ℓ values.
+    ensureModesThrough(parseInt(slider.value));
+
     drawOrbital();
     drawSky();
-
 });
 
-mSlider.addEventListener("input", function() {
+mSlider.addEventListener("input", function () {
     mValue.textContent = mSlider.value;
+    updateSliderFill(mSlider);
     drawOrbital();
     drawSky();
 });
@@ -809,10 +850,20 @@ planckLoaded = true;
 }
 
 loadPlanckSpectrum().then(function() {
-    precomputeModes();
+
+    // Build only the Mollweide coordinate lookup initially.
+    initializeModeCache();
+
+    // The page starts at ℓ = 1, so initially calculate only ℓ = 1.
+    ensureModesThrough(parseInt(slider.value));
+
     generateCoefficients();
     setupOrbitalViewer();
+
     updateMSlider();
+    updateSliderFill(slider);
+    updateSliderFill(mSlider);
+
     drawOrbital();
     drawSky();
 });
