@@ -60,9 +60,9 @@
     <div class="controlColumn rightControls">
 
     <label class="controlItem checkboxItem">
-        <input id="singleEllCheckbox" type="checkbox">
-        Show only current ℓ
-    </label>
+    <input id="singleEllCheckbox" type="checkbox">
+    Show only current (ℓ, m)
+</label>
 
     <button id="buildUniverseButton">
         Build universe
@@ -76,9 +76,58 @@
 
 </div>
 
-<p>
-    This map is built by randomly adding spherical-harmonic-like modes up to the selected maximum &ell;.
-</p>
+</div>
+
+<article id="explanation">
+
+    <h2>Atomic Orbitals, Music, and the Early Universe</h2>
+
+    <p>
+        If you've seen pictures of atomic orbitals in chemistry, the left panel should look familiar.
+        It shows a single spherical harmonic as a three-dimensional wave pattern.
+        The numbers <strong>&ell;</strong> and <strong>m</strong> determine the pattern's complexity
+        and orientation—you may have used them to understand how electrons fill atomic orbitals.
+        Move the sliders and see what happens.
+    </p>
+
+    <p>
+        The right panel shows a simulated Cosmic Microwave Background (CMB) sky.
+        It is formed by <strong>superposing</strong> many spherical harmonics with different amplitudes.
+        Increasing the maximum value of <strong>&ell;</strong> adds progressively finer wave patterns,
+        revealing more detailed structure in the simulated universe.
+    </p>
+
+    <p>
+        Checking <strong>Show only current (&ell;, m)</strong> displays the contribution of one selected
+        spherical harmonic—the analogue of a sine or cosine wave on the surface of a sphere.
+        Unchecking it returns you to the full superposition of many spherical harmonics.
+    </p>
+
+    <p>
+        Pressing <strong>Build Universe</strong> gradually adds modes up to the maximum
+        <strong>&ell;</strong> value selected with the slider. Notice how the largest features appear first,
+        while progressively smaller details emerge as higher-order harmonics are added.
+        This is the same mathematical framework cosmologists use to describe the temperature
+        fluctuations of the real CMB.
+    </p>
+
+    <p>
+        Maybe you've heard someone online break down a song into “stems.”
+        Software can separate the bass, guitar, keyboards, and vocals.
+        These programs use Fourier methods to decompose complex sounds into simpler components
+        that can later be recombined to reproduce the song.
+    </p>
+
+    <p class="closing">
+        <strong>The Cosmic Microwave Background is the sky-song of the early universe.</strong>
+        Just as a musical chord can be decomposed into individual notes, the temperature pattern
+        of the CMB can be decomposed into spherical harmonics. The real CMB contains significant
+        power well beyond <strong>&ell; = 200</strong>. Reproducing those finer details requires the
+        superposition of tens of thousands of spherical harmonic modes—far more computation than
+        is practical in a web browser.
+    </p>
+
+</article>
 
 <footer>
     Built using Planck CMB power spectrum data.<br>

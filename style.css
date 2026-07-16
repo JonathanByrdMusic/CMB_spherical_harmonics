@@ -271,6 +271,51 @@ input[type="range"]:hover::-moz-range-thumb {
     border: none;
 }
 
+#explanation {
+    width: min(100%, 960px);
+    margin: 52px auto 0;
+    padding: 34px 0;
+
+    text-align: left;
+    color: #3d3d3d;
+
+    border-top: 1px solid #d6d6d6;
+    border-bottom: 1px solid #d6d6d6;
+}
+
+#explanation h2 {
+    margin: 0 0 24px;
+
+    color: #222;
+    font-size: 1.45rem;
+    line-height: 1.25;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+#explanation p {
+    max-width: 78ch;
+    margin: 0 0 20px;
+
+    font-size: 1rem;
+    line-height: 1.72;
+}
+
+#explanation p:last-child {
+    margin-bottom: 0;
+}
+
+#explanation strong {
+    color: #202020;
+    font-weight: 600;
+}
+
+#explanation .closing {
+    margin-top: 30px;
+    padding-left: 18px;
+    border-left: 3px solid #d64232;
+}
+
 footer {
     margin-top: 40px;
     color: #777;
@@ -287,4 +332,20 @@ footer {
         gap: 12px;
     }
 
+}
+
+@media (max-width: 700px) {
+    #explanation {
+        margin-top: 38px;
+        padding: 28px 0;
+    }
+
+    #explanation h2 {
+        font-size: 1.25rem;
+    }
+
+    #explanation p {
+        font-size: 0.96rem;
+        line-height: 1.65;
+    }
 }
