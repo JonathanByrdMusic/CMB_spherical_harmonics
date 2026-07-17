@@ -22,12 +22,24 @@ const buildUniverseButton =
 const skyTitle =
     document.getElementById("skyTitle");
 
-let buildTimer = null;
 let buildIsRunning = false;
+let buildSequenceId = 0;
 let sliderDrawTimer = null;
+let buildFinalL = null;
+
+/*
+ * Lets code await a particular worker request.
+ * Each request ID maps to its Promise resolver.
+ */
+const pendingSkyRequests = new Map();
+
+const skyWorker = new Worker("sky-worker.js");
+
+let skyWorkerReady = false;
+let skyRequestId = 0;
+let latestSkyRequestId = 0;
 
 let seed = 12345;
-let modeMaps = [];
 let coefficients = [];
 let mask = [];
 let planckPower = new Float64Array(3001);
@@ -248,13 +260,13 @@ function drawOrbital() {
             vertices.push(x3, y3, z3);
 
             let normalizedY = Math.tanh(3 * y);
-let rgb = orbitalColorMap(normalizedY);
+            let rgb = orbitalColorMap(normalizedY);
 
-colors.push(
-    rgb[0],
-    rgb[1],
-    rgb[2]
-);
+            colors.push(
+                rgb[0],
+                rgb[1],
+                rgb[2]
+            );
         }
     }
 
@@ -282,10 +294,10 @@ colors.push(
     geometry.computeVertexNormals();
 
     let material = new THREE.MeshPhongMaterial({
-    vertexColors: true,
-    shininess: 100,
-    side: THREE.DoubleSide
-});
+        vertexColors: true,
+        shininess: 100,
+        side: THREE.DoubleSide
+    });
 
     orbitalMesh = new THREE.Mesh(geometry, material);
     orbitalMesh.rotation.x = 0.35;
@@ -293,7 +305,10 @@ colors.push(
 
     orbitalScene.add(orbitalMesh);
 
-orbitalRenderer.render(orbitalScene, orbitalCamera);
+    orbitalRenderer.render(
+        orbitalScene, 
+        orbitalCamera
+    );
 }
 
 function buildMaskAndCoordinates() {
@@ -386,59 +401,48 @@ function buildMaskAndCoordinates() {
     }
 }
 
-function initializeModeCache() {
+function initializeCoordinates() {
     buildMaskAndCoordinates();
-    modeMaps = [];
 }
 
-function computeModesForL(l) {
+function initializeSkyWorker() {
 
-    // Already calculated—reuse the cached result.
-    if (modeMaps[l]) {
-        return;
-    }
+    const pixelCount = width * height;
 
-    let ellModes = [];
+    const thetaGrid =
+        new Float32Array(pixelCount);
 
-    for (let m = -l; m <= l; m++) {
+    const phiGrid =
+        new Float32Array(pixelCount);
 
-        // Float32 uses half as much memory as Float64 and is
-        // more than precise enough for screen rendering.
-        let arr = new Float32Array(width * height);
+    for (let i = 0; i < pixelCount; i++) {
 
-        for (let i = 0; i < width * height; i++) {
+        if (mask[i] === null) {
 
-            if (mask[i] === null) {
-                arr[i] = 0;
-                continue;
-            }
+            // NaN tells the worker that the pixel is outside the map.
+            thetaGrid[i] = NaN;
+            phiGrid[i] = NaN;
 
-            let theta = mask[i].theta;
-            let phi = mask[i].phi;
+        } else {
 
-            arr[i] = sphericalHarmonicReal(
-                l,
-                m,
-                theta,
-                phi
-            );
+            thetaGrid[i] = mask[i].theta;
+            phiGrid[i] = mask[i].phi;
         }
-
-        ellModes.push({
-            l: l,
-            m: m,
-            values: arr
-        });
     }
 
-    modeMaps[l] = ellModes;
-}
-
-function ensureModesThrough(lmax) {
-
-    for (let l = 1; l <= lmax; l++) {
-        computeModesForL(l);
-    }
+    skyWorker.postMessage(
+        {
+            type: "initialize",
+            width: width,
+            height: height,
+            thetaBuffer: thetaGrid.buffer,
+            phiBuffer: phiGrid.buffer
+        },
+        [
+            thetaGrid.buffer,
+            phiGrid.buffer
+        ]
+    );
 }
 
 // -----------------------------
@@ -480,64 +484,139 @@ function generateCoefficients() {
     }
 }
 
-// -----------------------------
-// Draw
-// -----------------------------
+function makeFlatCoefficients(lmax) {
 
-function drawSky(temporaryLmax = null) {
+    /*
+     * Modes through lmax occupy indices:
+     *
+     * 0 through (lmax + 1)² - 1
+     */
+    const flat =
+        new Float64Array((lmax + 1) * (lmax + 1));
 
-    let lmax =
-        temporaryLmax === null
-            ? parseInt(slider.value)
-            : temporaryLmax;
+    if (singleEllCheckbox.checked) {
 
-    let image = ctx.createImageData(width, height);
-    let data = image.data;
+        const selectedL =
+            parseInt(slider.value);
 
-    let values = new Float32Array(width * height);
-    let maxAbs = 0;
+        const selectedM =
+            parseInt(mSlider.value);
 
-    let startL = singleEllCheckbox.checked ? lmax : 1;
-    let endL = lmax;
+        flat[
+            selectedL * selectedL +
+            selectedM +
+            selectedL
+        ] = 1;
 
-    let selectedM = parseInt(mSlider.value);
+        return flat;
+    }
 
-    // First build the complete unsmoothed field.
-    for (let l = startL; l <= endL; l++) {
+    for (let l = 1; l <= lmax; l++) {
 
-        let ellModes = modeMaps[l];
-        let ellCoeffs = coefficients[l];
+        const ellCoefficients = coefficients[l];
 
-        if (singleEllCheckbox.checked) {
+        for (let m = -l; m <= l; m++) {
 
-            let mi = selectedM + l;
-
-            if (ellModes[mi]) {
-                let mode = ellModes[mi].values;
-
-                for (let i = 0; i < values.length; i++) {
-                    values[i] += mode[i];
-                }
-            }
-
-        } else {
-
-            for (let mi = 0; mi < ellModes.length; mi++) {
-
-                let coeff = ellCoeffs[mi];
-                let mode = ellModes[mi].values;
-
-                for (let i = 0; i < values.length; i++) {
-                    values[i] += coeff * mode[i];
-                }
-            }
+            flat[
+                l * l + m + l
+            ] = ellCoefficients[m + l];
         }
     }
 
-    // Find the largest displayed magnitude for the color stretch.
+    return flat;
+}
+
+function requestSkyCalculation(
+    lmaxOverride = null,
+    showCalculatingTitle = true
+) {
+
+    if (!skyWorkerReady) {
+        return Promise.resolve({
+            completed: false,
+            reason: "worker-not-ready"
+        });
+    }
+
+    const lmax =
+        lmaxOverride === null
+            ? parseInt(slider.value)
+            : lmaxOverride;
+
+    const singleMode =
+        singleEllCheckbox.checked;
+
+    const selectedL =
+        parseInt(slider.value);
+
+    const selectedM =
+        parseInt(mSlider.value);
+
+    const flatCoefficients =
+        makeFlatCoefficients(lmax);
+
+    skyRequestId++;
+
+    const requestId = skyRequestId;
+
+    latestSkyRequestId = requestId;
+
+    if (showCalculatingTitle) {
+
+        if (singleMode) {
+            skyTitle.textContent =
+                `Selected harmonic: (ℓ, m) = (${selectedL}, ${selectedM})`;
+        } else {
+            skyTitle.textContent =
+                `Calculating sky through ℓ = ${lmax}...`;
+        }
+    }
+
+    return new Promise(function (resolve) {
+
+        pendingSkyRequests.set(
+            requestId,
+            {
+                resolve: resolve,
+                startedAt: performance.now(),
+                lmax: lmax
+            }
+        );
+
+        skyWorker.postMessage(
+            {
+                type: "calculate",
+                requestId: requestId,
+                lmax: lmax,
+
+                singleMode: singleMode,
+                selectedL: selectedL,
+                selectedM: selectedM,
+
+                coefficientBuffer:
+                    flatCoefficients.buffer
+            },
+            [
+                flatCoefficients.buffer
+            ]
+        );
+    });
+}
+
+function drawSkyValues(values) {
+
+    const image =
+        ctx.createImageData(width, height);
+
+    const data = image.data;
+
+    let maxAbs = 0;
+
     for (let i = 0; i < values.length; i++) {
 
-        if (mask[i] === null) continue;
+        if (mask[i] === null) {
+            continue;
+        }
 
         maxAbs = Math.max(
             maxAbs,
@@ -549,21 +628,22 @@ function drawSky(temporaryLmax = null) {
         maxAbs = 1;
     }
 
-    // Convert the field into canvas colors.
     for (let i = 0; i < values.length; i++) {
 
-        let p = 4 * i;
+        const p = 4 * i;
 
         if (mask[i] === null) {
+
             data[p] = 0;
             data[p + 1] = 0;
             data[p + 2] = 0;
             data[p + 3] = 255;
+
             continue;
         }
 
-        let v = values[i] / maxAbs;
-        let rgb = colorMap(v);
+        const v = values[i] / maxAbs;
+        const rgb = colorMap(v);
 
         data[p] = rgb[0];
         data[p + 1] = rgb[1];
@@ -574,73 +654,140 @@ function drawSky(temporaryLmax = null) {
     ctx.putImageData(image, 0, 0);
 }
 
-function startBuildUniverse() {
+async function startBuildUniverse() {
 
     if (sliderDrawTimer !== null) {
-    clearTimeout(sliderDrawTimer);
-    sliderDrawTimer = null;
-}
+        clearTimeout(sliderDrawTimer);
+        sliderDrawTimer = null;
+    }
 
     if (buildIsRunning) {
         stopBuildUniverse();
         return;
     }
 
-    buildIsRunning = true;
-    buildUniverseButton.textContent = "Stop building";
+    // Continue as before...
 
-    // The animation should show the cumulative universe,
-    // not a single selected harmonic.
+    buildIsRunning = true;
+    buildUniverseButton.textContent =
+        "Stop building";
+
+    /*
+     * The build animation represents the cumulative universe,
+     * not one selected (ℓ,m) mode.
+     */
     singleEllCheckbox.checked = false;
 
-    const finalL = parseInt(slider.value);
+    const finalL =
+        parseInt(slider.value);
 
-    let currentL = 1;
+buildFinalL = finalL;
 
-    function buildNextShell() {
+    /*
+     * A unique identifier for this particular build.
+     * If the user stops or restarts, the ID changes and
+     * this loop knows that it should exit.
+     */
+    buildSequenceId++;
 
-        computeModesForL(currentL);
+    const thisBuildSequence =
+        buildSequenceId;
 
-        skyTitle.textContent =
-            `Building universe: ℓ = ${currentL}`;
+    for (
+        let currentL = 1;
+        currentL <= finalL;
+        currentL++
+    ) {
 
-        drawSky(currentL);
-
-        if (currentL >= finalL) {
-            stopBuildUniverse();
-            skyTitle.textContent =
-                `Accumulated sky through ℓ = ${finalL}`;
+        if (
+            !buildIsRunning ||
+            thisBuildSequence !== buildSequenceId
+        ) {
             return;
         }
 
-        currentL++;
+        skyTitle.textContent =
+            `Building universe: ℓ = ${currentL} of ${finalL}`;
 
-        buildTimer = setTimeout(
-            buildNextShell,
-            450
-        );
+        const result =
+            await requestSkyCalculation(
+                currentL,
+                false
+            );
+
+        if (
+            !buildIsRunning ||
+            thisBuildSequence !== buildSequenceId
+        ) {
+            return;
+        }
+
+        if (!result.completed) {
+
+        if (
+            buildIsRunning &&
+            thisBuildSequence === buildSequenceId
+        ) {
+            stopBuildUniverse();
+            updateSkyTitle();
+        }
+
+        return;
     }
 
-    buildNextShell();
+        /*
+         * The worker may be fast enough that the intermediate
+         * maps would otherwise flash by too quickly to see.
+         */
+        await new Promise(function (resolve) {
+            setTimeout(resolve, 180);
+        });
+    }
+
+    if (
+        buildIsRunning &&
+        thisBuildSequence === buildSequenceId
+    ) {
+        const completedL = buildFinalL;
+
+        stopBuildUniverse();
+
+        skyTitle.textContent =
+            `Accumulated sky through ℓ = ${completedL}`;
+    }
 }
 
 function cancelBuildIfRunning() {
-    if (buildIsRunning) {
-        stopBuildUniverse();
-        skyTitle.textContent = "Accumulated sky";
+
+    if (!buildIsRunning) {
+        return;
     }
+
+    stopBuildUniverse();
+
+    skyTitle.textContent =
+        "Accumulated sky";
 }
 
 function stopBuildUniverse() {
 
     buildIsRunning = false;
+    buildFinalL = null;
+
+    /*
+     * Invalidates the currently running async build loop.
+     */
+    buildSequenceId++;
+
+    /*
+     * Invalidate any worker result currently in flight.
+     * It can finish, but it will not replace a newer display.
+     */
+    skyRequestId++;
+    latestSkyRequestId = skyRequestId;
+
     buildUniverseButton.textContent =
         "Build universe";
-
-    if (buildTimer !== null) {
-        clearTimeout(buildTimer);
-        buildTimer = null;
-    }
 }
 
 function updateMSlider() {
@@ -685,11 +832,24 @@ function updateSkyTitle() {
     }
 }
 
+function failPendingSkyRequests(reason) {
+
+    for (const pending of pendingSkyRequests.values()) {
+        pending.resolve({
+            completed: false,
+            reason: reason
+        });
+    }
+
+    pendingSkyRequests.clear();
+}
+
 // -----------------------------
 // Events
 // -----------------------------
 
 slider.addEventListener("input", function () {
+
     cancelBuildIfRunning();
 
     lmaxValue.textContent = slider.value;
@@ -699,48 +859,184 @@ slider.addEventListener("input", function () {
     updateSliderFill(slider);
     updateSliderFill(mSlider);
 
-    // The single orbital is inexpensive enough to update immediately.
     drawOrbital();
 
-    skyTitle.textContent =
-    `Calculating sky through ℓ = ${slider.value}`;
-
-    // Cancel any pending expensive sky calculation.
-    if (sliderDrawTimer !== null) {
-        clearTimeout(sliderDrawTimer);
+    if (singleEllCheckbox.checked) {
+        skyTitle.textContent =
+            `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
+    } else {
+        skyTitle.textContent =
+            `Waiting to calculate sky through ℓ = ${slider.value}...`;
     }
 
-    // Wait until the slider has paused before computing missing modes.
     sliderDrawTimer = setTimeout(function () {
-        const selectedL = parseInt(slider.value);
 
-        ensureModesThrough(selectedL);
-        drawSky();
-        updateSkyTitle();
-
+        requestSkyCalculation();
         sliderDrawTimer = null;
+
     }, 150);
 });
 
 mSlider.addEventListener("input", function () {
+
     cancelBuildIfRunning();
+
     mValue.textContent = mSlider.value;
+
     updateSliderFill(mSlider);
     drawOrbital();
-    drawSky();
+
+    /*
+     * The right panel depends on m only when displaying
+     * one selected harmonic.
+     */
+    if (singleEllCheckbox.checked) {
+        requestSkyCalculation();
+    }
 });
 
-singleEllCheckbox.addEventListener("change", function() {
-    cancelBuildIfRunning();
-    drawSky();
+skyWorker.addEventListener("message", function (event) {
+
+    const message = event.data;
+
+    if (message.type === "initialized") {
+
+        skyWorkerReady = true;
+        requestSkyCalculation();
+
+        return;
+    }
+
+    if (message.type === "progress") {
+
+        if (message.requestId !== latestSkyRequestId) {
+            return;
+        }
+
+        const percent =
+            Math.round(message.fraction * 100);
+
+        const pending =
+            pendingSkyRequests.get(message.requestId);
+
+        const requestedL = pending
+            ? pending.lmax
+            : parseInt(slider.value);
+
+        if (buildIsRunning) {
+            skyTitle.textContent =
+                `Building universe: ℓ = ${requestedL} of ${buildFinalL} (${percent}%)`;
+        } else {
+            skyTitle.textContent =
+                `Calculating sky through ℓ = ${requestedL}: ${percent}%`;
+        }
+
+        return;
+    }
+
+    if (message.type === "result") {
+
+        const pending =
+            pendingSkyRequests.get(message.requestId);
+
+        pendingSkyRequests.delete(message.requestId);
+
+        /*
+         * Ignore obsolete visual results, but still resolve
+         * their pending Promises so awaiting code can continue.
+         */
+        if (message.requestId !== latestSkyRequestId) {
+
+            if (pending) {
+                pending.resolve({
+                    completed: false,
+                    obsolete: true,
+                    lmax: message.lmax
+                });
+            }
+
+            return;
+        }
+
+        const values =
+            new Float32Array(message.valuesBuffer);
+
+        drawSkyValues(values);
+
+        const elapsed = pending
+            ? performance.now() - pending.startedAt
+            : null;
+
+        if (elapsed !== null) {
+            console.log(
+                `Sky through ℓ=${message.lmax} calculated in ` +
+                `${elapsed.toFixed(1)} ms`
+            );
+        }
+
+        if (pending) {
+            pending.resolve({
+                completed: true,
+                obsolete: false,
+                lmax: message.lmax
+            });
+        }
+
+        if (!buildIsRunning) {
+            updateSkyTitle();
+        }
+
+        return;
+    }
 });
 
-newSeedButton.addEventListener("click", function() {
+skyWorker.addEventListener("error", function (event) {
+
+    console.error("Sky worker error:", event);
+
+    failPendingSkyRequests("worker-error");
+
+    buildIsRunning = false;
+    buildSequenceId++;
+
+    skyTitle.textContent =
+        "Sky calculation failed";
+
+    buildUniverseButton.textContent =
+        "Build universe";
+});
+
+skyWorker.addEventListener("messageerror", function (event) {
+
+    console.error("Sky worker message error:", event);
+
+    failPendingSkyRequests("message-error");
+
+    buildIsRunning = false;
+    buildSequenceId++;
+
+    skyTitle.textContent =
+        "Could not read sky calculation result";
+
+    buildUniverseButton.textContent =
+        "Build universe";
+});
+
+singleEllCheckbox.addEventListener("change", function () {
+
+    cancelBuildIfRunning();
+    requestSkyCalculation();
+});
+
+newSeedButton.addEventListener("click", function () {
+
     cancelBuildIfRunning();
 
-    seed = Math.floor(Math.random() * 4294967296);
+    seed =
+        Math.floor(Math.random() * 4294967296);
+
     generateCoefficients();
-    drawSky();
+    requestSkyCalculation();
 });
 
 buildUniverseButton.addEventListener(
@@ -756,9 +1052,10 @@ async function loadPlanckSpectrum() {
     let response = await fetch("data/COM_PowerSpect_CMB-TT-full_R3.01.txt");
 
     if (!response.ok) {
-        console.error("Could not load Planck file:", response.status);
-        return;
-    }
+    throw new Error(
+        `Could not load Planck file: ${response.status}`
+    );
+}
 
     let text = await response.text();
 
@@ -793,21 +1090,25 @@ async function loadPlanckSpectrum() {
 
 }
 
-loadPlanckSpectrum().then(function() {
+loadPlanckSpectrum()
+    .then(function () {
 
-    // Build only the Mollweide coordinate lookup initially.
-    initializeModeCache();
+        initializeCoordinates();
+        generateCoefficients();
+        initializeSkyWorker();
 
-    // The page starts at ℓ = 1, so initially calculate only ℓ = 1.
-    ensureModesThrough(parseInt(slider.value));
+        setupOrbitalViewer();
 
-    generateCoefficients();
-    setupOrbitalViewer();
+        updateMSlider();
+        updateSliderFill(slider);
+        updateSliderFill(mSlider);
 
-    updateMSlider();
-    updateSliderFill(slider);
-    updateSliderFill(mSlider);
+        drawOrbital();
+    })
+    .catch(function (error) {
 
-    drawOrbital();
-    drawSky();
-});
+        console.error(error);
+
+        skyTitle.textContent =
+            "Could not load the Planck power spectrum";
+    });
