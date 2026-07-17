@@ -1,3 +1,11 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+}
+
 body {
     margin: 0;
     padding: 32px;
@@ -7,13 +15,18 @@ body {
     text-align: center;
 }
 
+#pageContent {
+    width: min(100%, 1024px);
+    margin: 0 auto;
+}
+
 #header {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     gap: 20px;
-    width: 1024px;
-    max-width: 90vw;
+
+    width: min(100%, 1024px);
     margin: 0 auto 24px;
 }
 
@@ -44,17 +57,17 @@ h1 {
 }
 
 #canvasRow {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
+    width: 100%;
 }
 
 .panel {
     position: relative;
-    width: 500px;
-    height: 340px;
+    width: 100%;
+    aspect-ratio: 500 / 340;
+
     background: #050505;
     border: 1px solid #d0d0d0;
     border-radius: 3px;
@@ -77,12 +90,11 @@ h1 {
 }
 
 #controlsRow {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap;
 
+    width: 100%;
     margin-top: 18px;
     font-size: 0.95rem;
 }
@@ -101,8 +113,8 @@ h1 {
 }
 
 .controlColumn {
-    width: 500px;
-    max-width: 45vw;
+    width: 100%;
+    min-width: 0;
 }
 
 .leftControls {
@@ -113,10 +125,9 @@ h1 {
 
 .leftControls .controlItem {
     display: grid;
-    grid-template-columns: 105px 300px 32px;
+    grid-template-columns: 105px minmax(0, 1fr) 32px;
     align-items: center;
     column-gap: 8px;
-    justify-content: center;
 }
 
 .checkboxItem {
@@ -171,7 +182,7 @@ button:active {
 }
 
 input[type="range"] {
-    width: 300px;          /* keeps the same horizontal span */
+    width: 100%;          /* keeps the same horizontal span */
     height: 30px;          /* larger click area */
     margin: 0;
 
@@ -252,12 +263,30 @@ input[type="range"]:hover::-moz-range-thumb {
 }
 
 #orbitalViewer,
-#cmbCanvas {
+.cmbCanvasWrapper {
     position: absolute;
     left: 0;
+    right: 0;
     top: 45px;
-    width: 500px;
-    height: 250px;
+    bottom: 45px;
+}
+
+#orbitalViewer {
+    width: 100%;
+    height: auto;
+}
+
+.cmbCanvasWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cmbCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
     border: none;
 }
 
@@ -315,14 +344,94 @@ footer {
 
 /* ---------- Responsive adjustments ---------- */
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
+
+    body {
+        padding: 24px;
+    }
+
+    #canvasRow,
+    #controlsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        max-width: 600px;
+        margin-inline: auto;
+    }
+
+    .controlColumn {
+        max-width: 600px;
+        margin-inline: auto;
+    }
+
+    .rightControls {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 560px) {
+
+    body {
+        padding: 16px;
+    }
+
+    #header {
+        align-items: center;
+        gap: 14px;
+    }
+
+    .logo {
+        width: 110px;
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: clamp(1.35rem, 6vw, 1.8rem);
+    }
+
+    .subtitle {
+        margin-top: 8px;
+        font-size: 0.86rem;
+    }
+
+    .panel {
+        aspect-ratio: 500 / 360;
+    }
+
+    .panel h2 {
+        top: 14px;
+        left: 16px;
+        font-size: 0.9rem;
+    }
+
+    .leftControls .controlItem {
+        grid-template-columns: 88px minmax(0, 1fr) 28px;
+        column-gap: 6px;
+    }
+
+    .controlLabel {
+        font-size: 0.88rem;
+    }
+
     .rightControls {
         flex-direction: column;
+        align-items: stretch;
         gap: 12px;
     }
 
+    .checkboxItem {
+        justify-content: center;
+        white-space: normal;
+    }
+
+    button {
+        width: 100%;
+        min-height: 48px;
+    }
+
     #explanation {
-        margin-top: 38px;
+        margin-top: 32px;
         padding: 28px 0;
     }
 

@@ -207,18 +207,64 @@ function setupOrbitalViewer() {
 
     orbitalCamera.position.z = 5;
 
-    orbitalRenderer = new THREE.WebGLRenderer({ antialias: true });
-    orbitalRenderer.setSize(orbitalViewer.clientWidth, orbitalViewer.clientHeight);
+    orbitalRenderer = new THREE.WebGLRenderer({
+        antialias: true
+    });
+
+    orbitalRenderer.setSize(
+        orbitalViewer.clientWidth,
+        orbitalViewer.clientHeight
+    );
+
     orbitalRenderer.setClearColor(0x000000);
 
-    orbitalViewer.appendChild(orbitalRenderer.domElement);
+    orbitalViewer.appendChild(
+        orbitalRenderer.domElement
+    );
 
-    let light = new THREE.DirectionalLight(0xffffff, 1);
+    let light =
+        new THREE.DirectionalLight(0xffffff, 1);
+
     light.position.set(2, 2, 3);
     orbitalScene.add(light);
 
-    let ambient = new THREE.AmbientLight(0xffffff, 1.7);
+    let ambient =
+        new THREE.AmbientLight(0xffffff, 1.7);
+
     orbitalScene.add(ambient);
+}
+
+function resizeOrbitalViewer() {
+
+    if (!orbitalRenderer || !orbitalCamera) {
+        return;
+    }
+
+    const viewerWidth =
+        orbitalViewer.clientWidth;
+
+    const viewerHeight =
+        orbitalViewer.clientHeight;
+
+    if (viewerWidth === 0 || viewerHeight === 0) {
+        return;
+    }
+
+    orbitalCamera.aspect =
+        viewerWidth / viewerHeight;
+
+    orbitalCamera.updateProjectionMatrix();
+
+    orbitalRenderer.setSize(
+        viewerWidth,
+        viewerHeight,
+        false
+    );
+
+    orbitalRenderer.render(
+        orbitalScene,
+        orbitalCamera
+    );
 }
 
 function drawOrbital() {
@@ -851,6 +897,15 @@ function failPendingSkyRequests(reason) {
 // Events
 // -----------------------------
 
+const orbitalResizeObserver =
+    new ResizeObserver(function () {
+        resizeOrbitalViewer();
+    });
+
+orbitalResizeObserver.observe(
+    orbitalViewer
+);
+
 slider.addEventListener("input", function () {
 
     cancelBuildIfRunning();
@@ -1101,6 +1156,7 @@ loadPlanckSpectrum()
         initializeSkyWorker();
 
         setupOrbitalViewer();
+        resizeOrbitalViewer();
 
         updateMSlider();
         updateSliderFill(slider);
