@@ -452,10 +452,6 @@ function buildMaskAndCoordinates() {
     }
 }
 
-function initializeCoordinates() {
-    buildMaskAndCoordinates();
-}
-
 function initializeSkyWorker() {
 
     const pixelCount = width * height;
@@ -717,8 +713,6 @@ async function startBuildUniverse() {
         return;
     }
 
-    // Continue as before...
-
     buildIsRunning = true;
     buildUniverseButton.textContent =
         "STOP BUILDING";
@@ -732,7 +726,7 @@ async function startBuildUniverse() {
     const finalL =
         parseInt(slider.value);
 
-buildFinalL = finalL;
+    buildFinalL = finalL;
 
     /*
      * A unique identifier for this particular build.
@@ -775,15 +769,15 @@ buildFinalL = finalL;
 
         if (!result.completed) {
 
-        if (
-            buildIsRunning &&
-            thisBuildSequence === buildSequenceId
-        ) {
-            stopBuildUniverse();
-            updateSkyTitle();
-        }
+            if (
+                buildIsRunning &&
+                thisBuildSequence === buildSequenceId
+            ) {
+                stopBuildUniverse();
+                updateSkyTitle();
+            }
 
-        return;
+            return;
     }
 
         /*
@@ -1153,7 +1147,7 @@ async function loadPlanckSpectrum() {
 loadPlanckSpectrum()
     .then(function () {
 
-        initializeCoordinates();
+        buildMaskAndCoordinates();
         generateCoefficients();
         initializeSkyWorker();
 
