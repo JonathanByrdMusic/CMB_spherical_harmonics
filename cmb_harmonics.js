@@ -211,9 +211,14 @@ function setupOrbitalViewer() {
         antialias: true
     });
 
+    orbitalRenderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+    );
+
     orbitalRenderer.setSize(
         orbitalViewer.clientWidth,
-        orbitalViewer.clientHeight
+        orbitalViewer.clientHeight,
+        false
     );
 
     orbitalRenderer.setClearColor(0x000000);
@@ -240,11 +245,8 @@ function resizeOrbitalViewer() {
         return;
     }
 
-    const viewerWidth =
-        orbitalViewer.clientWidth;
-
-    const viewerHeight =
-        orbitalViewer.clientHeight;
+    const viewerWidth = orbitalViewer.clientWidth;
+    const viewerHeight = orbitalViewer.clientHeight;
 
     if (viewerWidth === 0 || viewerHeight === 0) {
         return;
