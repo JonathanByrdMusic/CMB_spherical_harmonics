@@ -721,7 +721,7 @@ async function startBuildUniverse() {
 
     buildIsRunning = true;
     buildUniverseButton.textContent =
-        "Stop building";
+        "STOP BUILDING";
 
     /*
      * The build animation represents the cumulative universe,
@@ -838,7 +838,7 @@ function stopBuildUniverse() {
     latestSkyRequestId = skyRequestId;
 
     buildUniverseButton.textContent =
-        "Build universe";
+        "BUILD UNIVERSE";
 }
 
 function updateMSlider() {
