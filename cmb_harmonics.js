@@ -7,6 +7,18 @@ let orbitalMesh;
 
 const singleEllCheckbox = document.getElementById("singleEllCheckbox");
 const canvas = document.getElementById("cmbCanvas");
+
+const useMobileResolution =
+    window.matchMedia("(max-width: 560px)").matches;
+
+if (useMobileResolution) {
+    canvas.width = 360;
+    canvas.height = 180;
+} else {
+    canvas.width = 500;
+    canvas.height = 250;
+}
+
 const ctx = canvas.getContext("2d");
 
 const slider = document.getElementById("lmaxSlider");
