@@ -251,7 +251,11 @@ function drawOrbital() {
 
             let y = sphericalHarmonicReal(l, m, theta, phi);
 
-            let r = 0.45 + 1.5 * Math.abs(y);
+            let normalizedY = Math.tanh(3 * y);
+
+            let r =
+                0.45 +
+                1.15 * Math.abs(normalizedY);
 
             let x3 = r * Math.sin(theta) * Math.cos(phi);
             let y3 = r * Math.cos(theta);
@@ -259,7 +263,6 @@ function drawOrbital() {
 
             vertices.push(x3, y3, z3);
 
-            let normalizedY = Math.tanh(3 * y);
             let rgb = orbitalColorMap(normalizedY);
 
             colors.push(
