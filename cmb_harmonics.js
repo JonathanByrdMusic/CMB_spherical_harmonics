@@ -1063,7 +1063,7 @@ skyWorker.addEventListener("error", function (event) {
         "Sky calculation failed";
 
     buildUniverseButton.textContent =
-        "Build universe";
+        "BUILD UNIVERSE";
 });
 
 skyWorker.addEventListener("messageerror", function (event) {
@@ -1079,7 +1079,7 @@ skyWorker.addEventListener("messageerror", function (event) {
         "Could not read sky calculation result";
 
     buildUniverseButton.textContent =
-        "Build universe";
+        "BUILD UNIVERSE";
 });
 
 singleEllCheckbox.addEventListener("change", function () {
