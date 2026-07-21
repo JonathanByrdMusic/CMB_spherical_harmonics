@@ -82,77 +82,80 @@
 
 <main id="pageContent">
 
-    <section class="applicationRow" id="supernovaApplication">
+    <section
+        class="applicationRow"
+        id="supernovaApplication"
+    >
+        <div class="applicationVisual panel">
+            <h2 id="remnantTitle">
+                Tycho-type remnant: age 0 years
+            </h2>
 
-            <div class="applicationVisual panel">
-                <h2 id="remnantTitle">
-                    Tycho-type remnant: age 0 years
-                </h2>
+            <div id="supernovaViewer"></div>
+        </div>
 
-                <div
-                    id="supernovaViewer"
-                    role="img"
-                    aria-label="Three-dimensional simulation of an expanding supernova remnant"
-                ></div>
-            </div>
+        <div class="applicationInfo">
 
-            <div class="applicationInfo">
+            <div class="applicationControls">
 
-                <div class="applicationControls">
+                <label class="controlItem">
+                    <span class="controlLabel">&ell;:</span>
 
-                    <label class="controlItem">
-                        <span class="controlLabel">&ell;:</span>
+                    <input
+                        id="lmaxSlider"
+                        type="range"
+                        min="1"
+                        max="30"
+                        value="1"
+                    >
 
+                    <span id="lmaxValue">1</span>
+                </label>
+
+                <label class="controlItem">
+                    <span class="controlLabel">m:</span>
+
+                    <input
+                        id="mSlider"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        value="0"
+                    >
+
+                    <span id="mValue">0</span>
+                </label>
+
+                <div class="applicationActions">
+
+                    <label class="checkboxItem">
                         <input
-                            id="lmaxSlider"
-                            type="range"
-                            min="1"
-                            max="30"
-                            value="1"
-                            aria-describedby="lmaxValue"
+                            id="singleModeCheckbox"
+                            type="checkbox"
                         >
-
-                        <span id="lmaxValue">1</span>
+                        Show only current (&ell;, m)
                     </label>
 
-                    <label class="controlItem">
-                        <span class="controlLabel">m:</span>
-
-                        <input
-                            id="mSlider"
-                            type="range"
-                            min="-1"
-                            max="1"
-                            value="0"
-                            aria-describedby="mValue"
+                    <div class="applicationButtons">
+                        <button
+                            id="explodeButton"
+                            type="button"
                         >
-
-                        <span id="mValue">0</span>
-                    </label>
-
-                    <div class="applicationActions">
-
-                        <label class="controlItem checkboxItem">
-                            <input
-                                id="singleModeCheckbox"
-                                type="checkbox"
-                            >
-                            Show only current (&ell;, m)
-                        </label>
-
-                        <button id="explodeButton" type="button">
                             EXPLODE STAR
                         </button>
 
-                        <button id="newSeedButton" type="button">
+                        <button
+                            id="newSeedButton"
+                            type="button"
+                        >
                             NEW RANDOM EXPLOSION
                         </button>
-
                     </div>
 
                 </div>
+            </div>
 
-                <article class="applicationArticle">
+            <article class="applicationArticle">
 
                     <h2>Supernova remnants</h2>
 
@@ -174,9 +177,109 @@
 
                 </article>
 
+        </div>
+    </section>
+
+
+    <section
+        class="applicationRow"
+        id="magneticApplication"
+    >
+        <div class="applicationVisual panel">
+            <h2 id="magneticTitle">
+                Earth’s magnetic field: dipole
+            </h2>
+
+            <div id="magneticViewer"></div>
+        </div>
+
+        <div class="applicationInfo">
+
+            <div class="applicationControls">
+
+                <label class="controlItem">
+                    <span class="controlLabel">&ell;:</span>
+
+                    <input
+                        id="magneticLSlider"
+                        type="range"
+                        min="1"
+                        max="8"
+                        value="1"
+                    >
+
+                    <span id="magneticLValue">1</span>
+                </label>
+
+                <label class="controlItem">
+                    <span
+                        id="magneticMLabel"
+                        class="controlLabel"
+                    >
+                        m:
+                    </span>
+
+                    <input
+                        id="magneticMSlider"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        value="0"
+                    >
+
+                    <span id="magneticMValue">0</span>
+                </label>
+
+                <div class="applicationActions">
+
+                    <label class="checkboxItem">
+                        <input
+                            id="magneticSingleModeCheckbox"
+                            type="checkbox"
+                        >
+                        Show only current (&ell;, m)
+                    </label>
+
+                    <div class="applicationButtons">
+                        <button
+                            id="buildMagneticFieldButton"
+                            type="button"
+                        >
+                            BUILD FIELD
+                        </button>
+
+                        <button
+                            id="earthLikeFieldButton"
+                            type="button"
+                        >
+                            EARTH-LIKE FIELD
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
-        </section>
+            <article class="applicationArticle">
+
+                <h2>Earth’s magnetic field</h2>
+
+                <p>
+                    Earth’s magnetic field is often shown as a simple dipole,
+                    like the field around a bar magnet. That familiar
+                    pattern is the dominant spherical-harmonic mode with
+                    <strong>&ell; = 1</strong>.
+                </p>
+
+                <p>
+                    Higher-order modes add smaller-scale structure near the
+                    planet. These terms decay more rapidly with distance, so
+                    the field becomes increasingly dipolar farther from Earth.
+                </p>
+
+            </article>
+
+        </div>
+    </section>
 
 </main>
 
@@ -185,6 +288,7 @@
 </footer>
 
 <script src="supernova.js"></script>
+<script src="magnetic-field.js"></script>
 
 <script>
     const menuButton =

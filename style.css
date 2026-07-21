@@ -234,16 +234,27 @@ h1 {
 
 .applicationActions {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
 
     margin-top: 8px;
 }
 
 .applicationActions .checkboxItem {
-    margin-right: 8px;
+    justify-content: flex-start;
+    margin: 0;
     white-space: nowrap;
+}
+
+.applicationButtons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.applicationButtons button {
+    flex: 0 1 auto;
 }
 
 .applicationArticle {
@@ -381,42 +392,49 @@ input[type="range"]:hover::-moz-range-thumb {
 }
 
 #buildUniverseButton,
-#explodeButton {
+#explodeButton,
+#buildMagneticFieldButton {
     background: var(--so-orange);
     border-color: var(--so-orange);
     color: white;
 }
 
 #buildUniverseButton:hover,
-#explodeButton:hover {
+#explodeButton:hover,
+#buildMagneticFieldButton:hover {
     background: #111111;
     border-color: #111111;
     color: white;
 }
 
-#newSeedButton {
+#newSeedButton,
+#earthLikeFieldButton {
     background: #eeeeee;
     border-color: #eeeeee;
     color: #222222;
 }
 
-#newSeedButton:hover {
+#newSeedButton:hover,
+#earthLikeFieldButton:hover {
     background: #dddddd;
     border-color: #dddddd;
 }
 
 #orbitalViewer,
 #supernovaViewer,
+#magneticViewer,
 .cmbCanvasWrapper {
     position: absolute;
     left: 0;
     right: 0;
     top: 45px;
     bottom: 18px;
+    overflow: hidden;
 }
 
 #orbitalViewer canvas,
-#supernovaViewer canvas {
+#supernovaViewer canvas,
+#magneticViewer canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
@@ -665,6 +683,15 @@ footer {
     .applicationArticle p {
         font-size: 1rem;
         line-height: 1.55;
+    }
+
+    .applicationButtons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .applicationButtons button {
+        width: 100%;
     }
 
     .checkboxItem {
