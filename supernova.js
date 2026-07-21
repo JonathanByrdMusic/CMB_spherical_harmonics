@@ -14,8 +14,6 @@ const lmaxValue = document.getElementById("lmaxValue");
 const mSlider = document.getElementById("mSlider");
 const mValue = document.getElementById("mValue");
 
-const distortionTitle = document.getElementById("distortionTitle");
-
 /*
  * If your checkbox id is still "singleEllCheckbox"
  * in the HTML, change the line below accordingly.
@@ -821,19 +819,6 @@ function startExplosion() {
  * UI helpers
  */
 
-function updateDistortionTitle() {
-    const ell = Number(lmaxSlider.value);
-    const m = Number(mSlider.value);
-
-    if (singleModeCheckbox.checked) {
-        distortionTitle.innerHTML =
-            `Selected distortion: Y<sub>${ell}${m}</sub>`;
-    } else {
-        distortionTitle.innerHTML =
-            `Surface distortion through &ell; = ${ell}`;
-    }
-}
-
 function updateModeControls() {
     const ell = Number(lmaxSlider.value);
     let m = Number(mSlider.value);
@@ -854,7 +839,6 @@ function updateModeControls() {
     mSlider.value = String(m);
     mValue.textContent = String(m);
 
-    updateDistortionTitle();
 }
 
 function updateRemnantFromControls() {
@@ -898,14 +882,12 @@ lmaxSlider.addEventListener("change", () => {
 
 mSlider.addEventListener("input", () => {
     mValue.textContent = mSlider.value;
-    updateDistortionTitle();
 
     scheduleRemnantUpdate();
 });
 
 mSlider.addEventListener("change", () => {
     mValue.textContent = mSlider.value;
-    updateDistortionTitle();
 
     finishRemnantUpdate();
 });
@@ -913,7 +895,6 @@ mSlider.addEventListener("change", () => {
 singleModeCheckbox.addEventListener(
     "change",
     () => {
-        updateDistortionTitle();
         precomputeDistortionField();
         renderAge(FINAL_AGE_YEARS);
     }

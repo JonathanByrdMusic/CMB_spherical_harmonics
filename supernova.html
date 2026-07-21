@@ -53,148 +53,130 @@
         </div>
     </div>
 
-</div>
+    <div class="menuContainer">
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
-<nav class="siteNavigation" aria-label="Simulation pages">
-    <a href="index.html">CMB</a>
-    <a href="supernova.html" aria-current="page">Supernova</a>
-</nav>
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Simulation pages"
+            hidden
+        >
+            <a href="index.html">CMB simulation</a>
+            <a href="supernova.html">Supernova remnant</a>
+        </nav>
+    </div>
+
+</div>
 
 <main id="pageContent">
 
-    <div id="canvasRow">
+    <section class="applicationRow" id="supernovaApplication">
 
-        <section class="panel">
-            <h2 id="remnantTitle">Tycho-type remnant: age 0 years</h2>
+            <div class="applicationVisual panel">
+                <h2 id="remnantTitle">
+                    Tycho-type remnant: age 0 years
+                </h2>
 
-            <div
-                id="supernovaViewer"
-                role="img"
-                aria-label="Three-dimensional simulation of an expanding supernova remnant"
-            ></div>
-        </section>
-
-        <section class="panel">
-            <h2 id="distortionTitle">
-                Surface distortion through &ell; = 1
-            </h2>
-
-            <div class="cmbCanvasWrapper">
-                <canvas
-                    id="distortionCanvas"
-                    width="500"
-                    height="250"
+                <div
+                    id="supernovaViewer"
                     role="img"
-                    aria-label="Spherical-harmonic distortion field applied to the supernova remnant"
-                ></canvas>
+                    aria-label="Three-dimensional simulation of an expanding supernova remnant"
+                ></div>
             </div>
+
+            <div class="applicationInfo">
+
+                <div class="applicationControls">
+
+                    <label class="controlItem">
+                        <span class="controlLabel">&ell;:</span>
+
+                        <input
+                            id="lmaxSlider"
+                            type="range"
+                            min="1"
+                            max="30"
+                            value="1"
+                            aria-describedby="lmaxValue"
+                        >
+
+                        <span id="lmaxValue">1</span>
+                    </label>
+
+                    <label class="controlItem">
+                        <span class="controlLabel">m:</span>
+
+                        <input
+                            id="mSlider"
+                            type="range"
+                            min="-1"
+                            max="1"
+                            value="0"
+                            aria-describedby="mValue"
+                        >
+
+                        <span id="mValue">0</span>
+                    </label>
+
+                    <div class="applicationActions">
+
+                        <label class="controlItem checkboxItem">
+                            <input
+                                id="singleModeCheckbox"
+                                type="checkbox"
+                            >
+                            Show only current (&ell;, m)
+                        </label>
+
+                        <button id="explodeButton" type="button">
+                            EXPLODE STAR
+                        </button>
+
+                        <button id="newSeedButton" type="button">
+                            NEW RANDOM EXPLOSION
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <article class="applicationArticle">
+
+                    <h2>Supernova remnants</h2>
+
+                    <p>
+                        This idealized Type Ia supernova begins as an
+                        approximately spherical explosion. The simulation 
+                        advances the explosion for 454 years, approximately 
+                        the present age of Tycho's supernova remnant.
+                    </p>
+
+                    <p>
+                        Check "Show only current (&ell;, m)" to see the 
+                        contribution of a single spherical harmonic mode to 
+                        the remnant's structure. Uncheck it to see the full 
+                        superposition of all modes. Random superpositions 
+                        of modes introduce large-scale asymmetry and 
+                        increasingly finer structures.
+                    </p>
+
+                </article>
+
+            </div>
+
         </section>
-
-    </div>
-
-    <div id="controlsRow">
-
-        <div class="controlColumn leftControls">
-
-            <label class="controlItem">
-                <span class="controlLabel">&ell;:</span>
-
-                <input
-                    id="lmaxSlider"
-                    type="range"
-                    min="1"
-                    max="30"
-                    value="1"
-                    aria-describedby="lmaxValue"
-                >
-
-                <span id="lmaxValue">1</span>
-            </label>
-
-            <label class="controlItem">
-                <span class="controlLabel">m:</span>
-
-                <input
-                    id="mSlider"
-                    type="range"
-                    min="0"
-                    max="1"
-                    value="0"
-                    aria-describedby="mValue"
-                >
-
-                <span id="mValue">0</span>
-            </label>
-
-        </div>
-
-        <div class="controlColumn rightControls">
-
-            <label class="controlItem checkboxItem">
-                <input id="singleModeCheckbox" type="checkbox">
-                Show only current (&ell;, m)
-            </label>
-
-            <button id="explodeButton" type="button">
-                EXPLODE STAR
-            </button>
-
-            <button id="newSeedButton" type="button">
-                NEW RANDOM EXPLOSION
-            </button>
-
-        </div>
-
-    </div>
-
-    <article id="explanation">
-
-        <h2>Building a Supernova Remnant from Spherical Harmonics</h2>
-
-        <p>
-            This simulation begins with an idealized spherical stellar explosion.
-            The average radius of the remnant is represented by the
-            <strong>&ell; = 0</strong> spherical-harmonic mode.
-            Higher-order modes introduce departures from perfect spherical symmetry.
-        </p>
-
-        <p>
-            The left panel shows the expanding shock front from
-            <strong>t = 0</strong> to an age of <strong>454 years</strong>,
-            approximately the present age of Tycho's supernova remnant.
-            The simulation advances at about
-            <strong>150 simulated years per second</strong>
-            and freezes when it reaches the present day.
-        </p>
-
-        <p>
-            The right panel shows the angular field used to deform the remnant.
-            Increasing the maximum value of <strong>&ell;</strong> introduces
-            progressively smaller structures on the expanding surface.
-        </p>
-
-        <p>
-            Each new explosion uses a different randomized collection of
-            spherical-harmonic coefficients. The same coefficients remain fixed
-            during the animation, allowing one initial disturbance to grow smoothly
-            rather than changing randomly from frame to frame.
-        </p>
-
-        <p>
-            Checking <strong>Show only current (&ell;, m)</strong> isolates one
-            spherical-harmonic component. Unchecking it displays the accumulated
-            superposition of all modes through the selected maximum
-            <strong>&ell;</strong>.
-        </p>
-
-        <p class="closing">
-            <strong>
-                A nearly spherical explosion can develop a complicated remnant
-                through the superposition of many simple angular modes.
-            </strong>
-        </p>
-
-    </article>
 
 </main>
 
@@ -204,5 +186,70 @@
 
 <script src="supernova.js"></script>
 
+<script>
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const siteMenu =
+        document.getElementById("siteMenu");
+
+    function closeSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        siteMenu.hidden = true;
+    }
+
+    function openSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        siteMenu.hidden = false;
+    }
+
+    menuButton.addEventListener("click", () => {
+        const isOpen =
+            menuButton.getAttribute("aria-expanded")
+            === "true";
+
+        if (isOpen) {
+            closeSiteMenu();
+        } else {
+            openSiteMenu();
+        }
+    });
+
+    document.addEventListener("click", event => {
+        const clickedInsideMenu =
+            event.target.closest(".menuContainer");
+
+        if (!clickedInsideMenu) {
+            closeSiteMenu();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeSiteMenu();
+            menuButton.focus();
+        }
+    });
+</script>
+
 </body>
+
 </html>
