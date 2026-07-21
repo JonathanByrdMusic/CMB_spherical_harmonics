@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-90WMD4PJQP');
+    </script>
+
+    <title>Supernova Remnant from Spherical Harmonics</title>
+
+    <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h1>Supernova Remnant from Spherical Harmonics</h1>
+
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+    </div>
+
+</div>
+
+<nav class="siteNavigation" aria-label="Simulation pages">
+    <a href="index.html">CMB</a>
+    <a href="supernova.html" aria-current="page">Supernova</a>
+</nav>
+
+<main id="pageContent">
+
+    <div id="canvasRow">
+
+        <section class="panel">
+            <h2 id="remnantTitle">Tycho-type remnant: age 0 years</h2>
+
+            <div
+                id="supernovaViewer"
+                role="img"
+                aria-label="Three-dimensional simulation of an expanding supernova remnant"
+            ></div>
+        </section>
+
+        <section class="panel">
+            <h2 id="distortionTitle">
+                Surface distortion through &ell; = 1
+            </h2>
+
+            <div class="cmbCanvasWrapper">
+                <canvas
+                    id="distortionCanvas"
+                    width="500"
+                    height="250"
+                    role="img"
+                    aria-label="Spherical-harmonic distortion field applied to the supernova remnant"
+                ></canvas>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="controlsRow">
+
+        <div class="controlColumn leftControls">
+
+            <label class="controlItem">
+                <span class="controlLabel">&ell;:</span>
+
+                <input
+                    id="lmaxSlider"
+                    type="range"
+                    min="1"
+                    max="30"
+                    value="1"
+                    aria-describedby="lmaxValue"
+                >
+
+                <span id="lmaxValue">1</span>
+            </label>
+
+            <label class="controlItem">
+                <span class="controlLabel">m:</span>
+
+                <input
+                    id="mSlider"
+                    type="range"
+                    min="0"
+                    max="1"
+                    value="0"
+                    aria-describedby="mValue"
+                >
+
+                <span id="mValue">0</span>
+            </label>
+
+        </div>
+
+        <div class="controlColumn rightControls">
+
+            <label class="controlItem checkboxItem">
+                <input id="singleModeCheckbox" type="checkbox">
+                Show only current (&ell;, m)
+            </label>
+
+            <button id="explodeButton" type="button">
+                EXPLODE STAR
+            </button>
+
+            <button id="newSeedButton" type="button">
+                NEW RANDOM EXPLOSION
+            </button>
+
+        </div>
+
+    </div>
+
+    <article id="explanation">
+
+        <h2>Building a Supernova Remnant from Spherical Harmonics</h2>
+
+        <p>
+            This simulation begins with an idealized spherical stellar explosion.
+            The average radius of the remnant is represented by the
+            <strong>&ell; = 0</strong> spherical-harmonic mode.
+            Higher-order modes introduce departures from perfect spherical symmetry.
+        </p>
+
+        <p>
+            The left panel shows the expanding shock front from
+            <strong>t = 0</strong> to an age of <strong>454 years</strong>,
+            approximately the present age of Tycho's supernova remnant.
+            The simulation advances at about
+            <strong>150 simulated years per second</strong>
+            and freezes when it reaches the present day.
+        </p>
+
+        <p>
+            The right panel shows the angular field used to deform the remnant.
+            Increasing the maximum value of <strong>&ell;</strong> introduces
+            progressively smaller structures on the expanding surface.
+        </p>
+
+        <p>
+            Each new explosion uses a different randomized collection of
+            spherical-harmonic coefficients. The same coefficients remain fixed
+            during the animation, allowing one initial disturbance to grow smoothly
+            rather than changing randomly from frame to frame.
+        </p>
+
+        <p>
+            Checking <strong>Show only current (&ell;, m)</strong> isolates one
+            spherical-harmonic component. Unchecking it displays the accumulated
+            superposition of all modes through the selected maximum
+            <strong>&ell;</strong>.
+        </p>
+
+        <p class="closing">
+            <strong>
+                A nearly spherical explosion can develop a complicated remnant
+                through the superposition of many simple angular modes.
+            </strong>
+        </p>
+
+    </article>
+
+</main>
+
+<footer>
+    An idealized Tycho-type supernova-remnant simulation.
+</footer>
+
+<script src="supernova.js"></script>
+
+</body>
+</html>

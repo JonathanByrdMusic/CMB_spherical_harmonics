@@ -283,19 +283,33 @@ input[type="range"]:hover::-moz-range-thumb {
     --slider-color: var(--so-blue);
 }
 
-#buildUniverseButton {
+#buildUniverseButton,
+#explodeButton {
     background: var(--so-orange);
     border-color: var(--so-orange);
     color: white;
 }
 
-#buildUniverseButton:hover {
+#buildUniverseButton:hover,
+#explodeButton:hover {
     background: #111111;
     border-color: #111111;
     color: white;
 }
 
+#newSeedButton {
+    background: #eeeeee;
+    border-color: #eeeeee;
+    color: #222222;
+}
+
+#newSeedButton:hover {
+    background: #dddddd;
+    border-color: #dddddd;
+}
+
 #orbitalViewer,
+#supernovaViewer,
 .cmbCanvasWrapper {
     position: absolute;
     left: 0;
@@ -304,13 +318,15 @@ input[type="range"]:hover::-moz-range-thumb {
     bottom: 45px;
 }
 
-#orbitalViewer {
+#orbitalViewer,
+#supernovaViewer {
     width: 100%;
     height: auto;
     overflow: hidden;
 }
 
-#orbitalViewer canvas {
+#orbitalViewer canvas,
+#supernovaViewer canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
@@ -322,7 +338,8 @@ input[type="range"]:hover::-moz-range-thumb {
     justify-content: center;
 }
 
-#cmbCanvas {
+#cmbCanvas,
+#distortionCanvas {
     display: block;
     width: 100%;
     height: auto;
@@ -497,4 +514,24 @@ footer {
         font-size: 1.05rem;
         line-height: 1.65;
     }
+}
+
+.siteNavigation {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 0.8rem;
+}
+
+.siteNavigation a {
+    color: #244a87;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.siteNavigation a:hover {
+    text-decoration: underline;
+}
+
+.siteNavigation a[aria-current="page"] {
+    color: #f15a24;
 }
