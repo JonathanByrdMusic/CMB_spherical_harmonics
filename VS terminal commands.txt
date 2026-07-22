@@ -1,0 +1,7 @@
+git add .
+git commit -m "Move simulator files to GitHub Pages root"
+git push
+
+python3 -m http.server 8000
+
+
