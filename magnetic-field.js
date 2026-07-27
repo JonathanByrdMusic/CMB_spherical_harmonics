@@ -157,6 +157,10 @@ let magneticActiveTermCount = null;
 
 const MAGNETIC_TERM_DELAY_MS = 350;
 
+let magneticSliderUpdateTimer = null;
+
+const MAGNETIC_SLIDER_UPDATE_DELAY_MS = 120;
+
 function clearMagneticFieldLines() {
     while (
         magneticFieldLineGroup.children.length > 0
@@ -209,6 +213,24 @@ function cancelMagneticBuildAnimation() {
 
         magneticBuildAnimationId = null;
     }
+}
+
+function scheduleMagneticFieldLineUpdate() {
+    if (magneticSliderUpdateTimer !== null) {
+        clearTimeout(
+            magneticSliderUpdateTimer
+        );
+    }
+
+    magneticSliderUpdateTimer =
+        setTimeout(
+            () => {
+                magneticSliderUpdateTimer = null;
+
+                buildHarmonicFieldLines();
+            },
+            MAGNETIC_SLIDER_UPDATE_DELAY_MS
+        );
 }
 
 function animateMagneticFieldBuild() {
@@ -375,6 +397,7 @@ function updateMagneticControls() {
     magneticActiveTermCount = null;
 
     updateEarthSurfaceColors();
+    scheduleMagneticFieldLineUpdate();
 }
 
 /*
@@ -541,6 +564,18 @@ function realSphericalHarmonic(
         *
         Math.sin(absM * phi)
     );
+}
+
+function finishMagneticFieldLineUpdate() {
+    if (magneticSliderUpdateTimer !== null) {
+        clearTimeout(
+            magneticSliderUpdateTimer
+        );
+
+        magneticSliderUpdateTimer = null;
+    }
+
+    buildHarmonicFieldLines();
 }
 
 /*
@@ -1164,6 +1199,11 @@ magneticLSlider.addEventListener(
     updateMagneticControls
 );
 
+magneticLSlider.addEventListener(
+    "change",
+    finishMagneticFieldLineUpdate
+);
+
 magneticMSlider.addEventListener(
     "input",
     () => {
@@ -1171,6 +1211,19 @@ magneticMSlider.addEventListener(
             magneticMSlider.value;
 
         updateMagneticControls();
+    }
+);
+
+magneticMSlider.addEventListener(
+    "change",
+    finishMagneticFieldLineUpdate
+);
+
+magneticSingleModeCheckbox.addEventListener(
+    "change",
+    () => {
+        updateMagneticControls();
+        finishMagneticFieldLineUpdate();
     }
 );
 
@@ -1182,20 +1235,18 @@ buildMagneticFieldButton.addEventListener(
 earthLikeFieldButton.addEventListener(
     "click",
     () => {
-        magneticLSlider.value = "8";
-        magneticMSlider.value = "8";
-
         magneticSingleModeCheckbox.checked =
             false;
+
+        magneticLSlider.value = "8";
+
+        magneticMSlider.min = "0";
+        magneticMSlider.max = "8";
+        magneticMSlider.value = "6";
 
         updateMagneticControls();
         animateMagneticFieldBuild();
     }
-);
-
-magneticSingleModeCheckbox.addEventListener(
-    "change",
-    updateMagneticControls
 );
 
 /*
