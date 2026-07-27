@@ -56,8 +56,28 @@ let coefficients = [];
 let mask = [];
 let planckPower = new Float64Array(3001);
 
-const width = canvas.width;
-const height = canvas.height;
+const calculationWidth =
+    useMobileResolution
+        ? 360
+        : 500;
+
+const calculationHeight =
+    useMobileResolution
+        ? 180
+        : 250;
+
+const width = calculationWidth;
+const height = calculationHeight;
+
+const mapCanvas =
+    document.createElement("canvas");
+
+mapCanvas.width = width;
+mapCanvas.height = height;
+
+const mapContext =
+    mapCanvas.getContext("2d");
+
 const maxL = Number(slider.max);
 
 // -----------------------------
@@ -150,19 +170,19 @@ function sphericalHarmonicReal(l, m, theta, phi) {
 // Color map
 // -----------------------------
 
-function colorMap(v) {
+function randomSkyColorMap(v) {
     v = Math.max(-1, Math.min(1, v));
 
     let r, g, b;
 
     if (v < 0) {
-        let t = v + 1;
+        const t = v + 1;
 
         r = 20 + 180 * t;
         g = 80 + 160 * t;
         b = 255;
     } else {
-        let t = v;
+        const t = v;
 
         r = 255;
         g = 240 - 120 * t;
@@ -170,6 +190,62 @@ function colorMap(v) {
     }
 
     return [r, g, b];
+}
+
+function singleModeColorMap(v) {
+    v = Math.max(
+        -1,
+        Math.min(1, v)
+    );
+
+    /*
+     * Preserve the existing approximate endpoints.
+     */
+    const cold = [
+        20,
+        80,
+        255
+    ];
+
+    const neutral = [
+        235,
+        240,
+        218
+    ];
+
+    const hot = [
+        255,
+        120,
+        20
+    ];
+
+    let start;
+    let end;
+    let amount;
+
+    if (v < 0) {
+        start = cold;
+        end = neutral;
+        amount = v + 1;
+    } else {
+        start = neutral;
+        end = hot;
+        amount = v;
+    }
+
+    return [
+        start[0]
+            + (end[0] - start[0])
+            * amount,
+
+        start[1]
+            + (end[1] - start[1])
+            * amount,
+
+        start[2]
+            + (end[2] - start[2])
+            * amount
+    ];
 }
 
 function orbitalColorMap(v) {
@@ -662,24 +738,145 @@ function requestSkyCalculation(
     });
 }
 
+function smoothSkyValues(values) {
+    const smoothed =
+        new Float32Array(values.length);
+
+    for (
+        let y = 0;
+        y < height;
+        y += 1
+    ) {
+        for (
+            let x = 0;
+            x < width;
+            x += 1
+        ) {
+            const index =
+                y * width + x;
+
+            if (mask[index] === null) {
+                smoothed[index] = 0;
+                continue;
+            }
+
+            /*
+             * Give the center pixel more weight.
+             * This produces a very mild local interpolation,
+             * similar in spirit to interpolating vertex values
+             * across a triangle.
+             */
+            let weightedSum =
+                4 * values[index];
+
+            let totalWeight = 4;
+
+            /*
+             * Left neighbor
+             */
+            if (x > 0) {
+                const left =
+                    index - 1;
+
+                if (mask[left] !== null) {
+                    weightedSum +=
+                        values[left];
+
+                    totalWeight += 1;
+                }
+            }
+
+            /*
+             * Right neighbor
+             */
+            if (x < width - 1) {
+                const right =
+                    index + 1;
+
+                if (mask[right] !== null) {
+                    weightedSum +=
+                        values[right];
+
+                    totalWeight += 1;
+                }
+            }
+
+            /*
+             * Upper neighbor
+             */
+            if (y > 0) {
+                const above =
+                    index - width;
+
+                if (mask[above] !== null) {
+                    weightedSum +=
+                        values[above];
+
+                    totalWeight += 1;
+                }
+            }
+
+            /*
+             * Lower neighbor
+             */
+            if (y < height - 1) {
+                const below =
+                    index + width;
+
+                if (mask[below] !== null) {
+                    weightedSum +=
+                        values[below];
+
+                    totalWeight += 1;
+                }
+            }
+
+            smoothed[index] =
+                weightedSum / totalWeight;
+        }
+    }
+
+    return smoothed;
+}
+
 function drawSkyValues(values) {
 
+    /*
+     * Apply one inexpensive interpolation pass
+     * before mapping values to colors.
+     */
+    const displayValues =
+        smoothSkyValues(values);
+
     const image =
-        ctx.createImageData(width, height);
+        ctx.createImageData(
+            width,
+            height
+        );
 
     const data = image.data;
 
+    const activeColorMap =
+        singleEllCheckbox.checked
+            ? singleModeColorMap
+            : randomSkyColorMap;
+
     let maxAbs = 0;
 
-    for (let i = 0; i < values.length; i++) {
-
+    for (
+        let i = 0;
+        i < displayValues.length;
+        i += 1
+    ) {
         if (mask[i] === null) {
             continue;
         }
 
         maxAbs = Math.max(
             maxAbs,
-            Math.abs(values[i])
+            Math.abs(
+                displayValues[i]
+            )
         );
     }
 
@@ -687,12 +884,14 @@ function drawSkyValues(values) {
         maxAbs = 1;
     }
 
-    for (let i = 0; i < values.length; i++) {
-
+    for (
+        let i = 0;
+        i < displayValues.length;
+        i += 1
+    ) {
         const p = 4 * i;
 
         if (mask[i] === null) {
-
             data[p] = 0;
             data[p + 1] = 0;
             data[p + 2] = 0;
@@ -701,8 +900,13 @@ function drawSkyValues(values) {
             continue;
         }
 
-        const v = values[i] / maxAbs;
-        const rgb = colorMap(v);
+        const v =
+            displayValues[i]
+            /
+            maxAbs;
+
+        const rgb =
+            activeColorMap(v);
 
         data[p] = rgb[0];
         data[p + 1] = rgb[1];
@@ -710,7 +914,11 @@ function drawSkyValues(values) {
         data[p + 3] = 255;
     }
 
-    ctx.putImageData(image, 0, 0);
+    ctx.putImageData(
+        image,
+        0,
+        0
+    );
 }
 
 async function startBuildUniverse() {

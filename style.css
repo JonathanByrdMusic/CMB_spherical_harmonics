@@ -95,6 +95,10 @@ h1 {
     width: 100%;
 }
 
+#cmbCanvas {
+    image-rendering: auto;
+}
+
 .panel {
     position: relative;
     width: 100%;
