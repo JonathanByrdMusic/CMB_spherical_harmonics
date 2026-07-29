@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <!-- Google tag (gtag.js) -->
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"
+    ></script>
+
+    <script>
+        window.dataLayer =
+            window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag("js", new Date());
+        gtag("config", "G-90WMD4PJQP");
+    </script>
+
+    <title>Show Me the Math!</title>
+
+    <link
+        rel="icon"
+        href="media/Simons_logo_small.ico"
+        type="image/x-icon"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="math.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [
+                    ["\\(", "\\)"],
+                    ["$", "$"]
+                ],
+
+                displayMath: [
+                    ["\\[", "\\]"]
+                ]
+            },
+
+            svg: {
+                fontCache: "global"
+            }
+        };
+    </script>
+
+    <script
+        async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    ></script>
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h1>Show Me the Math!</h1>
+
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+    </div>
+
+    <div class="menuContainer">
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Simulation pages"
+            hidden
+        >
+            <a href="index.html">
+                CMB simulation
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+    </div>
+
+</div>
+
+<main id="pageContent">
+
+    <article class="mathArticle">
+
+        <p>
+            This is all very pretty and fun to play with, but what in the
+            math is going on? Let's take a look under the hood of spherical
+            harmonics, beginning with the divergence of the gradient, also
+            known as the Laplacian:
+            \(\nabla\cdot(\nabla u) = \Delta u\)
+        </p>
+
+        <p>
+            Imagine you are walking in a hilly country. Stop at any point
+            and look around. The <em>gradient</em> is a vector field that
+            points toward the maximum rate of increase at all points. At
+            the top of a hill, the gradient is zero&mdash;there's nowhere
+            “up” to go. On the side of a hill, the gradient points along
+            the steepest local incline. As you might have guessed, the
+            gradient is the first derivative in all three dimensions:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \nabla u
+            =
+            \frac{\partial u}{\partial x}\hat{i}
+            +
+            \frac{\partial u}{\partial y}\hat{j}
+            +
+            \frac{\partial u}{\partial z}\hat{k}
+            \]
+        </div>
+
+        <section
+            class="gradientAnimation"
+            aria-labelledby="gradientAnimationTitle"
+        >
+            <h2 id="gradientAnimationTitle">
+                The gradient as a vector field
+            </h2>
+
+            <div class="gradientFrame">
+                <img
+                    id="gradientImage"
+                    src="media/gradient_1.png"
+                    alt="Side view of three hills"
+                >
+            </div>
+
+            <p
+                id="gradientCaption"
+                class="gradientCaption"
+                aria-live="polite"
+            >
+                Begin with a side view of a hilly landscape.
+            </p>
+
+            <div class="gradientControls">
+                <button
+                    id="gradientPreviousButton"
+                    type="button"
+                    aria-label="Previous frame"
+                >
+                    &#10094;
+                </button>
+
+                <button
+                    id="gradientPlayButton"
+                    type="button"
+                    aria-label="Play animation"
+                >
+                    Play
+                </button>
+
+                <button
+                    id="gradientNextButton"
+                    type="button"
+                    aria-label="Next frame"
+                >
+                    &#10095;
+                </button>
+            </div>
+
+            <div
+                id="gradientFrameCounter"
+                class="gradientFrameCounter"
+            >
+                1 / 6
+            </div>
+        </section>
+
+        <p>
+            The gradient tells you the steepest rate of change, but what is
+            happening around it locally? In a valley, the gradient vectors point
+            outward and up the walls. At another point, the gradient might point
+            along a crest toward a higher peak, even while nearby vectors converge
+            toward the ridge from either side. This local behavior
+            of the vector field is measured by the <em>divergence</em> of the
+            gradient: the net outward flow of the vector field around a point.
+        </p>
+
+        <p> 
+            Divergence applies to temperature gradients, electric fields, and many
+            other phenomena. Along a vibrating string or across a drum head, 
+            the divergence of the gradient varies periodically. That's why we're
+            interested in the divergence of the gradient; spherical harmonics 
+            exhibit analogous behavior on the surface of a sphere (though they may 
+            model periodicity across spatial dimensions, rather than time). 
+            You might have guessed that divergence is the second derivative in all
+            three dimensions:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \nabla^2 u
+            =
+            \frac{\partial^2 u}{\partial x^2}
+            +
+            \frac{\partial^2 u}{\partial y^2}
+            +
+            \frac{\partial^2 u}{\partial z^2}
+            =
+            \Delta u
+            \]
+        </div>
+
+        <p>
+            Hopefully, you now understand how the Laplacian&mdash;the divergence
+            of the gradient&mdash;gives us fundamental information about the
+            behavior of a function, or mathematical “landscape,” at any point.
+            In this case, we are interested in how this function behaves on a
+            sphere, so we will need the Laplacian in spherical coordinates.
+            Let's transform a Cartesian position vector from
+            \(\mathbf{r}(x,y,z)\) to
+            \(\mathbf{r}(r,\phi,\theta)\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \begin{cases}
+                x = r\cos\phi\sin\theta\\
+                y = r\sin\phi\sin\theta\\
+                z = r\cos\theta
+            \end{cases}
+            \]
+        </div>
+
+        <p>
+            To find the gradient, we will take the first partial derivative of
+            the position vector with respect to each spherical coordinate.
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\partial \mathbf{r}}{\partial r}
+            =
+            \begin{pmatrix}
+                \cos\phi\,\sin\theta\\
+                \sin\phi\,\sin\theta\\
+                \cos\theta
+            \end{pmatrix},
+            \qquad
+            \frac{\partial \mathbf{r}}{\partial \theta}
+            =
+            \begin{pmatrix}
+                r\cos\phi\,\cos\theta\\
+                r\sin\phi\,\cos\theta\\
+                -r\sin\theta
+            \end{pmatrix},
+            \qquad
+            \frac{\partial \mathbf{r}}{\partial \phi}
+            =
+            \begin{pmatrix}
+                -r\sin\phi\,\sin\theta\\
+                r\cos\phi\,\sin\theta\\
+                0
+            \end{pmatrix}
+            \]
+        </div>
+
+        <p>
+            Taking the magnitude of each derivative gives us the scale factors
+            needed to convert a small change in each coordinate into a physical
+            distance in spherical geometry.
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \begin{aligned}
+            \left|
+                \frac{\partial \mathbf{r}}{\partial r}
+            \right|
+            &=
+            \sqrt{
+                \cos^2\phi\sin^2\theta
+                +
+                \sin^2\phi\sin^2\theta
+                +
+                \cos^2\theta
+            }\\
+            &=
+            \sqrt{
+                \left(
+                    \cos^2\phi+\sin^2\phi
+                \right)
+                \sin^2\theta
+                +
+                \cos^2\theta
+            }\\
+            &=
+            \sqrt{
+                \sin^2\theta+\cos^2\theta
+            }\\
+            h_r&=1\\
+            \\
+            \left|
+                \frac{\partial \mathbf{r}}{\partial \theta}
+            \right|
+            &=
+            \sqrt{
+                r^2\cos^2\phi\cos^2\theta
+                +
+                r^2\sin^2\phi\cos^2\theta
+                +
+                r^2\sin^2\theta
+            }\\
+            &=
+            \sqrt{
+                \left(
+                    \cos^2\phi+\sin^2\phi
+                \right)
+                r^2\cos^2\theta
+                +
+                r^2\sin^2\theta
+            }\\
+            &=
+            \sqrt{
+                r^2
+                \left(
+                    \sin^2\theta+\cos^2\theta
+                \right)
+            }\\
+            h_\theta&=r\\
+            \\
+            \left|
+                \frac{\partial \mathbf{r}}{\partial \phi}
+            \right|
+            &=
+            \sqrt{
+                r^2\sin^2\phi\sin^2\theta
+                +
+                r^2\cos^2\phi\sin^2\theta
+            }\\
+            &=
+            \sqrt{
+                \left(
+                    \sin^2\phi+\cos^2\phi
+                \right)
+                r^2\sin^2\theta
+            }\\
+            &=
+            \sqrt{
+                r^2\sin^2\theta
+            }\\
+            h_\phi&=r\sin\theta
+            \end{aligned}
+            \]
+        </div>
+
+        <p>
+            A small change in the radial direction is simply \(dr\), because its
+            scale factor is \(1\). A small change in \(\theta\) corresponds to a
+            physical distance \(r\,d\theta\), while a small change in \(\phi\)
+            corresponds to a physical distance
+            \(r\sin\theta\,d\phi\). The spherical line element is therefore:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            ds^2
+            =
+            dr^2
+            +
+            r^2\,d\theta^2
+            +
+            r^2\sin^2\theta\,d\phi^2
+            \]
+        </div>
+
+        <p>
+            We can now return to our original definition of the gradient and
+            incorporate the scale factors for spherical coordinates:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \nabla u_{\text{Cartesian}}
+            =
+            \frac{\partial u}{\partial x}\hat{i}
+            +
+            \frac{\partial u}{\partial y}\hat{j}
+            +
+            \frac{\partial u}{\partial z}\hat{k}
+            \quad
+            \longrightarrow
+            \quad
+            \nabla u_{\text{spherical}}
+            =
+            \frac{\partial u}{\partial r}\hat{\mathbf r}
+            +
+            \frac{1}{r}
+            \frac{\partial u}{\partial \theta}
+            \hat{\boldsymbol\theta}
+            +
+            \frac{1}{r\sin\theta}
+            \frac{\partial u}{\partial \phi}
+            \hat{\boldsymbol\phi}
+            \]
+        </div>
+
+        <p>
+            If you have never done this before, great work! You may have used the
+            Jacobian determinant in calculus without knowing where its components
+            came from. This is how those geometric scale factors are built.
+        </p>
+
+    </article>
+
+</main>
+
+<script>
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const siteMenu =
+        document.getElementById("siteMenu");
+
+    function closeSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        siteMenu.hidden = true;
+    }
+
+    function openSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        siteMenu.hidden = false;
+    }
+
+    menuButton.addEventListener(
+        "click",
+        () => {
+            const isOpen =
+                menuButton.getAttribute(
+                    "aria-expanded"
+                ) === "true";
+
+            if (isOpen) {
+                closeSiteMenu();
+            } else {
+                openSiteMenu();
+            }
+        }
+    );
+
+    document.addEventListener(
+        "click",
+        event => {
+            const clickedInsideMenu =
+                event.target.closest(
+                    ".menuContainer"
+                );
+
+            if (!clickedInsideMenu) {
+                closeSiteMenu();
+            }
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        event => {
+            if (event.key === "Escape") {
+                closeSiteMenu();
+                menuButton.focus();
+            }
+        }
+    );
+</script>
+
+<script>
+    const gradientFrames = [
+        {
+            src: "media/gradient_1.png",
+            alt: "Side view of three hills",
+            caption:
+                "Begin with a side view of a hilly landscape."
+        },
+        {
+            src: "media/gradient_2.png",
+            alt: "A few gradient arrows appearing on the hills",
+            caption:
+                "At each point, the gradient points in the direction of steepest ascent."
+        },
+        {
+            src: "media/gradient_3.png",
+            alt: "Gradient arrows distributed across all hill slopes",
+            caption:
+                "On opposite sides of a hill, the arrows point in opposite directions—always uphill."
+        },
+        {
+            src: "media/gradient_4.png",
+            alt: "Oblique view of a hilly surface with gradient arrows",
+            caption:
+                "Rotating the view reveals the three-dimensional shape of the landscape."
+        },
+        {
+            src: "media/gradient_5.png",
+            alt: "Nearly top-down view of the surface and gradient field",
+            caption:
+                "From above, the changes in elevation are harder to see, but the vector field remains."
+        },
+        {
+            src: "media/gradient_6.png",
+            alt: "Top-down vector field with the landscape removed",
+            caption:
+                "Remove the visible surface, and what remains is the gradient vector field."
+        }
+    ];
+
+    const gradientImage =
+        document.getElementById("gradientImage");
+
+    const gradientCaption =
+        document.getElementById("gradientCaption");
+
+    const gradientFrameCounter =
+        document.getElementById("gradientFrameCounter");
+
+    const gradientPreviousButton =
+        document.getElementById(
+            "gradientPreviousButton"
+        );
+
+    const gradientPlayButton =
+        document.getElementById(
+            "gradientPlayButton"
+        );
+
+    const gradientNextButton =
+        document.getElementById(
+            "gradientNextButton"
+        );
+
+    let gradientFrameIndex = 0;
+    let gradientTimer = null;
+
+    function showGradientFrame(index) {
+        gradientFrameIndex =
+            (
+                index +
+                gradientFrames.length
+            ) %
+            gradientFrames.length;
+
+        const frame =
+            gradientFrames[gradientFrameIndex];
+
+        gradientImage.src = frame.src;
+        gradientImage.alt = frame.alt;
+        gradientCaption.textContent =
+            frame.caption;
+
+        gradientFrameCounter.textContent =
+            `${gradientFrameIndex + 1} / ${gradientFrames.length}`;
+    }
+
+    function stopGradientAnimation() {
+        if (gradientTimer !== null) {
+            clearInterval(gradientTimer);
+            gradientTimer = null;
+        }
+
+        gradientPlayButton.textContent =
+            "Play";
+
+        gradientPlayButton.setAttribute(
+            "aria-label",
+            "Play animation"
+        );
+    }
+
+    function startGradientAnimation() {
+        gradientTimer = setInterval(
+            () => {
+                showGradientFrame(
+                    gradientFrameIndex + 1
+                );
+            },
+            3000
+        );
+
+        gradientPlayButton.textContent =
+            "Pause";
+
+        gradientPlayButton.setAttribute(
+            "aria-label",
+            "Pause animation"
+        );
+    }
+
+    gradientPreviousButton.addEventListener(
+        "click",
+        () => {
+            stopGradientAnimation();
+
+            showGradientFrame(
+                gradientFrameIndex - 1
+            );
+        }
+    );
+
+    gradientNextButton.addEventListener(
+        "click",
+        () => {
+            stopGradientAnimation();
+
+            showGradientFrame(
+                gradientFrameIndex + 1
+            );
+        }
+    );
+
+    gradientPlayButton.addEventListener(
+        "click",
+        () => {
+            if (gradientTimer === null) {
+                startGradientAnimation();
+            } else {
+                stopGradientAnimation();
+            }
+        }
+    );
+
+    showGradientFrame(0);
+</script>
+
+</body>
+</html>
