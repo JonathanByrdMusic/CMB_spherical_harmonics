@@ -243,6 +243,174 @@
     line-height: 1.45;
 }
 
+.codeExample {
+    width: min(100%, 980px);
+    margin: 2rem auto;
+    overflow: hidden;
+
+    background: #161b22;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 14px;
+
+    box-shadow:
+        0 14px 38px rgba(21, 38, 59, 0.16),
+        0 3px 9px rgba(21, 38, 59, 0.1);
+}
+
+.codeExampleHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    min-height: 54px;
+    padding: 0.65rem 0.8rem 0.65rem 1.2rem;
+
+    background: #212833;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.codeExampleTitle {
+    margin: 0;
+
+    color: #eef3f8;
+    font-family: "Figtree", sans-serif;
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.copyCodeButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+
+    min-width: 84px;
+    padding: 0.52rem 0.72rem;
+
+    color: #dce6ef;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        transform 160ms ease;
+}
+
+.copyCodeButton:hover {
+    background: rgba(255, 255, 255, 0.13);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.copyCodeButton:active {
+    transform: translateY(1px);
+}
+
+.copyCodeButton:focus-visible {
+    outline: 3px solid rgba(111, 190, 230, 0.7);
+    outline-offset: 2px;
+}
+
+.copyCodeButton.copied {
+    background: rgba(83, 171, 120, 0.2);
+    border-color: rgba(118, 210, 156, 0.55);
+}
+
+.copyCodeIcon {
+    width: 17px;
+    height: 17px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.codeExampleBody {
+    max-height: 680px;
+    overflow: auto;
+
+    scrollbar-color: #687481 #212833;
+    scrollbar-width: thin;
+}
+
+.codeExample pre {
+    margin: 0;
+    padding: 1.4rem 1.55rem;
+
+    tab-size: 4;
+}
+
+.codeExample code {
+    color: #e6edf3;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        Menlo,
+        monospace;
+
+    font-size: 0.88rem;
+    line-height: 1.65;
+    white-space: pre;
+}
+
+.copyCodeStatus {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 560px) {
+    .codeExample {
+        border-radius: 11px;
+    }
+
+    .codeExampleHeader {
+        min-height: 50px;
+        padding-left: 0.9rem;
+    }
+
+    .codeExampleTitle {
+        font-size: 0.88rem;
+    }
+
+    .copyCodeButton {
+        min-width: auto;
+    }
+
+    .copyCodeLabel {
+        display: none;
+    }
+
+    .codeExample pre {
+        padding: 1.1rem;
+    }
+
+    .codeExample code {
+        font-size: 0.78rem;
+    }
+}
+
 @media (max-width: 560px) {
     .mathArticle {
         width: 100%;

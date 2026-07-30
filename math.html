@@ -256,8 +256,9 @@
             interested in the divergence of the gradient; spherical harmonics 
             exhibit analogous behavior on the surface of a sphere (though they may 
             model periodicity across spatial dimensions, rather than time). 
-            You might have guessed that divergence is the second derivative in all
-            three dimensions:
+            Because the gradient already contains the first derivatives of u, 
+            taking its divergence produces the second derivatives in all three 
+            dimensions::
         </p>
 
         <div class="displayEquation">
@@ -367,7 +368,7 @@
             In this case, we are interested in how this function behaves on a
             sphere, so we will need the Laplacian in spherical coordinates.
             Let's transform a Cartesian position vector from
-            \(\mathbf{r}(x,y,z)\) to \(\mathbf{r}(r,\phi,\theta):\)
+            \(\mathbf{r}(x,y,z)\) to \(\mathbf{r}(r,\theta,\phi)\)
         </p>
 
         <div class="displayEquation">
@@ -559,7 +560,7 @@
             came from. This is how those geometric scale factors are built.
         </p>
 
-        <h3>Divergence in Spherical Coordinates</h3>
+        <h3 class="mathSubheading">Divergence in Spherical Coordinates</h3>
 
         <p>
             Now, we need to take the divergence of the gradient field: 
@@ -830,7 +831,7 @@
             makes things cleaner later.
         </p>
 
-        <h3>Now, about those spherical harmonics...</h3>
+        <h3 class="mathSubheading">Now, about those spherical harmonics...</h3>
 
         <p>
             We can now ask what functions behave especially simply under the
@@ -1099,8 +1100,17 @@
             <strong><em>
                 The spherical harmonics arise from the angular equation. 
             </em></strong>
-            To find them, we will now separate the polar and azimuthal dependence.
+            To find them, we will now separate the polar and azimuthal dependence. 
+            We will again assume that the equation can be separated like this:
         </p>
+
+        <div class="displayEquation">
+            \[
+            Y(\theta,\phi)
+            =
+            \Theta(\theta)\Phi(\phi)
+            \]
+        </div>
 
         <p>
             If we multiply the angular equation by \(\sin^2\theta\):
@@ -1183,6 +1193,7 @@
             one complete rotation around the \(z\)-axis, 
             \(\Phi(\phi+2\pi)=\Phi(\phi)\). It's easy to see in the 
             exponential form:
+        </p>
 
         <div class="displayEquation">
             \[
@@ -1206,413 +1217,779 @@
             and so on, this requires
             \(m=0,\pm1,\pm2,\ldots\)
         </p>
+
+        <p>
+            Now, if we go back to the angular equation:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\Phi}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            -m^2
+            \quad\longrightarrow\quad
+            \frac{1}{\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+            \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            -
+            \frac{m^2}{\sin^2\theta}
+            +
+            \lambda
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            Multiply through by \(\Theta\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+            \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \left[
+            \lambda
+            -
+            \frac{m^2}{\sin^2\theta}
+            \right]
+            \Theta
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            This is the polar differential equation in the variable \(\theta\).
+            We're going to use another math trick to get this in terms of \(x\),
+            and again there's no reason you should have guessed that we would do
+            this. Define:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            x=\cos\theta
+            \quad\longrightarrow\quad
+            \frac{dx}{d\theta}
+            =
+            -\sin\theta
+            \quad\longrightarrow\quad
+            \frac{d}{d\theta}
+            =
+            -\sin\theta\frac{d}{dx}
+            \]
+        </div>
+
+        <p>
+            Apply this to \(\Theta\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{d\Theta}{d\theta}
+            =
+            -\sin\theta\frac{d\Theta}{dx}
+            \quad\longrightarrow\quad
+            \sin\theta\frac{d\Theta}{d\theta}
+            =
+            -\sin^2\theta\frac{d\Theta}{dx}
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Since }
+            \sin^2\theta
+            =
+            1-\cos^2\theta
+            =
+            1-x^2,
+            \text{we have: }
+            \sin\theta\frac{d\Theta}{d\theta}
+            =
+            -(1-x^2)\frac{d\Theta}{dx}
+            \]
+        </div>
+
+        <p>
+            Differentiate once more:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{d}{d\theta}
+            \left(
+            \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            =
+            \frac{d}{d\theta}
+            \left[
+            -(1-x^2)\frac{d\Theta}{dx}
+            \right]
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Using }
+            \frac{d}{d\theta}
+            =
+            -\sin\theta\frac{d}{dx},
+            \text{we obtain: }
+            \frac{d}{d\theta}
+            \left(
+            \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            =
+            \sin\theta
+            \frac{d}{dx}
+            \left[
+            (1-x^2)\frac{d\Theta}{dx}
+            \right]
+            \]
+        </div>
+
+        <p>
+            Divide by \(\sin\theta\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+            \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            =
+            \frac{d}{dx}
+            \left[
+            (1-x^2)\frac{d\Theta}{dx}
+            \right].
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Since }
+            \sin^2\theta=1-x^2,
+            \text{the polar equation becomes: }
+            \frac{d}{dx}
+            \left[
+            (1-x^2)\frac{d\Theta}{dx}
+            \right]
+            +
+            \left[
+            \lambda
+            -
+            \frac{m^2}{1-x^2}
+            \right]\Theta
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            If we expand the derivative, we get the associated Legendre equation.
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \boxed{
+            (1-x^2)\frac{d^2\Theta}{dx^2}
+            -
+            2x\frac{d\Theta}{dx}
+            +
+            \left[
+            \lambda
+            -
+            \frac{m^2}{1-x^2}
+            \right]\Theta
+            =
+            0
+            }
+            \]
+        </div>
+
+        <p>
+            You may already see this problem, but allow me to point
+            out that having \(1-x^2\) in the denominator will cause
+            a singularity at the poles where \(\cos\theta = \pm 1.\)
+            In the next step, requiring the solutions to remain 
+            finite and smooth at the poles will restrict the separation 
+            constant to \(\lambda=\ell(\ell+1)\), where \(\ell\) is a 
+            nonnegative integer and \(|m|≤\ell.\) Acceptable solutions 
+            will become the associated Legendre functions \(P_\ell^m(x).\)
+        </p>
+
+        <p>
+            To see how this works, consider \(m=0\). Using prime 
+            notation for the derivatives, the equation 
+            above reduces to the ordinary Legendre equation:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            (1-x^2)P_\ell''
+            -
+            2xP_\ell'
+            +
+            \ell(\ell+1)P_\ell
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            For each non-negative integer \(\ell\), this equation has a polynomial 
+            solution called \(P_\ell(x)\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            P_0(x)=1
+            \qquad
+            P_1(x)=x
+            \qquad
+            P_2(x)
+            =
+            \frac{1}{2}
+            \left(
+                3x^2-1
+            \right)
+            \qquad
+            P_3(x)
+            =
+            \frac{1}{2}
+            \left(
+                5x^3-3x
+            \right)
+            \]
+        </div>
+
+        <p>
+            For \(m=1\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            P_2^1(x)
+            =
+            -(1-x^2)^{1/2}
+            \frac{d}{dx}
+            \left[
+                \frac{1}{2}
+                \left(
+                    3x^2-1
+                \right)
+            \right]
+            \quad\longrightarrow\quad
+            P_2^1(x)
+            =
+            -3x\sqrt{1-x^2}
+            \]
+        </div>
+
+        <p>
+            For \(m=2\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            P_2^2(x)
+            =
+            (1-x^2)
+            \frac{d^2}{dx^2}
+            \left[
+                \frac{1}{2}
+                \left(
+                    3x^2-1
+                \right)
+            \right]
+            \quad\longrightarrow\quad
+            P_2^2(x)
+            =
+            3(1-x^2)
+            \]
+        </div>
+
+        <p>
+            In spherical harmonics, the input is \(x=\cos\theta,\)
+            so we get information about what value the function 
+            has from pole to pole. \(\ell\) tells us which polynomial 
+            solution to use, and \(m\) controls the azimuthal behavior 
+            through \(e^{im\phi}\). 
+        </p>
+
     </article>
+
+    <article class="mathArticle">
+
+        <p>
+            We found both pieces of the angular part of the equation, 
+            so we now know the form the angular solution must take. 
+            \(C_{\ell m}\) is, for the moment, an unknown constant:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \Phi(\phi)
+            =
+            e^{im\phi},
+            \qquad
+            \Theta(\theta)
+            =
+            P_\ell^m(\cos\theta)
+            \longrightarrow\quad
+            Y_\ell^m(\theta,\phi)
+            =
+            C_{\ell m}
+            P_\ell^m(\cos\theta)
+            e^{im\phi}
+            \]
+        </div>
+
+        <p>
+            We have found the shape of the solution, but any scalar multiple 
+            would satisfy the differential equation. We therefore need one 
+            more condition to choose a standard size. Spherical harmonics 
+            are normally defined so that their total squared magnitude over 
+            the sphere is \(1\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \int_0^{2\pi}
+            \int_0^\pi
+            \left|
+                Y_\ell^m(\theta,\phi)
+            \right|^2
+            \sin\theta\,d\theta\,d\phi
+            =
+            1
+            \]
+        </div>
+
+        <p>
+            The factor \(\sin\theta\,d\theta\,d\phi\) is the 
+            surface-area element of the unit sphere. Substitute:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            Y_\ell^m
+            =
+            C_{\ell m}
+            P_\ell^m(\cos\theta)
+            e^{im\phi}
+            \longrightarrow\quad
+            1
+            =
+            |C_{\ell m}|^2
+            \int_0^{2\pi}
+            \left|
+                e^{im\phi}
+            \right|^2
+            d\phi
+            \int_0^\pi
+            \left[
+                P_\ell^m(\cos\theta)
+            \right]^2
+            \sin\theta\,d\theta
+            \]
+        </div>
+
+        <p>
+            The exponential has magnitude \(1\) (\(
+            \left|
+                e^{im\phi}
+            \right|^2
+            =
+            1\)), 
+            so its integral is simply \(2\pi.\)
+            The associated Legendre functions satisfy what's called
+            an orthogonality relation, which means that different
+            modes do not overlap when compared across the whole sphere.
+            When two different angular patterns are multiplied together 
+            and summed over the whole sphere, their positive and negative 
+            parts cancel. When a mode is multiplied by itself, the 
+            result is a definite nonzero value. That makes the second part 
+            of the integral:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \int_0^\pi
+            \left[
+                P_\ell^m(\cos\theta)
+            \right]^2
+            \sin\theta\,d\theta
+            =
+            \frac{2}{2\ell+1}
+            \frac{(\ell+m)!}{(\ell-m)!}
+            \]
+        </div>
+
+        <p>
+            Therefore
+        </p>
+
+        <div class="displayEquation">
+            \[
+            1
+            =
+            |C_{\ell m}|^2
+            (2\pi)
+            \left[
+                \frac{2}{2\ell+1}
+                \frac{(\ell+m)!}{(\ell-m)!}
+            \right]
+            \longrightarrow\quad
+            |C_{\ell m}|^2
+            =
+            \frac{2\ell+1}{4\pi}
+            \frac{(\ell-m)!}{(\ell+m)!}
+            \longrightarrow\quad
+            C_{\ell m}
+            =
+            \sqrt{
+                \frac{2\ell+1}{4\pi}
+                \frac{(\ell-m)!}{(\ell+m)!}
+            }
+            \]
+        </div>
+
+        <p>
+            Now you can see that the factorials and square root 
+            are not part of the differential equation. They set 
+            every mode to the same standard total magnitude. 
+            Over the course of the nineteenth and twentieth centuries, 
+            mathematicians and physicists developed standard definitions 
+            and normalizations for these functions so that the same 
+            angular patterns could be used consistently across astronomy, 
+            gravity, electromagnetism, quantum mechanics, and other 
+            applications. 
+        </p>
+
+        <p>
+            What might be fun for you now is to play around with
+            these functions with the appropriate computational power
+            to see some instant results. Below is the code for a 
+            Python cell that will create a Mollweide projection 
+            of spherical harmonics and output the associated 
+            Legendre function. You can input the \(\ell\) and \(m\)
+            value, and then choose between real, imaginary, magnitude,
+            and phase representations. 
+        </p>
+
+        <p>
+            <em>Real</em> shows the cosine-like positive and negative lobes of 
+            the spherical harmonic. <em>Imaginary</em> shows the same pattern 
+            shifted around the sphere, using the sine-like part instead.
+            <em>Magnitude</em> shows only the size of the harmonic, so negative 
+            values become positive and the azimuthal phase pattern 
+            disappears. <em>Phase</em> shows where each point lies in the complex 
+            oscillation cycle, with sharp boundaries where the phase wraps 
+            or changes by \(\pi\). 
+        </p>
+
+        <p>
+            Study the code and see for yourself how it works. Above all, have fun! 
+        </p>
+
+    </article>
+
+    <section class="codeExample" aria-labelledby="pythonExampleTitle">
+    <div class="codeExampleHeader">
+        <h3 id="pythonExampleTitle" class="codeExampleTitle">
+            Python: Explore a spherical harmonic
+        </h3>
+
+        <button
+            class="copyCodeButton"
+            type="button"
+            data-copy-target="sphericalHarmonicPython"
+            aria-label="Copy Python code"
+            title="Copy Python code"
+        >
+            <svg
+                class="copyCodeIcon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <rect
+                    x="9"
+                    y="9"
+                    width="11"
+                    height="11"
+                    rx="2"
+                ></rect>
+
+                <path
+                    d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"
+                ></path>
+            </svg>
+
+            <span class="copyCodeLabel">
+                Copy
+            </span>
+        </button>
+    </div>
+
+    <div class="codeExampleBody">
+        <pre><code
+            id="sphericalHarmonicPython"
+            class="language-python"
+>import numpy as np
+import matplotlib.pyplot as plt
+
+from scipy.special import sph_harm_y
+from sympy import symbols, assoc_legendre, latex
+from IPython.display import display, Math
+
+
+# ------------------------------------------------------------
+# User input
+# ------------------------------------------------------------
+
+MAX_ELL = 30
+
+
+def get_integer(prompt):
+    """
+    Ask repeatedly until the user enters an integer.
+    """
+    while True:
+        try:
+            return int(input(prompt))
+
+        except ValueError:
+            print("Please enter a whole number.")
+
+
+ell = get_integer(
+    f"Choose ell from 0 to {MAX_ELL}: "
+)
+
+if ell &lt; 0:
+    print("ell cannot be negative. Setting ell = 0.")
+    ell = 0
+
+elif ell &gt; MAX_ELL:
+    print(
+        f"ell is capped at {MAX_ELL} "
+        "to keep the calculation manageable."
+    )
+
+    ell = MAX_ELL
+
+
+m = get_integer(
+    f"Choose m from {-ell} to {ell}: "
+)
+
+if m &lt; -ell:
+    print(
+        f"m cannot be less than {-ell}. "
+        f"Setting m = {-ell}."
+    )
+
+    m = -ell
+
+elif m &gt; ell:
+    print(
+        f"m cannot be greater than {ell}. "
+        f"Setting m = {ell}."
+    )
+
+    m = ell
+
+
+valid_display_modes = {
+    "real",
+    "imaginary",
+    "magnitude",
+    "phase"
+}
+
+display_mode = input(
+    "Choose real, imaginary, magnitude, or phase: "
+).strip().lower()
+
+while display_mode not in valid_display_modes:
+    print(
+        "Please enter real, imaginary, "
+        "magnitude, or phase."
+    )
+
+    display_mode = input(
+        "Choose display mode: "
+    ).strip().lower()
+
+
+# ------------------------------------------------------------
+# Symbolic associated Legendre function
+# ------------------------------------------------------------
+
+x = symbols("x")
+
+P_lm = assoc_legendre(
+    ell,
+    m,
+    x
+)
+
+display(
+    Math(
+        rf"P_{{{ell}}}^{{{m}}}(x)"
+        rf"="
+        rf"{latex(P_lm)}"
+    )
+)
+
+
+# ------------------------------------------------------------
+# Longitude-latitude grid
+# ------------------------------------------------------------
+
+longitude = np.linspace(
+    -np.pi,
+    np.pi,
+    500
+)
+
+latitude = np.linspace(
+    -np.pi / 2,
+    np.pi / 2,
+    250
+)
+
+longitude_grid, latitude_grid = np.meshgrid(
+    longitude,
+    latitude
+)
+
+
+# SciPy uses theta as the polar angle:
+# theta = 0 at the north pole
+# theta = pi at the south pole
+
+theta = (
+    np.pi / 2
+    -
+    latitude_grid
+)
+
+# Convert longitude from [-pi, pi]
+# to SciPy's azimuthal range [0, 2*pi]
+
+phi = np.mod(
+    longitude_grid,
+    2 * np.pi
+)
+
+
+# ------------------------------------------------------------
+# Evaluate the spherical harmonic
+# ------------------------------------------------------------
+
+Y_lm = sph_harm_y(
+    ell,
+    m,
+    theta,
+    phi
+)
+
+
+# ------------------------------------------------------------
+# Select what to display
+# ------------------------------------------------------------
+
+if display_mode == "real":
+    values = np.real(Y_lm)
+    title_label = "Real part"
+    colorbar_label = (
+        rf"$\mathrm{{Re}}"
+        rf"\left(Y_{{{ell}}}^{{{m}}}\right)$"
+    )
+
+elif display_mode == "imaginary":
+    values = np.imag(Y_lm)
+    title_label = "Imaginary part"
+    colorbar_label = (
+        rf"$\mathrm{{Im}}"
+        rf"\left(Y_{{{ell}}}^{{{m}}}\right)$"
+    )
+
+elif display_mode == "magnitude":
+    values = np.abs(Y_lm)
+    title_label = "Magnitude"
+    colorbar_label = (
+        rf"$\left|Y_{{{ell}}}^{{{m}}}\right|$"
+    )
+
+else:
+    values = np.angle(Y_lm)
+    title_label = "Phase"
+    colorbar_label = (
+        rf"$\arg"
+        rf"\left(Y_{{{ell}}}^{{{m}}}\right)$"
+    )
+
+
+# ------------------------------------------------------------
+# Mollweide plot
+# ------------------------------------------------------------
+
+figure = plt.figure(
+    figsize=(10, 5.5)
+)
+
+axis = figure.add_subplot(
+    111,
+    projection="mollweide"
+)
+
+image = axis.pcolormesh(
+    longitude_grid,
+    latitude_grid,
+    values,
+    shading="auto"
+)
+
+axis.set_title(
+    rf"{title_label} of "
+    rf"$Y_{{{ell}}}^{{{m}}}$"
+)
+
+axis.grid(True)
+
+figure.colorbar(
+    image,
+    ax=axis,
+    orientation="horizontal",
+    pad=0.08,
+    label=colorbar_label
+)
+
+plt.show()</code></pre>
+    </div>
+
+    <p
+        class="copyCodeStatus"
+        aria-live="polite"
+    ></p>
+</section>
 
 </main>
 
-<script>
-    const menuButton =
-        document.getElementById("menuButton");
-
-    const siteMenu =
-        document.getElementById("siteMenu");
-
-    function closeSiteMenu() {
-        menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        menuButton.setAttribute(
-            "aria-label",
-            "Open navigation menu"
-        );
-
-        siteMenu.hidden = true;
-    }
-
-    function openSiteMenu() {
-        menuButton.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
-        menuButton.setAttribute(
-            "aria-label",
-            "Close navigation menu"
-        );
-
-        siteMenu.hidden = false;
-    }
-
-    menuButton.addEventListener(
-        "click",
-        () => {
-            const isOpen =
-                menuButton.getAttribute(
-                    "aria-expanded"
-                ) === "true";
-
-            if (isOpen) {
-                closeSiteMenu();
-            } else {
-                openSiteMenu();
-            }
-        }
-    );
-
-    document.addEventListener(
-        "click",
-        event => {
-            const clickedInsideMenu =
-                event.target.closest(
-                    ".menuContainer"
-                );
-
-            if (!clickedInsideMenu) {
-                closeSiteMenu();
-            }
-        }
-    );
-
-    document.addEventListener(
-        "keydown",
-        event => {
-            if (event.key === "Escape") {
-                closeSiteMenu();
-                menuButton.focus();
-            }
-        }
-    );
-</script>
-
-<script>
-    const gradientFrames = [
-        {
-            src: "media/gradient_1.png",
-            alt: "Side view of three hills",
-            caption:
-                "Begin with a side view of a hilly landscape."
-        },
-        {
-            src: "media/gradient_2.png",
-            alt: "A few gradient arrows appearing on the hills",
-            caption:
-                "At each point, the gradient points in the direction of steepest ascent."
-        },
-        {
-            src: "media/gradient_3.png",
-            alt: "Gradient arrows distributed across all hill slopes",
-            caption:
-                "On opposite sides of a hill, the arrows point in opposite directions—always uphill."
-        },
-        {
-            src: "media/gradient_4.png",
-            alt: "Oblique view of a hilly surface with gradient arrows",
-            caption:
-                "Rotating the view reveals the three-dimensional shape of the landscape."
-        },
-        {
-            src: "media/gradient_5.png",
-            alt: "Nearly top-down view of the surface and gradient field",
-            caption:
-                "From above, the changes in elevation are harder to see, but the vector field remains."
-        },
-        {
-            src: "media/gradient_6.png",
-            alt: "Top-down vector field with the landscape removed",
-            caption:
-                "Remove the visible surface, and what remains is the gradient vector field."
-        }
-    ];
-
-    const gradientImage =
-        document.getElementById("gradientImage");
-
-    const gradientCaption =
-        document.getElementById("gradientCaption");
-
-    const gradientFrameCounter =
-        document.getElementById("gradientFrameCounter");
-
-    const gradientPreviousButton =
-        document.getElementById(
-            "gradientPreviousButton"
-        );
-
-    const gradientPlayButton =
-        document.getElementById(
-            "gradientPlayButton"
-        );
-
-    const gradientNextButton =
-        document.getElementById(
-            "gradientNextButton"
-        );
-
-    let gradientFrameIndex = 0;
-    let gradientTimer = null;
-
-    function showGradientFrame(index) {
-        gradientFrameIndex =
-            (
-                index +
-                gradientFrames.length
-            ) %
-            gradientFrames.length;
-
-        const frame =
-            gradientFrames[gradientFrameIndex];
-
-        gradientImage.src = frame.src;
-        gradientImage.alt = frame.alt;
-        gradientCaption.textContent =
-            frame.caption;
-
-        gradientFrameCounter.textContent =
-            `${gradientFrameIndex + 1} / ${gradientFrames.length}`;
-    }
-
-    function stopGradientAnimation() {
-        if (gradientTimer !== null) {
-            clearInterval(gradientTimer);
-            gradientTimer = null;
-        }
-
-        gradientPlayButton.textContent =
-            "Play";
-
-        gradientPlayButton.setAttribute(
-            "aria-label",
-            "Play animation"
-        );
-    }
-
-    function startGradientAnimation() {
-        gradientTimer = setInterval(
-            () => {
-                showGradientFrame(
-                    gradientFrameIndex + 1
-                );
-            },
-            3000
-        );
-
-        gradientPlayButton.textContent =
-            "Pause";
-
-        gradientPlayButton.setAttribute(
-            "aria-label",
-            "Pause animation"
-        );
-    }
-
-    gradientPreviousButton.addEventListener(
-        "click",
-        () => {
-            stopGradientAnimation();
-
-            showGradientFrame(
-                gradientFrameIndex - 1
-            );
-        }
-    );
-
-    gradientNextButton.addEventListener(
-        "click",
-        () => {
-            stopGradientAnimation();
-
-            showGradientFrame(
-                gradientFrameIndex + 1
-            );
-        }
-    );
-
-    gradientPlayButton.addEventListener(
-        "click",
-        () => {
-            if (gradientTimer === null) {
-                startGradientAnimation();
-            } else {
-                stopGradientAnimation();
-            }
-        }
-    );
-
-    showGradientFrame(0);
-</script>
-
-<script>
-    const divergenceFrames = [
-        {
-            src: "media/divergence_1.png",
-            alt: "Gradient arrows over a hilly landscape",
-            caption:
-                "Here is our hilly landscape with the gradient overlaid."
-        },
-        {
-            src: "media/divergence_2.png",
-            alt: "A small control volume highlighted on a hill",
-            caption:
-                "Now isolate a small region of the vector field."
-        },
-        {
-            src: "media/divergence_3.png",
-            alt: "Balanced gradient flow through a control volume",
-            caption:
-                "Divergence is zero here because the same amount of gradient enters and leaves the volume."
-        },
-        {
-            src: "media/divergence_4.png",
-            alt: "Gradient arrows spreading outward from a valley",
-            caption:
-                "Divergence is positive here because the gradient field is flowing mostly out of the volume."
-        },
-        {
-            src: "media/divergence_5.png",
-            alt: "Gradient arrows converging toward a smooth hilltop",
-            caption:
-                "Divergence is negative here because the gradient field is flowing mostly into the volume."
-        },
-        {
-            src: "media/divergence_6.png",
-            alt: "A grid of scalar values",
-            caption:
-                "At every point, divergence assigns a single number. The result is a scalar field. Look at the numbers. What shape is this?"
-        }
-    ];
-
-    const divergenceImage =
-        document.getElementById("divergenceImage");
-
-    const divergenceCaption =
-        document.getElementById("divergenceCaption");
-
-    const divergenceFrameCounter =
-        document.getElementById(
-            "divergenceFrameCounter"
-        );
-
-    const divergencePreviousButton =
-        document.getElementById(
-            "divergencePreviousButton"
-        );
-
-    const divergencePlayButton =
-        document.getElementById(
-            "divergencePlayButton"
-        );
-
-    const divergenceNextButton =
-        document.getElementById(
-            "divergenceNextButton"
-        );
-
-    let divergenceFrameIndex = 0;
-    let divergenceTimer = null;
-
-    const DIVERGENCE_FRAME_DURATION_MS =
-        2200;
-
-    function showDivergenceFrame(index) {
-        divergenceFrameIndex =
-            (
-                index +
-                divergenceFrames.length
-            ) %
-            divergenceFrames.length;
-
-        const frame =
-            divergenceFrames[
-                divergenceFrameIndex
-            ];
-
-        divergenceImage.src =
-            frame.src;
-
-        divergenceImage.alt =
-            frame.alt;
-
-        divergenceCaption.textContent =
-            frame.caption;
-
-        divergenceFrameCounter.textContent =
-            `${divergenceFrameIndex + 1} / ${divergenceFrames.length}`;
-    }
-
-    function stopDivergenceAnimation() {
-        if (divergenceTimer !== null) {
-            clearInterval(
-                divergenceTimer
-            );
-
-            divergenceTimer = null;
-        }
-
-        divergencePlayButton.textContent =
-            "Play";
-
-        divergencePlayButton.setAttribute(
-            "aria-label",
-            "Play animation"
-        );
-    }
-
-    function startDivergenceAnimation() {
-        divergenceTimer = setInterval(
-            () => {
-                showDivergenceFrame(
-                    divergenceFrameIndex + 1
-                );
-            },
-            DIVERGENCE_FRAME_DURATION_MS
-        );
-
-        divergencePlayButton.textContent =
-            "Pause";
-
-        divergencePlayButton.setAttribute(
-            "aria-label",
-            "Pause animation"
-        );
-    }
-
-    divergencePreviousButton.addEventListener(
-        "click",
-        () => {
-            stopDivergenceAnimation();
-
-            showDivergenceFrame(
-                divergenceFrameIndex - 1
-            );
-        }
-    );
-
-    divergenceNextButton.addEventListener(
-        "click",
-        () => {
-            stopDivergenceAnimation();
-
-            showDivergenceFrame(
-                divergenceFrameIndex + 1
-            );
-        }
-    );
-
-    divergencePlayButton.addEventListener(
-        "click",
-        () => {
-            if (divergenceTimer === null) {
-                startDivergenceAnimation();
-            } else {
-                stopDivergenceAnimation();
-            }
-        }
-    );
-
-    showDivergenceFrame(0);
-</script>
+<script src="math.js"></script>
 
 </body>
 </html>
