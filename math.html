@@ -1786,11 +1786,11 @@ ell = get_integer(
     f"Choose ell from 0 to {MAX_ELL}: "
 )
 
-if ell < 0:
+if ell &lt; 0:
     print("ell cannot be negative. Setting ell = 0.")
     ell = 0
 
-elif ell > MAX_ELL:
+elif ell &gt; MAX_ELL:
     print(
         f"ell is capped at {MAX_ELL} "
         "to keep the calculation manageable."
@@ -1803,7 +1803,7 @@ m = get_integer(
     f"Choose m from {-ell} to {ell}: "
 )
 
-if m < -ell:
+if m &lt; -ell:
     print(
         f"m cannot be less than {-ell}. "
         f"Setting m = {-ell}."
@@ -1811,7 +1811,7 @@ if m < -ell:
 
     m = -ell
 
-elif m > ell:
+elif m &gt; ell:
     print(
         f"m cannot be greater than {ell}. "
         f"Setting m = {ell}."
