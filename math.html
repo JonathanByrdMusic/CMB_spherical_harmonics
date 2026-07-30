@@ -90,7 +90,7 @@
     >
 
     <div id="titleBlock">
-        <h1>Show Me the Math!</h1>
+        <h1>Show Me the Math.</h1>
 
         <div class="subtitle">
             Designed by Jonathan Byrd
@@ -138,12 +138,15 @@
     <article class="mathArticle">
 
         <p>
-            This is all very pretty and fun to play with, but what in the
+            The visualizations are pretty and fun to play with, but what in the
             math is going on? Let's take a look under the hood of spherical
             harmonics, beginning with the divergence of the gradient, also
-            known as the Laplacian:
-            \(\nabla\cdot(\nabla u) = \Delta u\)
+            known as the Laplacian: \(\nabla\cdot(\nabla u) = \nabla^2 u = \Delta u\)
         </p>
+
+        <h3 class="mathSubheading">
+            The Gradient
+        </h3>
 
         <p>
             Imagine you are walking in a hilly country. Stop at any point
@@ -168,13 +171,18 @@
             \]
         </div>
 
+    </article>
+
         <section
             class="gradientAnimation"
             aria-labelledby="gradientAnimationTitle"
         >
-            <h2 id="gradientAnimationTitle">
+            <h3
+                id="gradientAnimationTitle"
+                class="mathSubheading"
+            >
                 The gradient as a vector field
-            </h2>
+            </h3>
 
             <div class="gradientFrame">
                 <img
@@ -226,12 +234,17 @@
             </div>
         </section>
 
+    <article class="mathArticle"> 
+
+        <h3 class="mathSubheading">
+            Divergence
+        </h3>
+        
         <p>
-            The gradient tells you the steepest rate of change, but what is
-            happening around it locally? In a valley, the gradient vectors point
-            outward and up the walls. At another point, the gradient might point
-            along a crest toward a higher peak, even while nearby vectors converge
-            toward the ridge from either side. This local behavior
+            What is happening around the gradient locally? In a valley, the gradient 
+            vectors point outward and up the walls. At another point, the gradient 
+            might point along a crest toward a higher peak, even while nearby vectors 
+            converge toward the ridge from either side. This local behavior
             of the vector field is measured by the <em>divergence</em> of the
             gradient: the net outward flow of the vector field around a point.
         </p>
@@ -261,15 +274,100 @@
             \]
         </div>
 
+    </article>
+
+    <section
+            class="divergenceAnimation"
+            aria-labelledby="divergenceAnimationTitle"
+        >
+            <h3
+                id="divergenceAnimationTitle"
+                class="mathSubheading"
+            >
+                Divergence as a scalar field
+            </h3>
+
+            <div class="divergenceFrame">
+                <img
+                    id="divergenceImage"
+                    src="media/divergence_1.png"
+                    alt="The gradient on three hills"
+                >
+            </div>
+
+            <p
+                id="divergenceCaption"
+                class="divergenceCaption"
+                aria-live="polite"
+            >
+                Here's our hilly landscape with the gradient overlaid.
+            </p>
+
+            <div class="divergenceControls">
+                <button
+                    id="divergencePreviousButton"
+                    type="button"
+                    aria-label="Previous frame"
+                >
+                    &#10094;
+                </button>
+
+                <button
+                    id="divergencePlayButton"
+                    type="button"
+                    aria-label="Play animation"
+                >
+                    Play
+                </button>
+
+                <button
+                    id="divergenceNextButton"
+                    type="button"
+                    aria-label="Next frame"
+                >
+                    &#10095;
+                </button>
+            </div>
+
+            <div
+                id="divergenceFrameCounter"
+                class="divergenceFrameCounter"
+            >
+                1 / 6
+            </div>
+        </section>
+
+    <article class="mathArticle">
+
         <p>
-            Hopefully, you now understand how the Laplacian&mdash;the divergence
-            of the gradient&mdash;gives us fundamental information about the
-            behavior of a function, or mathematical “landscape,” at any point.
+            Can you see how the Laplacian&mdash;the divergence of the gradient&mdash;
+            gives us fundamental information about the behavior of a function, 
+            or mathematical “landscape,” at any point? If it's not clear, take 
+            a break. Go for a walk. Drink some water. Talk to a peer. Give your big, 
+            beautiful brain time to <em>play</em> with the idea. 
+        </p>
+
+        <p>
+            I didn't create this website because I understood all the math. 
+            I created it because I <em>didn't and I wanted to</em>. 
+            It took me <em>a month</em>&mdash; even though I made As and Bs
+            in Calc III, Partial Differential Equations, Thermal Physics, and 
+            Mechanics! I reviewed and relearned concepts I "should have known." 
+            Physics is hard. You're here because it's also beautiful and 
+            awe-inspiring, and you don't give up. 
+        </p>
+
+        <p>
+            Did you drink some water? Okay, let's go!
+        </p>
+
+        <h3 class="mathSubheading">The Gradient in Spherical Coordinates</h3>
+
+        <p>
             In this case, we are interested in how this function behaves on a
             sphere, so we will need the Laplacian in spherical coordinates.
             Let's transform a Cartesian position vector from
-            \(\mathbf{r}(x,y,z)\) to
-            \(\mathbf{r}(r,\phi,\theta)\):
+            \(\mathbf{r}(x,y,z)\) to \(\mathbf{r}(r,\phi,\theta):\)
         </p>
 
         <div class="displayEquation">
@@ -461,6 +559,653 @@
             came from. This is how those geometric scale factors are built.
         </p>
 
+        <h3>Divergence in Spherical Coordinates</h3>
+
+        <p>
+            Now, we need to take the divergence of the gradient field: 
+            \(\nabla\cdot\nabla u\), the net outward flux per unit volume. 
+            What is the differential form of volume for our tiny box surrounding 
+            any point? 
+        </p>
+
+        <div class="displayEquation">
+            \[
+            dV
+            =
+            (dr)(r\,d\theta)(r\sin\theta\,d\phi)
+            =
+            r^2\sin\theta\,dr\,d\theta\,d\phi
+            \]
+        </div>
+
+        <p>
+            The flux for each coordinate flows through an area bounded by the
+            other two coordinates. For example, in Cartesian coordinates, flux
+            along the \(x\)-direction would flow through an area in the
+            \(yz\)-plane. So, our equation should look something like:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \nabla\cdot(\nabla u)
+            =
+            \frac{
+                \text{change in flux through each face}
+            }{
+                \text{volume of the box}
+            }
+            \]
+        </div>
+
+        <figure class="mathFigure">
+            <img
+                src="media/flux.png"
+                alt="Diagram illustrating flux through a small volume"
+            >
+
+            <figcaption>
+                Flux through a small Cartesian-coordinate volume
+            </figcaption>
+        </figure>
+
+        <p>
+            Let us call our gradient field \(\mathbf A\) for now to simplify
+            notation:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \mathbf A
+            =
+            A_r\hat{\mathbf r}
+            +
+            A_\theta\hat{\boldsymbol\theta}
+            +
+            A_\phi\hat{\boldsymbol\phi}
+            \]
+        </div>
+
+        <p>
+            The denominator, representing the volume, will be the product of the
+            scale factors: \(h_rh_\theta h_\phi=r^2\sin\theta\). Each numerator 
+            contains the area of the face perpendicular to the direction being 
+            considered. For the radial direction:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            h_\theta h_\phi
+            =
+            r(r\sin\theta)
+            =
+            r^2\sin\theta
+            \qquad\longrightarrow\qquad
+            \frac{1}{r^2\sin\theta}
+            \frac{\partial}{\partial r}
+            \left(
+                r^2\sin\theta\,A_r
+            \right)
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Since }\sin\theta\text{ is constant with respect to }r
+            \qquad
+            =
+            \frac{1}{r^2}
+            \frac{\partial}{\partial r}
+            \left(
+                r^2A_r
+            \right)
+            \]
+        </div>
+
+        <p>
+            For the polar direction:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            h_rh_\phi
+            =
+            (1)(r\sin\theta)
+            =
+            r\sin\theta
+            \qquad\longrightarrow\qquad
+            \frac{1}{r^2\sin\theta}
+            \frac{\partial}{\partial\theta}
+            \left(
+                r\sin\theta\,A_\theta
+            \right)
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Since }r\text{ is constant with respect to }\theta
+            \qquad
+            =
+            \frac{1}{r\sin\theta}
+            \frac{\partial}{\partial\theta}
+            \left(
+                \sin\theta\,A_\theta
+            \right)
+            \]
+        </div>
+
+        <p>
+            For the azimuthal direction:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            h_rh_\theta
+            =
+            (1)(r)
+            =
+            r
+            \qquad\longrightarrow\qquad
+            \frac{1}{r^2\sin\theta}
+            \frac{\partial}{\partial\phi}
+            \left(
+                rA_\phi
+            \right)
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \text{Since }r\text{ is constant with respect to }\phi
+            \qquad
+            =
+            \frac{1}{r\sin\theta}
+            \frac{\partial A_\phi}{\partial\phi}
+            \]
+        </div>
+
+        <p>
+            Combining the three pieces:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \nabla\cdot\mathbf A
+            =
+            \frac{1}{r^2}
+            \frac{\partial}{\partial r}
+            \left(
+                r^2A_r
+            \right)
+            +
+            \frac{1}{r\sin\theta}
+            \frac{\partial}{\partial\theta}
+            \left(
+                \sin\theta\,A_\theta
+            \right)
+            +
+            \frac{1}{r\sin\theta}
+            \frac{\partial A_\phi}{\partial\phi}
+            \]
+        </div>
+
+        <p>
+            Substituting our values from the gradient into the divergence
+            formula:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            A_r
+            =
+            \frac{\partial u}{\partial r}
+            \qquad\qquad
+            A_\theta
+            =
+            \frac{1}{r}
+            \frac{\partial u}{\partial\theta}
+            \qquad\qquad
+            A_\phi
+            =
+            \frac{1}{r\sin\theta}
+            \frac{\partial u}{\partial\phi}
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            \boxed{
+            \nabla^2u
+            =
+            \frac{1}{r^2}
+            \frac{\partial}{\partial r}
+            \left(
+                r^2
+                \frac{\partial u}{\partial r}
+            \right)
+            +
+            \frac{1}{r^2\sin\theta}
+            \frac{\partial}{\partial\theta}
+            \left(
+                \sin\theta
+                \frac{\partial u}{\partial\theta}
+            \right)
+            +
+            \frac{1}{r^2\sin^2\theta}
+            \frac{\partial^2u}{\partial\phi^2}
+            }
+            \]
+        </div>
+
+        <p>
+            That is the Laplacian in spherical coordinates! You may expand the
+            radial derivative using the product rule and use subscript notation
+            for partial derivatives:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \boxed{
+            \nabla^2u
+            =
+            u_{rr}
+            +
+            \frac{2}{r}u_r
+            +
+            \frac{1}{r^2\sin\theta}
+            \frac{\partial}{\partial\theta}
+            \left(
+                \sin\theta\,u_\theta
+            \right)
+            +
+            \frac{1}{r^2\sin^2\theta}
+            u_{\phi\phi}
+            }
+            \]
+        </div>
+
+        <p>
+            However it is written, you may notice that the polar term is not
+            simplified. It typically is not, because leaving it in this form
+            makes things cleaner later.
+        </p>
+
+        <h3>Now, about those spherical harmonics...</h3>
+
+        <p>
+            We can now ask what functions behave especially simply under the
+            Laplacian on a sphere. If you have not studied partial differential
+            equations, you can still understand this next solution method. The
+            Laplacian in spherical coordinates looks impossible, but we are going
+            to separate variables. Because the coordinates describe three
+            independent directions, let us assume there is a solution that can be
+            written as a product, analogous to multiplying coordinate lengths
+            together to obtain a volume:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            R=R(r)
+            \qquad\qquad
+            \Theta=\Theta(\theta)
+            \qquad\qquad
+            \Phi=\Phi(\phi)
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            u(r,\theta,\phi)
+            =
+            R(r)\Theta(\theta)\Phi(\phi)
+            \]
+        </div>
+
+        <p>
+            When we differentiate with respect to any one coordinate, we treat
+            the other two functions as constants, turning the relevant partial
+            derivatives into ordinary derivatives. The radial derivative is:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\partial u}{\partial r}
+            =
+            R'(r)\Theta(\theta)\Phi(\phi)
+            \qquad\longrightarrow\qquad
+            \frac{\partial}{\partial r}
+            \left(
+                r^2\frac{\partial u}{\partial r}
+            \right)
+            =
+            \Theta\Phi
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            \]
+        </div>
+
+        <p>
+            The polar derivative is:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\partial u}{\partial\theta}
+            =
+            R\Theta'\Phi
+            \qquad\longrightarrow\qquad
+            \frac{\partial}{\partial\theta}
+            \left(
+                \sin\theta\frac{\partial u}{\partial\theta}
+            \right)
+            =
+            R\Phi
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            \]
+        </div>
+
+        <p>
+            The azimuthal derivative is:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\partial u}{\partial\phi}
+            =
+            R\Theta\Phi'
+            \qquad\longrightarrow\qquad
+            \frac{\partial^2u}{\partial\phi^2}
+            =
+            R\Theta
+            \frac{d^2\Phi}{d\phi^2}
+            \]
+        </div>
+
+        <p>
+            Substituting these expressions into Laplace's equation:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\Theta\Phi}{r^2}
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            +
+            \frac{R\Phi}{r^2\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{R\Theta}{r^2\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            Divide the entire equation by \(R\Theta\Phi\) (assuming the product is
+            nonzero, for the pedantic!):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{r^2R}
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            +
+            \frac{1}{r^2\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{r^2\Phi\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            Multiply through by \(r^2\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{R}
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            +
+            \frac{1}{\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{\Phi\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            Stop! Note that the <em>radial and angular parts of the equation are
+            independent</em>. The first term depends only on \(r\), while the
+            remaining terms depend only on \(\theta\) and \(\phi\). We could write
+            the equation as:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{\Phi\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            -\frac{1}{R}
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            \]
+        </div>
+
+        <p>
+            The only way the two sides can remain equal for every point in space
+            is if both sides are constant. We will therefore make them equal to a
+            <em>separation constant</em>, \(\lambda\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{\Phi\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            -\lambda
+            \qquad\qquad
+            \frac{1}{R}
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            =
+            \lambda
+            \]
+        </div>
+
+        <p>
+            Thus, the radial equation is:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{d}{dr}
+            \left(
+                r^2\frac{dR}{dr}
+            \right)
+            -
+            \lambda R
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            The angular equation is:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\Theta\sin\theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{\Phi\sin^2\theta}
+            \frac{d^2\Phi}{d\phi^2}
+            +
+            \lambda
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            <strong><em>
+                The spherical harmonics arise from the angular equation. 
+            </em></strong>
+            To find them, we will now separate the polar and azimuthal dependence.
+        </p>
+
+        <p>
+            If we multiply the angular equation by \(\sin^2\theta\):
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{\sin\theta}{\Theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \frac{1}{\Phi}
+            \frac{d^2\Phi}{d\phi^2}
+            +
+            \lambda\sin^2\theta
+            =
+            0
+            \quad\longrightarrow\quad
+            \frac{\sin\theta}{\Theta}
+            \frac{d}{d\theta}
+            \left(
+                \sin\theta\frac{d\Theta}{d\theta}
+            \right)
+            +
+            \lambda\sin^2\theta
+            =
+            -
+            \frac{1}{\Phi}
+            \frac{d^2\Phi}{d\phi^2}
+            \]
+        </div>
+
+        <p>
+            If the two sides are equal at every point, each side must again equal
+            a constant. There is no reason you should know in advance to choose
+            this particular form, but setting the second separation constant to
+            \(m^2\), so that the azimuthal equation contains \(-m^2\), gives us a
+            convenient result:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \frac{1}{\Phi}
+            \frac{d^2\Phi}{d\phi^2}
+            =
+            -m^2
+            \quad\longrightarrow\quad
+            \frac{d^2\Phi}{d\phi^2}
+            +
+            m^2\Phi
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            This is a second-order differential equation whose solutions must
+            reproduce themselves after two derivatives (apart from a factor of
+            \(-m^2\)). Trigonometric functions have exactly this behavior! For
+            example, \(\frac{d^2}{d\phi^2}\sin\phi=-\sin\phi\).
+            So, the real solutions look like this:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \Phi(\phi)
+            =
+            A\cos(m\phi)
+            +
+            B\sin(m\phi)
+            \]
+        </div>
+
+        <p>
+            However, let's look at the complex exponential solutions
+            \(\Phi(\phi)=Ce^{im\phi}\). Because the field must return 
+            to the same value (because it's the same point) after 
+            one complete rotation around the \(z\)-axis, 
+            \(\Phi(\phi+2\pi)=\Phi(\phi)\). It's easy to see in the 
+            exponential form:
+
+        <div class="displayEquation">
+            \[
+            e^{im(\phi+2\pi)}
+            =
+            e^{im\phi}e^{i2\pi m}
+            =
+            e^{im\phi}
+            \]
+        </div>
+
+        <p>
+            Therefore, it must be true that \(e^{i2\pi m}=1\).
+        </p>
+
+        <p>
+            Because
+            \(e^0=1\),
+            \(e^{i2\pi}=1\),
+            \(e^{i4\pi}=1\),
+            and so on, this requires
+            \(m=0,\pm1,\pm2,\ldots\)
+        </p>
     </article>
 
 </main>
@@ -696,6 +1441,177 @@
     );
 
     showGradientFrame(0);
+</script>
+
+<script>
+    const divergenceFrames = [
+        {
+            src: "media/divergence_1.png",
+            alt: "Gradient arrows over a hilly landscape",
+            caption:
+                "Here is our hilly landscape with the gradient overlaid."
+        },
+        {
+            src: "media/divergence_2.png",
+            alt: "A small control volume highlighted on a hill",
+            caption:
+                "Now isolate a small region of the vector field."
+        },
+        {
+            src: "media/divergence_3.png",
+            alt: "Balanced gradient flow through a control volume",
+            caption:
+                "Divergence is zero here because the same amount of gradient enters and leaves the volume."
+        },
+        {
+            src: "media/divergence_4.png",
+            alt: "Gradient arrows spreading outward from a valley",
+            caption:
+                "Divergence is positive here because the gradient field is flowing mostly out of the volume."
+        },
+        {
+            src: "media/divergence_5.png",
+            alt: "Gradient arrows converging toward a smooth hilltop",
+            caption:
+                "Divergence is negative here because the gradient field is flowing mostly into the volume."
+        },
+        {
+            src: "media/divergence_6.png",
+            alt: "A grid of scalar values",
+            caption:
+                "At every point, divergence assigns a single number. The result is a scalar field. Look at the numbers. What shape is this?"
+        }
+    ];
+
+    const divergenceImage =
+        document.getElementById("divergenceImage");
+
+    const divergenceCaption =
+        document.getElementById("divergenceCaption");
+
+    const divergenceFrameCounter =
+        document.getElementById(
+            "divergenceFrameCounter"
+        );
+
+    const divergencePreviousButton =
+        document.getElementById(
+            "divergencePreviousButton"
+        );
+
+    const divergencePlayButton =
+        document.getElementById(
+            "divergencePlayButton"
+        );
+
+    const divergenceNextButton =
+        document.getElementById(
+            "divergenceNextButton"
+        );
+
+    let divergenceFrameIndex = 0;
+    let divergenceTimer = null;
+
+    const DIVERGENCE_FRAME_DURATION_MS =
+        2200;
+
+    function showDivergenceFrame(index) {
+        divergenceFrameIndex =
+            (
+                index +
+                divergenceFrames.length
+            ) %
+            divergenceFrames.length;
+
+        const frame =
+            divergenceFrames[
+                divergenceFrameIndex
+            ];
+
+        divergenceImage.src =
+            frame.src;
+
+        divergenceImage.alt =
+            frame.alt;
+
+        divergenceCaption.textContent =
+            frame.caption;
+
+        divergenceFrameCounter.textContent =
+            `${divergenceFrameIndex + 1} / ${divergenceFrames.length}`;
+    }
+
+    function stopDivergenceAnimation() {
+        if (divergenceTimer !== null) {
+            clearInterval(
+                divergenceTimer
+            );
+
+            divergenceTimer = null;
+        }
+
+        divergencePlayButton.textContent =
+            "Play";
+
+        divergencePlayButton.setAttribute(
+            "aria-label",
+            "Play animation"
+        );
+    }
+
+    function startDivergenceAnimation() {
+        divergenceTimer = setInterval(
+            () => {
+                showDivergenceFrame(
+                    divergenceFrameIndex + 1
+                );
+            },
+            DIVERGENCE_FRAME_DURATION_MS
+        );
+
+        divergencePlayButton.textContent =
+            "Pause";
+
+        divergencePlayButton.setAttribute(
+            "aria-label",
+            "Pause animation"
+        );
+    }
+
+    divergencePreviousButton.addEventListener(
+        "click",
+        () => {
+            stopDivergenceAnimation();
+
+            showDivergenceFrame(
+                divergenceFrameIndex - 1
+            );
+        }
+    );
+
+    divergenceNextButton.addEventListener(
+        "click",
+        () => {
+            stopDivergenceAnimation();
+
+            showDivergenceFrame(
+                divergenceFrameIndex + 1
+            );
+        }
+    );
+
+    divergencePlayButton.addEventListener(
+        "click",
+        () => {
+            if (divergenceTimer === null) {
+                startDivergenceAnimation();
+            } else {
+                stopDivergenceAnimation();
+            }
+        }
+    );
+
+    showDivergenceFrame(0);
 </script>
 
 </body>
