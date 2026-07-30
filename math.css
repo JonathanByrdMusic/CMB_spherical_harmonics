@@ -243,6 +243,13 @@
     line-height: 1.45;
 }
 
+.mathFootnote {
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #5f6872;
+}
+
 .codeExample {
     width: min(100%, 980px);
     margin: 2rem auto;
