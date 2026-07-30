@@ -1748,6 +1748,7 @@
             class="language-python"
 >import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 
 from scipy.special import sph_harm_y
 from sympy import symbols, assoc_legendre, latex
@@ -1777,11 +1778,11 @@ ell = get_integer(
     f"Choose ell from 0 to {MAX_ELL}: "
 )
 
-if ell &lt; 0:
+if ell < 0:
     print("ell cannot be negative. Setting ell = 0.")
     ell = 0
 
-elif ell &gt; MAX_ELL:
+elif ell > MAX_ELL:
     print(
         f"ell is capped at {MAX_ELL} "
         "to keep the calculation manageable."
@@ -1794,7 +1795,7 @@ m = get_integer(
     f"Choose m from {-ell} to {ell}: "
 )
 
-if m &lt; -ell:
+if m < -ell:
     print(
         f"m cannot be less than {-ell}. "
         f"Setting m = {-ell}."
@@ -1802,7 +1803,7 @@ if m &lt; -ell:
 
     m = -ell
 
-elif m &gt; ell:
+elif m > ell:
     print(
         f"m cannot be greater than {ell}. "
         f"Setting m = {ell}."
@@ -1956,12 +1957,43 @@ axis = figure.add_subplot(
     projection="mollweide"
 )
 
-image = axis.pcolormesh(
-    longitude_grid,
-    latitude_grid,
-    values,
-    shading="auto"
+
+# Use a circular colormap for phase
+
+phase_cmap = LinearSegmentedColormap.from_list(
+    "phase_cmap",
+    [
+        "#234f9b",  # blue
+        "#2f7fc1",  # lighter blue
+        "#2fa7a0",  # blue-green
+        "#67c56f",  # green
+        "#e6db4f",  # yellow
+        "#67c56f",  # back through green
+        "#2fa7a0",  # back through blue-green
+        "#2f7fc1",  # back through blue
+        "#234f9b"   # same as start so it wraps smoothly
+    ]
 )
+
+if display_mode == "phase":
+    image = axis.pcolormesh(
+        longitude_grid,
+        latitude_grid,
+        values,
+        shading="auto",
+        cmap=phase_cmap,
+        vmin=-np.pi,
+        vmax=np.pi
+    )
+
+else:
+    image = axis.pcolormesh(
+        longitude_grid,
+        latitude_grid,
+        values,
+        shading="auto"
+    )
+
 
 axis.set_title(
     rf"{title_label} of "
