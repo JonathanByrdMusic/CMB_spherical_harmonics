@@ -3,22 +3,20 @@
     margin: 0 auto;
     padding: 34px 38px;
 
+    color: var(--space-text);
     font-size: 1.08rem;
     line-height: 1.75;
     text-align: left;
 
-    background:
-        linear-gradient(
-            135deg,
-            #f3f8fa 0%,
-            #eef2f7 55%,
-            #e8e8f1 100%
-        );
+    background: var(--space-panel);
 
-    border: 1px solid var(--so-border);
+    border: 1px solid var(--space-border);
     border-radius: 18px 34px 18px 34px;
 
     box-sizing: border-box;
+
+    box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.18);
 }
 
 .mathArticle p {
@@ -32,7 +30,7 @@
 .mathArticle h2 {
     margin: 2.5rem 0 1rem;
 
-    color: var(--so-blue);
+    color: var(--space-title);
     font-size: 1.45rem;
     line-height: 1.15;
     font-weight: 700;
@@ -46,7 +44,7 @@
 .mathArticle h3 {
     margin: 2rem 0 0.8rem;
 
-    color: var(--so-blue);
+    color: var(--space-title);
     font-size: 1.18rem;
     line-height: 1.25;
     font-weight: 600;
@@ -55,7 +53,7 @@
 .mathSubheading {
     margin: 0 0 1rem;
 
-    color: var(--so-blue);
+    color: var(--space-title);
     font-size: 1.18rem;
     line-height: 1.25;
     font-weight: 700;
@@ -69,12 +67,16 @@
 .displayEquation {
     margin: 2rem 0;
     overflow-x: auto;
+
+    color: var(--space-title);
     text-align: center;
 }
 
 .gradientAnimation {
     width: min(100%, 620px);
     margin: 3rem auto 1rem;
+
+    color: var(--space-text);
 }
 
 .gradientAnimation .mathSubheading {
@@ -85,9 +87,13 @@
     width: 100%;
     aspect-ratio: 16 / 9;
     overflow: hidden;
+
     background: #ffffff;
-    border: 1px solid #d8dde5;
+    border: 1px solid var(--space-border);
     border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 .gradientFrame img {
@@ -100,10 +106,11 @@
 .gradientCaption {
     min-height: 3.2em;
     margin: 1rem auto 0.75rem;
-    text-align: center;
-    color: #4d5663;
+
+    color: var(--space-text);
     font-size: 1rem;
     line-height: 1.55;
+    text-align: center;
 }
 
 .gradientControls {
@@ -116,19 +123,24 @@
 .gradientControls button {
     min-width: 48px;
     padding: 0.65rem 1rem;
-    border: 1px solid #234f96;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #234f96;
+
+    background: var(--secondary-button);
+    border: 1px solid var(--secondary-button);
+    border-radius: 8px;
+
+    color: var(--space-background);
+
     font-family: inherit;
     font-size: 0.95rem;
     font-weight: 600;
+
     cursor: pointer;
 }
 
 .gradientControls button:hover {
-    background: #234f96;
-    color: #ffffff;
+    background: var(--secondary-button-hover);
+    border-color: var(--secondary-button-hover);
+    color: var(--space-background);
 }
 
 #gradientPlayButton {
@@ -137,14 +149,17 @@
 
 .gradientFrameCounter {
     margin-top: 0.55rem;
-    text-align: center;
-    color: #727b87;
+
+    color: var(--space-muted);
     font-size: 0.85rem;
+    text-align: center;
 }
 
 .divergenceAnimation {
     width: min(100%, 620px);
     margin: 3rem auto 1rem;
+
+    color: var(--space-text);
 }
 
 .divergenceAnimation .mathSubheading {
@@ -157,17 +172,17 @@
     overflow: hidden;
 
     background: #ffffff;
-
-    border: 1px solid #d8dde5;
+    border: 1px solid var(--space-border);
     border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 .divergenceFrame img {
     display: block;
-
     width: 100%;
     height: 100%;
-
     object-fit: contain;
 }
 
@@ -175,7 +190,7 @@
     min-height: 3.2em;
     margin: 1rem auto 0.75rem;
 
-    color: #4d5663;
+    color: var(--space-text);
     font-size: 1rem;
     line-height: 1.55;
     text-align: center;
@@ -192,11 +207,11 @@
     min-width: 48px;
     padding: 0.65rem 1rem;
 
-    border: 1px solid #234f96;
-    border-radius: 6px;
+    background: var(--secondary-button);
+    border: 1px solid var(--secondary-button);
+    border-radius: 8px;
 
-    background: #ffffff;
-    color: #234f96;
+    color: var(--space-background);
 
     font-family: inherit;
     font-size: 0.95rem;
@@ -206,8 +221,9 @@
 }
 
 .divergenceControls button:hover {
-    background: #234f96;
-    color: #ffffff;
+    background: var(--secondary-button-hover);
+    border-color: var(--secondary-button-hover);
+    color: var(--space-background);
 }
 
 #divergencePlayButton {
@@ -217,7 +233,7 @@
 .divergenceFrameCounter {
     margin-top: 0.55rem;
 
-    color: #727b87;
+    color: var(--space-muted);
     font-size: 0.85rem;
     text-align: center;
 }
@@ -235,23 +251,28 @@
     width: 100%;
     height: auto;
 
-    border: 1px solid #d8dde5;
+    background: #ffffff;
+    border: 1px solid var(--space-border);
     border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 .mathFigure figcaption {
     margin-top: 0.75rem;
 
-    color: #4d5663;
+    color: var(--space-muted);
     font-size: 0.95rem;
     line-height: 1.45;
 }
 
 .mathFootnote {
     margin-top: 1rem;
+
+    color: var(--space-muted);
     font-size: 0.88rem;
     line-height: 1.5;
-    color: #5f6872;
     text-indent: 2em;
 }
 
@@ -260,13 +281,12 @@
     margin: 2rem auto;
     overflow: hidden;
 
-    background: #161b22;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: #0f1420;
+    border: 1px solid var(--space-border);
     border-radius: 14px;
 
     box-shadow:
-        0 14px 38px rgba(21, 38, 59, 0.16),
-        0 3px 9px rgba(21, 38, 59, 0.1);
+        0 16px 38px rgba(0, 0, 0, 0.28);
 }
 
 .codeExampleHeader {
@@ -278,14 +298,14 @@
     min-height: 54px;
     padding: 0.65rem 0.8rem 0.65rem 1.2rem;
 
-    background: #212833;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--space-panel-soft);
+    border-bottom: 1px solid var(--space-border);
 }
 
 .codeExampleTitle {
     margin: 0;
 
-    color: #eef3f8;
+    color: var(--space-title);
     font-family: "Figtree", sans-serif;
     font-size: 0.98rem;
     font-weight: 600;
@@ -301,13 +321,13 @@
     min-width: 84px;
     padding: 0.52rem 0.72rem;
 
-    color: #dce6ef;
+    color: var(--space-title);
     font: inherit;
     font-size: 0.86rem;
     font-weight: 600;
 
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(96, 156, 248, 0.12);
+    border: 1px solid rgba(96, 156, 248, 0.38);
     border-radius: 8px;
 
     cursor: pointer;
@@ -319,8 +339,8 @@
 }
 
 .copyCodeButton:hover {
-    background: rgba(255, 255, 255, 0.13);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(96, 156, 248, 0.22);
+    border-color: var(--secondary-button);
 }
 
 .copyCodeButton:active {
@@ -328,7 +348,7 @@
 }
 
 .copyCodeButton:focus-visible {
-    outline: 3px solid rgba(111, 190, 230, 0.7);
+    outline: 3px solid rgba(96, 156, 248, 0.5);
     outline-offset: 2px;
 }
 
@@ -352,7 +372,9 @@
     max-height: 680px;
     overflow: auto;
 
-    scrollbar-color: #687481 #212833;
+    scrollbar-color:
+        var(--space-muted)
+        var(--space-panel);
     scrollbar-width: thin;
 }
 
@@ -364,7 +386,7 @@
 }
 
 .codeExample code {
-    color: #e6edf3;
+    color: #dfe5f1;
 
     font-family:
         "SFMono-Regular",
@@ -393,6 +415,34 @@
 }
 
 @media (max-width: 560px) {
+    .mathArticle {
+        width: 100%;
+        padding: 24px 20px;
+
+        font-size: 1rem;
+        line-height: 1.65;
+
+        border-radius: 14px 24px 14px 24px;
+    }
+
+    .mathArticle h2 {
+        font-size: 1.25rem;
+    }
+
+    .gradientAnimation,
+    .divergenceAnimation {
+        margin-top: 2.25rem;
+    }
+
+    .gradientAnimation h2 {
+        font-size: 1.25rem;
+    }
+
+    .gradientCaption,
+    .divergenceCaption {
+        font-size: 0.95rem;
+    }
+
     .codeExample {
         border-radius: 11px;
     }
@@ -420,41 +470,5 @@
 
     .codeExample code {
         font-size: 0.78rem;
-    }
-}
-
-@media (max-width: 560px) {
-    .mathArticle {
-        width: 100%;
-        padding: 24px 20px;
-
-        font-size: 1rem;
-        line-height: 1.65;
-
-        border-radius: 14px 24px 14px 24px;
-    }
-
-    .mathArticle h2 {
-        font-size: 1.25rem;
-    }
-
-    .gradientAnimation {
-        margin-top: 2.25rem;
-    }
-
-    .gradientAnimation h2 {
-        font-size: 1.25rem;
-    }
-
-    .gradientCaption {
-        font-size: 0.95rem;
-    }
-
-    .divergenceAnimation {
-        margin-top: 2.25rem;
-    }
-
-    .divergenceCaption {
-        font-size: 0.95rem;
     }
 }
