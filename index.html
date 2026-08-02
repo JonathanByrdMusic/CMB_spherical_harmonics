@@ -50,6 +50,34 @@
         <div class="subtitle">
             Designed by Jonathan Byrd
         </div>
+
+        <div
+            class="harmonicLegend"
+            role="group"
+            aria-label="Spherical harmonic color legend"
+        >
+            <span class="harmonicLegendItem">
+                <span
+                    class="harmonicLegendSwatch harmonicLegendPositive"
+                    aria-hidden="true"
+                ></span>
+
+                <span>Positive</span>
+            </span>
+
+            <span class="harmonicLegendItem">
+                <span
+                    class="harmonicLegendSwatch harmonicLegendNegative"
+                    aria-hidden="true"
+                ></span>
+
+                <span>Negative</span>
+            </span>
+
+            <span class="harmonicLegendMagnitude">
+                Saturation indicates magnitude
+            </span>
+        </div>
     </div>
 
     <div class="menuContainer">
@@ -169,17 +197,21 @@
 
     <p>
         If you've seen pictures of atomic orbitals in chemistry, the left panel should look familiar.
-        It shows a single spherical harmonic as a three-dimensional wave pattern.
-        The numbers <strong>&ell;</strong> and <strong>m</strong> determine the pattern's complexity
-        and orientation—you may have used them to understand how electrons fill atomic orbitals.
-        Move the sliders and see what happens.
+        It shows a single spherical harmonic as a three-dimensional wave pattern including radial 
+        displacement from the origin, analogous to the probability of finding an 
+        electron some distance from the nucleus. The numbers <strong>&ell;</strong> and 
+        <strong>m</strong> determine the pattern's complexity and orientation. Move the sliders and 
+        see what happens.
     </p>
 
     <p>
-        The right panel shows a simulated Cosmic Microwave Background (CMB) sky.
-        It is formed by <strong>superposing</strong> many spherical harmonics with different amplitudes.
-        Increasing the maximum value of <strong>&ell;</strong> adds progressively finer wave patterns,
-        revealing more detailed structure in the simulated universe.
+        The right panel shows a simulated Cosmic Microwave Background (CMB) sky, keeping only the 
+        angular coordinates and representing the value using color across the surface of a 
+        sphere, projected onto a flat canvas using a Mollweide projection. It is formed by 
+        <strong>superposing</strong> many spherical harmonics with different amplitudes
+        up to the maximum <strong>&ell;</strong> you selected with the slider. Increasing the maximum 
+        value of <strong>&ell;</strong> adds progressively finer wave patterns, revealing more 
+        detailed structure in the simulated universe.
     </p>
 
     <p>
