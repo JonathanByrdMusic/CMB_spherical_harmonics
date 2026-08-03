@@ -839,6 +839,9 @@ function updateModeControls() {
     mSlider.value = String(m);
     mValue.textContent = String(m);
 
+    updateSliderFill(lmaxSlider);
+    updateSliderFill(mSlider);
+
 }
 
 function updateRemnantFromControls() {
@@ -864,6 +867,42 @@ function finishRemnantUpdate() {
     }
 
     updateRemnantFromControls();
+}
+
+function updateSliderFill(
+    sliderElement
+) {
+    const minimum =
+        Number(sliderElement.min);
+
+    const maximum =
+        Number(sliderElement.max);
+
+    const value =
+        Number(sliderElement.value);
+
+    const range =
+        maximum - minimum;
+
+    const percentage =
+        range > 0
+            ? (
+                (value - minimum)
+                /
+                range
+            ) * 100
+            : 0;
+
+    sliderElement.style.setProperty(
+        "--slider-background",
+        `linear-gradient(
+            to right,
+            var(--slider-color) 0%,
+            var(--slider-color) ${percentage}%,
+            #eeeeee ${percentage}%,
+            #eeeeee 100%
+        )`
+    );
 }
 
 /*
