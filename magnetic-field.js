@@ -375,14 +375,6 @@ function updateMagneticControls() {
     magneticMValue.textContent =
         String(m);
 
-    updateMagneticSliderFill(
-        magneticLSlider
-    );
-
-    updateMagneticSliderFill(
-        magneticMSlider
-    );
-
     magneticMLabel.textContent =
         showingSingleMode
             ? "m:"
@@ -1199,42 +1191,6 @@ function buildHarmonicFieldLines() {
     magneticRenderer.render(
         magneticScene,
         magneticCamera
-    );
-}
-
-function updateMagneticSliderFill(
-    sliderElement
-) {
-    const minimum =
-        Number(sliderElement.min);
-
-    const maximum =
-        Number(sliderElement.max);
-
-    const value =
-        Number(sliderElement.value);
-
-    const range =
-        maximum - minimum;
-
-    const percentage =
-        range > 0
-            ? (
-                (value - minimum)
-                /
-                range
-            ) * 100
-            : 0;
-
-    sliderElement.style.setProperty(
-        "--slider-background",
-        `linear-gradient(
-            to right,
-            var(--slider-color) 0%,
-            var(--slider-color) ${percentage}%,
-            #eeeeee ${percentage}%,
-            #eeeeee 100%
-        )`
     );
 }
 
