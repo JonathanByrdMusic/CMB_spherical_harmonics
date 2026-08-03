@@ -121,6 +121,17 @@ const material = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide
 });
 
+const remnantGroup =
+    new THREE.Group();
+
+remnantGroup.rotation.set(
+    -0.35,
+    0.8,
+    0.1
+);
+
+scene.add(remnantGroup);
+
 const remnant = new THREE.Mesh(
     geometry,
     material
@@ -140,11 +151,8 @@ const filaments = new THREE.Mesh(
     filamentMaterial
 );
 
-remnant.rotation.set(-0.35, 0.8, 0.1);
-filaments.rotation.copy(remnant.rotation);
-
-scene.add(remnant);
-scene.add(filaments);
+remnantGroup.add(remnant);
+remnantGroup.add(filaments);
 
 const particleMaterial =
     new THREE.PointsMaterial({
@@ -161,9 +169,7 @@ const particles = new THREE.Points(
     particleMaterial
 );
 
-particles.rotation.copy(remnant.rotation);
-
-scene.add(particles);
+remnantGroup.add(particles);
 
 /*
  * Math utilities
@@ -759,9 +765,7 @@ function renderAge(ageYears) {
         minimumScale
     );
 
-    remnant.scale.setScalar(scale);
-    filaments.scale.setScalar(scale);
-    particles.scale.setScalar(scale);
+    remnantGroup.scale.setScalar(scale);
 
     const roundedAge = Math.min(
         Math.round(ageYears),
@@ -866,6 +870,90 @@ function finishRemnantUpdate() {
     updateRemnantFromControls();
 }
 
+function enableDragRotation(
+    viewer,
+    objects,
+    renderScene
+) {
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
+
+    const rotationSpeed = 0.006;
+
+    viewer.style.cursor = "grab";
+    viewer.style.touchAction = "none";
+
+    viewer.addEventListener(
+        "pointerdown",
+        event => {
+            dragging = true;
+
+            previousX = event.clientX;
+            previousY = event.clientY;
+
+            viewer.style.cursor = "grabbing";
+
+            viewer.setPointerCapture(
+                event.pointerId
+            );
+        }
+    );
+
+    viewer.addEventListener(
+        "pointermove",
+        event => {
+            if (!dragging) {
+                return;
+            }
+
+            const deltaX =
+                event.clientX - previousX;
+
+            const deltaY =
+                event.clientY - previousY;
+
+            previousX = event.clientX;
+            previousY = event.clientY;
+
+            for (const object of objects) {
+                object.rotation.y +=
+                    deltaX * rotationSpeed;
+
+                object.rotation.x +=
+                    deltaY * rotationSpeed;
+            }
+
+            renderScene();
+        }
+    );
+
+    function stopDragging(event) {
+        dragging = false;
+        viewer.style.cursor = "grab";
+
+        if (
+            viewer.hasPointerCapture(
+                event.pointerId
+            )
+        ) {
+            viewer.releasePointerCapture(
+                event.pointerId
+            );
+        }
+    }
+
+    viewer.addEventListener(
+        "pointerup",
+        stopDragging
+    );
+
+    viewer.addEventListener(
+        "pointercancel",
+        stopDragging
+    );
+}
+
 /*
  * Events
  */
@@ -911,6 +999,19 @@ newSeedButton.addEventListener("click", () => {
     rebuildOpacityTexture();
     startExplosion();
 });
+
+enableDragRotation(
+    viewer,
+    [
+        remnantGroup
+    ],
+    () => {
+        renderer.render(
+            scene,
+            camera
+        );
+    }
+);
 
 /*
  * Initialize

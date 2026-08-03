@@ -101,18 +101,27 @@ const earth =
         earthMaterial
     );
 
-earth.rotation.set(
+const magneticModelGroup =
+    new THREE.Group();
+
+magneticModelGroup.rotation.set(
     -0.25,
     0.35,
     0
 );
 
-magneticScene.add(earth);
+magneticScene.add(
+    magneticModelGroup
+);
+
+magneticModelGroup.add(
+    earth
+);
 
 const magneticFieldLineGroup =
     new THREE.Group();
 
-magneticScene.add(
+magneticModelGroup.add(
     magneticFieldLineGroup
 );
 
@@ -1182,15 +1191,95 @@ function buildHarmonicFieldLines() {
                 );
             }
         }
-    }
-
-    magneticFieldLineGroup.rotation.copy(
-        earth.rotation
-    );
+        }
 
     magneticRenderer.render(
         magneticScene,
         magneticCamera
+    );
+}
+
+function enableDragRotation(
+    viewer,
+    objects,
+    renderScene
+) {
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
+
+    const rotationSpeed = 0.006;
+
+    viewer.style.cursor = "grab";
+    viewer.style.touchAction = "none";
+
+    viewer.addEventListener(
+        "pointerdown",
+        event => {
+            dragging = true;
+
+            previousX = event.clientX;
+            previousY = event.clientY;
+
+            viewer.style.cursor = "grabbing";
+
+            viewer.setPointerCapture(
+                event.pointerId
+            );
+        }
+    );
+
+    viewer.addEventListener(
+        "pointermove",
+        event => {
+            if (!dragging) {
+                return;
+            }
+
+            const deltaX =
+                event.clientX - previousX;
+
+            const deltaY =
+                event.clientY - previousY;
+
+            previousX = event.clientX;
+            previousY = event.clientY;
+
+            for (const object of objects) {
+                object.rotation.y +=
+                    deltaX * rotationSpeed;
+
+                object.rotation.x +=
+                    deltaY * rotationSpeed;
+            }
+
+            renderScene();
+        }
+    );
+
+    function stopDragging(event) {
+        dragging = false;
+        viewer.style.cursor = "grab";
+
+        if (
+            viewer.hasPointerCapture(
+                event.pointerId
+            )
+        ) {
+            viewer.releasePointerCapture(
+                event.pointerId
+            );
+        }
+    }
+
+    viewer.addEventListener(
+        "pointerup",
+        stopDragging
+    );
+
+    viewer.addEventListener(
+        "pointercancel",
+        stopDragging
     );
 }
 
@@ -1249,10 +1338,22 @@ earthLikeFieldButton.addEventListener(
     }
 );
 
+enableDragRotation(
+    magneticViewer,
+    [
+        magneticModelGroup
+    ],
+    () => {
+        magneticRenderer.render(
+            magneticScene,
+            magneticCamera
+        );
+    }
+);
+
 /*
  * Initialize
  */
 
 resizeMagneticRenderer();
 updateMagneticControls();
-clearMagneticFieldLines();
