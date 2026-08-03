@@ -450,7 +450,7 @@ input[type="range"]:hover::-moz-range-thumb {
 
 #lmaxSlider,
 #mSlider {
-    --slider-color: #c7ccd6;
+    --slider-color: #808080;
 }
 
 #buildUniverseButton,
