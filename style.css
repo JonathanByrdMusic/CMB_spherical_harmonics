@@ -448,6 +448,11 @@ input[type="range"]:hover::-moz-range-thumb {
     background: #ffffff;
 }
 
+#lmaxSlider,
+#mSlider {
+    --slider-color: #c7ccd6;
+}
+
 #buildUniverseButton,
 #explodeButton,
 #buildMagneticFieldButton {
