@@ -431,13 +431,11 @@ input[type="range"]:hover::-moz-range-thumb {
     background: #ffffff;
 }
 
-#lmaxSlider,
-#magneticLSlider {
+#lmaxSlider {
     --slider-color: var(--so-orange);
 }
 
-#mSlider,
-#magneticMSlider {
+#mSlider {
     --slider-color: var(--so-blue);
 }
 
