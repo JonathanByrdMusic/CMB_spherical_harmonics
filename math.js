@@ -472,6 +472,212 @@ createFlipbook({
 });
 
 /*
+ * Standing-wave flipbook
+ */
+
+const standingWaveFrames = [
+    {
+        src:
+            "media/fourier_standing_1.png",
+
+        alt:
+            "The 220 hertz fundamental standing-wave mode between two fixed boundaries",
+
+        caption:
+            "The fundamental 220 Hz mode forms one arch between the fixed endpoints."
+    },
+    {
+        src:
+            "media/fourier_standing_2.png",
+
+        alt:
+            "The 440 hertz second standing-wave mode with one internal node",
+
+        caption:
+            "The 440 Hz mode fits two half-wavelengths into the same domain and introduces one internal node."
+    },
+    {
+        src:
+            "media/fourier_standing_3.png",
+
+        alt:
+            "The 660 hertz third standing-wave mode with two internal nodes",
+
+        caption:
+            "The 660 Hz mode fits three half-wavelengths into the domain while remaining zero at both boundaries."
+    },
+    {
+        src:
+            "media/fourier_standing_4.png",
+
+        alt:
+            "The 880 hertz fourth standing-wave mode with three internal nodes",
+
+        caption:
+            "The 880 Hz mode adds still finer structure, but it obeys the same fixed-end boundary conditions."
+    },
+    {
+        src:
+            "media/fourier_standing_5.png",
+
+        alt:
+            "A standing-wave pattern formed by adding the 220 and 440 hertz modes",
+
+        caption:
+            "The first two allowed modes combine to form a more complicated pattern that still vanishes at both endpoints."
+    },
+    {
+        src:
+            "media/fourier_standing_6.png",
+
+        alt:
+            "A standing-wave pattern formed by adding the 220, 440, and 660 hertz modes",
+
+        caption:
+            "Adding the third mode changes the interior shape without changing the boundary conditions."
+    },
+    {
+        src:
+            "media/fourier_standing_7.png",
+
+        alt:
+            "A standing-wave pattern formed by adding all four allowed modes",
+
+        caption:
+            "The final pattern is a superposition of four discrete standing-wave modes, each with its own amplitude."
+    }
+];
+
+createFlipbook({
+    frames:
+        standingWaveFrames,
+
+    imageId:
+        "standingWaveImage",
+
+    captionId:
+        "standingWaveCaption",
+
+    counterId:
+        "standingWaveFrameCounter",
+
+    previousButtonId:
+        "standingWavePreviousButton",
+
+    playButtonId:
+        "standingWavePlayButton",
+
+    nextButtonId:
+        "standingWaveNextButton",
+
+    frameDuration:
+        2400
+});
+
+/*
+ * Circular-mode flipbook
+ */
+
+const circularModeFrames = [
+    {
+        src:
+            "media/circular_mode_1.png",
+
+        alt:
+            "The first circular mode overlaid on an undeformed grey circle",
+
+        caption:
+            "The first mode completes one oscillation around the circle and returns smoothly to its starting value."
+    },
+    {
+        src:
+            "media/circular_mode_2.png",
+
+        alt:
+            "The second circular mode overlaid on an undeformed grey circle",
+
+        caption:
+            "The second mode completes two oscillations around the same circumference."
+    },
+    {
+        src:
+            "media/circular_mode_3.png",
+
+        alt:
+            "The third circular mode overlaid on an undeformed grey circle",
+
+        caption:
+            "The third mode fits three complete oscillations around the circle, with a smaller amplitude."
+    },
+    {
+        src:
+            "media/circular_mode_4.png",
+
+        alt:
+            "The fourth circular mode overlaid on an undeformed grey circle",
+
+        caption:
+            "The fourth mode adds still finer angular structure while remaining continuous around the closed domain."
+    },
+    {
+        src:
+            "media/circular_mode_5.png",
+
+        alt:
+            "A combined circular pattern formed from the first two modes, with the component modes visible faintly behind it",
+
+        caption:
+            "Adding the first two permitted modes produces a new closed pattern. The black curve is their point-by-point sum."
+    },
+    {
+        src:
+            "media/circular_mode_6.png",
+
+        alt:
+            "A combined circular pattern formed from the first three modes, with the component modes visible faintly behind it",
+
+        caption:
+            "The third mode adds finer structure without replacing the larger pattern established by the lower modes."
+    },
+    {
+        src:
+            "media/circular_mode_7.png",
+
+        alt:
+            "A combined circular pattern formed from all four modes, with the component modes visible faintly behind it",
+
+        caption:
+            "The final curve is a superposition of four discrete circular modes, each contributing its own amplitude and angular scale."
+    }
+];
+
+createFlipbook({
+    frames:
+        circularModeFrames,
+
+    imageId:
+        "circularModeImage",
+
+    captionId:
+        "circularModeCaption",
+
+    counterId:
+        "circularModeFrameCounter",
+
+    previousButtonId:
+        "circularModePreviousButton",
+
+    playButtonId:
+        "circularModePlayButton",
+
+    nextButtonId:
+        "circularModeNextButton",
+
+    frameDuration:
+        2400
+});
+
+/*
  * Copy buttons for code examples
  */
 

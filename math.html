@@ -26,7 +26,7 @@
         gtag("config", "G-90WMD4PJQP");
     </script>
 
-    <title>Show Me the Math.</title>
+    <title>Show Me the Math</title>
 
     <link
         rel="icon"
@@ -139,10 +139,10 @@
 
         <p>
             The visualizations are pretty and fun to play with, but what in the
-            math is going on? Let's start with a musical waveform, something you
-            might see in digital recording software or if you ran an audio output 
-            into an oscilloscope. Music, as with most natural phenomena, is a 
-            superposition of many different frequencies. 
+            math is going on? To build an intuition for what any of these models are 
+            doing, let's start with a waveform, something you might see in 
+            digital recording software or an oscilloscope. Music, as with most 
+            natural phenomena, is a superposition of many different frequencies. 
         </p>
 
         <section
@@ -212,12 +212,20 @@
 
         <p>
             Notice how the waves with higher frequencies and lower amplitudes add detail 
-            while preserving the larger structure already established. The process can be 
-            reversed, which is how MP3 compression works. The audio is analyzed 
+            while preserving the larger structure somewhat. The process can be 
+            reversed, which is part of how digital audio works. The audio is analyzed 
             to determine which frequencies are present, and then the sound is stored as a 
             list of those frequencies and their amplitudes. When the audio is played back, the 
-            frequencies are recombined to reconstruct the original waveform. An <strong>fft plot</strong>
-            (Fast Fourier Transform) shows the amplitude of each frequency present in a waveform. 
+            frequencies are recombined to reconstruct the original waveform. 
+            
+        </p>
+
+        <p>
+            Fourier's theorem states that any periodic, reasonably continuous 
+            function (or signal) can be written as the sum of simple sine and 
+            cosine waves. An <strong>FFT plot</strong> (Fast Fourier Transform) 
+            shows the amplitude of each frequency present in a waveform. 
+            Compare the colors to the waveforms above. 
         </p>
 
         <figure class="mathFigure">
@@ -233,14 +241,248 @@
             </figcaption>
         </figure>
 
+        <h2>From arbitrary frequencies to standing-wave modes</h2>
+
         <p>
-            In the same way, a complicated pattern on the surface of a sphere can be
-            decomposed into spherical harmonics. <strong>Spherical harmonics are Fourier 
-            modes on a sphere</strong> and form a <strong>complete orthonormal basis</strong>
-            for functions on the sphere. “Orthonormal” means that the individual modes
-            can be separated cleanly from one another. “Complete” means that, by adding
-            enough modes, we can approximate any sufficiently well-behaved function on
-            the sphere as closely as we choose. The sum is infinite:
+            The frequencies in the previous example could be chosen independently.
+            <strong>Standing waves</strong> on a bounded domain must satisfy the same boundary 
+            conditions at both ends, so only particular modes are allowed. You 
+            may have seen the 'infinite square well' example in quantum mechanics, 
+            or heard annoying feedback frequencies in a concert hall that are 
+            amplified by the room's geometry. The next example uses a domain length 
+            that is one half-period of the 220 Hz mode. Allowed frequencies are integer 
+            multiples of the fundamental frequency, the only modes that fit between the 'walls' 
+            of the domain:
+        </p>
+
+        <section
+            class="standingWaveAnimation"
+            aria-labelledby="standingWaveAnimationTitle"
+        >
+            <h3
+                id="standingWaveAnimationTitle"
+                class="mathSubheading"
+            >
+                Building a pattern from standing-wave modes
+            </h3>
+
+            <div class="standingWaveFrame">
+                <img
+                    id="standingWaveImage"
+                    src="media/fourier_standing_1.png"
+                    alt="The fundamental standing-wave mode spanning a fixed domain"
+                >
+            </div>
+
+            <p
+                id="standingWaveCaption"
+                class="standingWaveCaption"
+                aria-live="polite"
+            >
+                The fundamental mode forms one arch between the fixed endpoints.
+            </p>
+
+            <div
+                class="standingWaveControls"
+                aria-label="Standing-wave animation controls"
+            >
+                <button
+                    id="standingWavePreviousButton"
+                    type="button"
+                    aria-label="Show previous standing-wave frame"
+                >
+                    Previous
+                </button>
+
+                <button
+                    id="standingWavePlayButton"
+                    type="button"
+                    aria-label="Play standing-wave animation"
+                    aria-pressed="false"
+                >
+                    Play
+                </button>
+
+                <button
+                    id="standingWaveNextButton"
+                    type="button"
+                    aria-label="Show next standing-wave frame"
+                >
+                    Next
+                </button>
+            </div>
+
+            <div
+                id="standingWaveFrameCounter"
+                class="standingWaveFrameCounter"
+                aria-live="polite"
+            >
+                1 / 7
+            </div>
+        </section>
+            
+        <p>
+            Frequency is the superpower of your ears! 
+            Play these audio samples to hear how each set of frequencies sound together. Each 
+            sample is an audio version of the flipbooks above; the frequencies play
+            in sequence and then are all summed together. Which set sounds more chaotic 
+            and dissonant? Which sounds more organized and resonant? 
+        </p>
+
+                <section
+            class="frequencyAudio"
+            aria-labelledby="independentAudioTitle"
+        >
+            <h3
+                id="independentAudioTitle"
+                class="mathSubheading"
+            >
+                Independently chosen frequencies
+            </h3>
+
+            <audio controls preload="metadata">
+                <source
+                    src="media/independent_frequency_superposition.wav"
+                    type="audio/wav"
+                >
+
+                Your browser does not support embedded audio.
+            </audio>
+
+        </section>
+
+        <section
+            class="frequencyAudio"
+            aria-labelledby="harmonicAudioTitle"
+        >
+            <h3
+                id="harmonicAudioTitle"
+                class="mathSubheading"
+            >
+                Harmonic standing-wave frequencies
+            </h3>
+
+            <audio controls preload="metadata">
+                <source
+                    src="media/harmonic_frequency_superposition.wav"
+                    type="audio/wav"
+                >
+
+                Your browser does not support embedded audio.
+            </audio>
+
+        </section>
+
+        <h2> </h2>
+
+        <p>
+            Integer multiples of the fundamental frequency are called <strong>harmonics</strong>, 
+            which are the basis for musical scales. More important to our scientific purpose, 
+            the appropriate harmonic modes form a <strong>complete orthonormal basis</strong>
+            for functions within many different domains, geometries, and boundary conditions. 
+            “Orthonormal” means that the individual modes can be separated cleanly from one
+            another. “Complete” means that, by adding enough modes, we can
+            approximate any sufficiently well-behaved function as closely as we choose. 
+            The sum of harmonic modes is infinite but, just as higher musical harmonics
+            become inaudible above the human hearing range, a limited number of lower-order 
+            modes are often enough to create a very good description of many physical phenomena.
+        </p>
+
+        <h2>From a line to a closed circle</h2>
+
+        <p>
+            A fixed line segment has boundaries at its two endpoints. A circle
+            has no endpoints, but imposes another condition: after traveling
+            once around the circle, the wave must return smoothly to its starting
+            value. Only patterns that fit an integer number of oscillations around
+            the circumference satisfy this condition. For example:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \Phi_m(\phi)
+            =
+            \cos(m\phi)
+            \qquad
+            m=0,1,2,3,\ldots
+            \]
+        </div>
+
+        <section
+            class="circularModeAnimation"
+            aria-labelledby="circularModeAnimationTitle"
+        >
+            <h3
+                id="circularModeAnimationTitle"
+                class="mathSubheading"
+            >
+                Building a pattern from circular modes
+            </h3>
+
+            <div class="circularModeFrame">
+                <img
+                    id="circularModeImage"
+                    src="media/circular_mode_1.png"
+                    alt="The first circular mode overlaid on an undeformed grey circle"
+                >
+            </div>
+
+            <p
+                id="circularModeCaption"
+                class="circularModeCaption"
+                aria-live="polite"
+            >
+                The first circular mode completes one oscillation around the circle.
+            </p>
+
+            <div
+                class="circularModeControls"
+                aria-label="Circular-mode animation controls"
+            >
+                <button
+                    id="circularModePreviousButton"
+                    type="button"
+                    aria-label="Show previous circular-mode frame"
+                >
+                    Previous
+                </button>
+
+                <button
+                    id="circularModePlayButton"
+                    type="button"
+                    aria-label="Play circular-mode animation"
+                    aria-pressed="false"
+                >
+                    Play
+                </button>
+
+                <button
+                    id="circularModeNextButton"
+                    type="button"
+                    aria-label="Show next circular-mode frame"
+                >
+                    Next
+                </button>
+            </div>
+
+            <div
+                id="circularModeFrameCounter"
+                class="circularModeFrameCounter"
+                aria-live="polite"
+            >
+                1 / 7
+            </div>
+        </section>
+
+        <h2>From a circle to a sphere</h2>
+
+        <p>
+            The surface of a sphere requires standing-wave behavior in two angular 
+            coordinates. <strong>Spherical harmonics are Fourier modes on a sphere</strong>. 
+            The azimuthal coordinate \(\phi\) retains Fourier behavior around the sphere, 
+            while the polar coordinate \(\theta\) supplies the additional pole-to-pole structure.
+            Again, the sum is infinite, but we can stop when adding more modes no longer improves 
+            the model in any meaningful way.
         </p>
 
         <div class="displayEquation">
@@ -253,17 +495,13 @@
             Y_{\ell m}(\theta,\phi)
             \]
         </div>     
-
-        <p>
-            In practice, a handful of modes are often enough to capture the essential 
-            features of a function and create a very good working model of many 
-            physical phenomena.
-        </p>
             
         <p>   
-            Let's take a look under the hood of spherical
-            harmonics, beginning with the divergence of the gradient, also
-            known as the Laplacian: \(\nabla\cdot(\nabla u) = \nabla^2 u = \Delta u\)
+            Let's take a look under the hood of spherical harmonics, beginning with 
+            the divergence of the gradient, also known as the Laplacian: 
+            \(\nabla\cdot(\nabla u) = \nabla^2 u = \Delta u\). The Laplacian helps 
+            identify the possible wave shapes allowed by various boundary conditions
+            and geometries, including the linear and circular models above. 
         </p>
 
         <h3 class="mathSubheading">
@@ -374,8 +612,7 @@
         <p> 
             Divergence applies to temperature gradients, electric fields, and many
             other phenomena. Along a vibrating string or across a drum head, 
-            the divergence of the gradient varies periodically. That's why we're
-            interested in the divergence of the gradient; spherical harmonics 
+            the divergence of the gradient varies periodically. Spherical harmonics 
             exhibit analogous behavior on the surface of a sphere (though they may 
             model periodicity across spatial dimensions, rather than time). 
             Because the gradient already contains the first derivatives of \(u\), 
@@ -954,13 +1191,11 @@
 
         <p>
             We can now ask what functions behave especially simply under the
-            Laplacian on a sphere. If you have not studied partial differential
-            equations, you can still understand this next solution method. The
-            Laplacian in spherical coordinates looks impossible, but we are going
-            to separate variables. Because the coordinates describe three
-            independent directions, let us assume there is a solution that can be
-            written as a product, analogous to multiplying coordinate lengths
-            together to obtain a volume:
+            Laplacian on a sphere. The Laplacian in spherical coordinates looks 
+            impossible, but we are going to separate variables. Because the 
+            coordinates describe three independent directions, let us assume 
+            there is a solution that can be written as a product, analogous to 
+            multiplying coordinate lengths together to obtain a volume:
         </p>
 
         <div class="displayEquation">
@@ -1047,7 +1282,9 @@
         </div>
 
         <p>
-            Substituting these expressions into Laplace's equation:
+            We can set these expressions equal to zero in the form of Laplace's equation, 
+            \(\nabla^2u=0\). The radial and angular behavior separate, and the spherical 
+            harmonics arise from the angular part.
         </p>
 
         <div class="displayEquation">
@@ -1537,9 +1774,8 @@
         </div>
 
         <p>
-            You may already see this problem, but allow me to point
-            out that having \(1-x^2\) in the denominator will cause
-            a singularity at the poles where \(\cos\theta = \pm 1.\)
+            You may already see the problem. Having \(1-x^2\) in the denominator 
+            may cause a singularity at the poles where \(\cos\theta = \pm 1.\)
             In the next step, requiring the solutions to remain 
             finite and smooth at the poles will restrict the separation 
             constant to \(\lambda=\ell(\ell+1)\), where \(\ell\) is a 
@@ -1649,6 +1885,8 @@
     </article>
 
     <article class="mathArticle">
+
+        <h2>The angular solution</h2>
 
         <p>
             We found both pieces of the angular part of the equation, 

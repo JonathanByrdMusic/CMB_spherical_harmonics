@@ -322,6 +322,174 @@
     text-align: center;
 }
 
+.standingWaveAnimation {
+    width: min(100%, 760px);
+    margin: 3rem auto 1rem;
+
+    color: var(--space-text);
+}
+
+.standingWaveAnimation .mathSubheading {
+    text-align: center;
+}
+
+.standingWaveFrame {
+    width: 100%;
+    aspect-ratio: 60 / 29;
+    overflow: hidden;
+
+    background: #ffffff;
+    border: 1px solid var(--space-border);
+    border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.standingWaveFrame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.standingWaveCaption {
+    min-height: 3.2em;
+    margin: 1rem auto 0.75rem;
+
+    color: var(--space-text);
+    font-size: 1rem;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.standingWaveControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.standingWaveControls button {
+    min-width: 48px;
+    padding: 0.65rem 1rem;
+
+    background: var(--secondary-button);
+    border: 1px solid var(--secondary-button);
+    border-radius: 8px;
+
+    color: var(--space-background);
+
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.standingWaveControls button:hover {
+    background: var(--secondary-button-hover);
+    border-color: var(--secondary-button-hover);
+    color: var(--space-background);
+}
+
+#standingWavePlayButton {
+    min-width: 90px;
+}
+
+.standingWaveFrameCounter {
+    margin-top: 0.55rem;
+
+    color: var(--space-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.circularModeAnimation {
+    width: min(100%, 700px);
+    margin: 3rem auto 1rem;
+
+    color: var(--space-text);
+}
+
+.circularModeAnimation .mathSubheading {
+    text-align: center;
+}
+
+.circularModeFrame {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+
+    background: #ffffff;
+    border: 1px solid var(--space-border);
+    border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.circularModeFrame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.circularModeCaption {
+    min-height: 3.2em;
+    margin: 1rem auto 0.75rem;
+
+    color: var(--space-text);
+    font-size: 1rem;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.circularModeControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.circularModeControls button {
+    min-width: 48px;
+    padding: 0.65rem 1rem;
+
+    background: var(--secondary-button);
+    border: 1px solid var(--secondary-button);
+    border-radius: 8px;
+
+    color: var(--space-background);
+
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.circularModeControls button:hover {
+    background: var(--secondary-button-hover);
+    border-color: var(--secondary-button-hover);
+    color: var(--space-background);
+}
+
+#circularModePlayButton {
+    min-width: 90px;
+}
+
+.circularModeFrameCounter {
+    margin-top: 0.55rem;
+
+    color: var(--space-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
 .mathFigure {
     width: min(100%, 700px);
     margin: 2.5rem auto;
@@ -515,28 +683,43 @@
 
     .gradientAnimation .mathSubheading,
     .divergenceAnimation .mathSubheading,
-    .fourierAnimation .mathSubheading {
+    .fourierAnimation .mathSubheading,
+    .standingWaveAnimation .mathSubheading,
+    .circularModeAnimation .mathSubheading {
         font-size: 1.1rem;
     }
 
-    .gradientAnimation h2,
-    .fourierAnimation h2 {
-        font-size: 1.25rem;
+    .gradientAnimation,
+    .divergenceAnimation,
+    .fourierAnimation,
+    .standingWaveAnimation,
+    .circularModeAnimation {
+        margin-top: 2.25rem;
     }
 
     .gradientCaption,
     .divergenceCaption,
-    .fourierCaption {
+    .fourierCaption,
+    .standingWaveCaption,
+    .circularModeCaption {
         font-size: 0.95rem;
     }
 
-    .fourierControls {
+    .fourierControls,
+    .standingWaveControls,
+    .circularModeControls {
         gap: 0.5rem;
     }
 
-    .fourierControls button {
+    .fourierControls button,
+    .standingWaveControls button,
+    .circularModeControls button {
         padding: 0.6rem 0.8rem;
         font-size: 0.88rem;
+    }
+
+    .circularModeAnimation {
+        width: min(100%, 520px);
     }
 
     .codeExample {
