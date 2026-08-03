@@ -42,6 +42,9 @@ body {
 
     --secondary-button: #609cf8;
     --secondary-button-hover: #4f8be6;
+
+    --slider-fill: #c7ccd6;
+    --slider-empty: #eeeeee;
 }
 
 html {
@@ -385,16 +388,30 @@ input[type="range"]::-webkit-slider-runnable-track {
     height: 12px;
     border: 1px solid #a9a9a9;
     border-radius: 999px;
-    background: #eeeeee;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.18);
+
+    background: var(
+        --slider-background,
+        var(--slider-empty)
+    );
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
 }
 
 input[type="range"]::-moz-range-track {
     height: 12px;
     border: 1px solid #a9a9a9;
     border-radius: 999px;
-    background: var(--slider-background, #eeeeee);
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.18);
+
+    background: var(
+        --slider-background,
+        var(--slider-empty)
+    );
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -429,14 +446,6 @@ input[type="range"]:hover::-webkit-slider-thumb {
 
 input[type="range"]:hover::-moz-range-thumb {
     background: #ffffff;
-}
-
-#lmaxSlider {
-    --slider-color: var(--so-orange);
-}
-
-#mSlider {
-    --slider-color: var(--so-blue);
 }
 
 #buildUniverseButton,
