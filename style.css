@@ -570,6 +570,30 @@ input[type="range"]:hover::-moz-range-thumb {
     border-radius: 18px 34px 18px 34px;
 }
 
+#explanation a {
+    color: var(--so-orange);
+    font-family: inherit;
+    font-weight: inherit;
+    text-decoration: underline;        
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.14em;
+}
+
+#explanation a:visited {
+    color: var(--so-orange);
+}
+
+#explanation a:hover {
+    color: var(--space-title);
+}
+
+#explanation a:focus-visible {
+    color: var(--space-title);
+    outline: 2px solid var(--so-orange);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
 footer {
     margin-top: 42px;
     padding: 22px 0;
@@ -607,10 +631,11 @@ footer {
 
     body {
         padding: 24px;
-        .harmonicLegend {
+    }
+
+    .harmonicLegend {
         margin-top: 28px;
         gap: 10px 20px;
-    }
     }
 
     #canvasRow,

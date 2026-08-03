@@ -115,6 +115,35 @@ function createFlipbook({
             nextButtonId
         );
 
+    const requiredElements = [
+        image,
+        caption,
+        counter,
+        previousButton,
+        playButton,
+        nextButton
+    ];
+
+    if (
+        requiredElements.some(
+            element => element === null
+        )
+    ) {
+        console.warn(
+            "Flipbook initialization failed because one or more elements were not found.",
+            {
+                imageId,
+                captionId,
+                counterId,
+                previousButtonId,
+                playButtonId,
+                nextButtonId
+            }
+        );
+
+        return;
+    }
+
     let frameIndex = 0;
     let timer = null;
 
@@ -155,9 +184,18 @@ function createFlipbook({
             "aria-label",
             "Play animation"
         );
+
+        playButton.setAttribute(
+            "aria-pressed",
+            "false"
+        );
     }
 
     function startAnimation() {
+        if (timer !== null) {
+            return;
+        }
+
         timer = setInterval(
             () => {
                 showFrame(
@@ -173,6 +211,11 @@ function createFlipbook({
         playButton.setAttribute(
             "aria-label",
             "Pause animation"
+        );
+
+        playButton.setAttribute(
+            "aria-pressed",
+            "true"
         );
     }
 
@@ -344,6 +387,86 @@ createFlipbook({
 
     nextButtonId:
         "divergenceNextButton",
+
+    frameDuration: 2200
+});
+
+/*
+ * Fourier flipbook
+ */
+
+const fourierFrames = [
+    {
+        src: "media/fourier_1.png",
+        alt:
+            "A 220 hertz sine wave plotted over twenty milliseconds",
+        caption:
+            "Begin with a single sine wave at 220 Hz."
+    },
+    {
+        src: "media/fourier_2.png",
+        alt:
+            "A 537 hertz sine wave plotted over the same twenty millisecond interval",
+        caption:
+            "This 537 Hz wave completes more cycles across the same interval, and it's quieter."
+    },
+    {
+        src: "media/fourier_3.png",
+        alt:
+            "An 810 hertz sine wave plotted over the same twenty millisecond interval",
+        caption:
+            "At 810 Hz, the oscillations are even closer together, and the amplitude is smaller still."
+    },
+    {
+        src: "media/fourier_4.png",
+        alt:
+            "An 1130 hertz sine wave plotted over the same twenty millisecond interval",
+        caption:
+            "The 1130 Hz wave is quietest and completes the greatest number of cycles across the same domain."
+    },
+    {
+        src: "media/fourier_5.png",
+        alt:
+            "A combined waveform formed by adding 220 and 537 hertz sine waves",
+        caption:
+            "Add the first two sine waves point by point to produce a more complicated waveform."
+    },
+    {
+        src: "media/fourier_6.png",
+        alt:
+            "A combined waveform formed by adding 220, 537, and 810 hertz sine waves",
+        caption:
+            "Adding a third frequency introduces still finer structure into the combined waveform."
+    },
+    {
+        src: "media/fourier_7.png",
+        alt:
+            "A combined waveform formed by adding all four sine waves",
+        caption:
+            "The final waveform is the superposition of all four Fourier components."
+    }
+];
+
+createFlipbook({
+    frames: fourierFrames,
+
+    imageId:
+        "fourierImage",
+
+    captionId:
+        "fourierCaption",
+
+    counterId:
+        "fourierFrameCounter",
+
+    previousButtonId:
+        "fourierPreviousButton",
+
+    playButtonId:
+        "fourierPlayButton",
+
+    nextButtonId:
+        "fourierNextButton",
 
     frameDuration: 2200
 });

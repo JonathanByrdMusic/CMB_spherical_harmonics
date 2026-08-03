@@ -139,7 +139,123 @@
 
         <p>
             The visualizations are pretty and fun to play with, but what in the
-            math is going on? Let's take a look under the hood of spherical
+            math is going on? Let's start with a musical waveform, something you
+            might see in digital recording software or if you ran an audio output 
+            into an oscilloscope. Music, as with most natural phenomena, is a 
+            superposition of many different frequencies. 
+        </p>
+
+        <section
+            class="fourierAnimation"
+            aria-labelledby="fourierAnimationTitle"
+        >
+            <h3
+                id="fourierAnimationTitle"
+                class="mathSubheading"
+            >
+                Building a waveform from components
+            </h3>
+
+            <div class="fourierFrame">
+                <img
+                    id="fourierImage"
+                    src="media/fourier_1.png"
+                    alt="A 220 hertz sine wave plotted over twenty milliseconds"
+                >
+            </div>
+
+            <p
+                id="fourierCaption"
+                class="fourierCaption"
+                aria-live="polite"
+            >
+                Begin with a single sine wave at 220 Hz.
+            </p>
+
+            <div
+                class="fourierControls"
+                aria-label="Fourier animation controls"
+            >
+                <button
+                    id="fourierPreviousButton"
+                    type="button"
+                    aria-label="Show previous Fourier frame"
+                >
+                    Previous
+                </button>
+
+                <button
+                    id="fourierPlayButton"
+                    type="button"
+                    aria-pressed="false"
+                >
+                    Play
+                </button>
+
+                <button
+                    id="fourierNextButton"
+                    type="button"
+                    aria-label="Show next Fourier frame"
+                >
+                    Next
+                </button>
+            </div>
+
+            <div
+                id="fourierFrameCounter"
+                class="fourierFrameCounter"
+                aria-live="polite"
+            >
+                Frame 1 of 7
+            </div>
+        </section>
+
+        <p>
+            Notice how the waves with higher frequencies and lower amplitudes add detail 
+            while preserving the larger structure already established. The process can be 
+            reversed, which is how MP3 compression works. The audio is analyzed 
+            to determine which frequencies are present, and then the sound is stored as a 
+            list of those frequencies and their amplitudes. When the audio is played back, the 
+            frequencies are recombined to reconstruct the original waveform. An <strong>fft plot</strong>
+            shows the amplitude of each frequency present in a waveform. 
+        </p>
+
+        <figure class="mathFigure">
+            <img
+                src="media/fourier_fft.png"
+                alt="FFT plot showing peaks at 220, 537, 810, and 1130 hertz"
+            >
+
+            <figcaption>
+                The Fourier transform of the combined waveform shows four peaks,
+                one for each frequency present in the signal. The height of each
+                peak gives the amplitude of that frequency.
+            </figcaption>
+        </figure>
+
+        <p>
+            The spherical harmonics form a <strong>complete orthonormal basis</strong>
+            for functions on the sphere. “Orthonormal” means that the individual modes
+            can be separated cleanly from one another. “Complete” means that, by adding
+            enough modes, we can approximate any sufficiently well-behaved function on
+            the sphere as closely as we choose.
+        </p>
+
+        <div class="displayEquation">
+            \[
+            f(\theta,\phi)
+            =
+            \sum_{\ell=0}^{\infty}
+            \sum_{m=-\ell}^{\ell}
+            a_{\ell m}
+            Y_{\ell m}(\theta,\phi)
+            \]
+        </div>     
+            
+        <p>   
+            In the same way, a complicated pattern on the surface of a sphere can be
+            decomposed into spherical harmonics. <strong>Spherical harmonics are Fourier 
+            modes on a sphere.</strong> Let's take a look under the hood of spherical
             harmonics, beginning with the divergence of the gradient, also
             known as the Laplacian: \(\nabla\cdot(\nabla u) = \nabla^2 u = \Delta u\)
         </p>

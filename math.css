@@ -238,6 +238,90 @@
     text-align: center;
 }
 
+.fourierAnimation {
+    width: min(100%, 760px);
+    margin: 3rem auto 1rem;
+
+    color: var(--space-text);
+}
+
+.fourierAnimation .mathSubheading {
+    text-align: center;
+}
+
+.fourierFrame {
+    width: 100%;
+    aspect-ratio: 60 / 29;
+    overflow: hidden;
+
+    background: #ffffff;
+    border: 1px solid var(--space-border);
+    border-radius: 10px;
+
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.fourierFrame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.fourierCaption {
+    min-height: 3.2em;
+    margin: 1rem auto 0.75rem;
+
+    color: var(--space-text);
+    font-size: 1rem;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.fourierControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.fourierControls button {
+    min-width: 48px;
+    padding: 0.65rem 1rem;
+
+    background: var(--secondary-button);
+    border: 1px solid var(--secondary-button);
+    border-radius: 8px;
+
+    color: var(--space-background);
+
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.fourierControls button:hover {
+    background: var(--secondary-button-hover);
+    border-color: var(--secondary-button-hover);
+    color: var(--space-background);
+}
+
+#fourierPlayButton {
+    min-width: 90px;
+}
+
+.fourierFrameCounter {
+    margin-top: 0.55rem;
+
+    color: var(--space-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
 .mathFigure {
     width: min(100%, 700px);
     margin: 2.5rem auto;
@@ -429,18 +513,30 @@
         font-size: 1.25rem;
     }
 
-    .gradientAnimation,
-    .divergenceAnimation {
-        margin-top: 2.25rem;
+    .gradientAnimation .mathSubheading,
+    .divergenceAnimation .mathSubheading,
+    .fourierAnimation .mathSubheading {
+        font-size: 1.1rem;
     }
 
-    .gradientAnimation h2 {
+    .gradientAnimation h2,
+    .fourierAnimation h2 {
         font-size: 1.25rem;
     }
 
     .gradientCaption,
-    .divergenceCaption {
+    .divergenceCaption,
+    .fourierCaption {
         font-size: 0.95rem;
+    }
+
+    .fourierControls {
+        gap: 0.5rem;
+    }
+
+    .fourierControls button {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.88rem;
     }
 
     .codeExample {
