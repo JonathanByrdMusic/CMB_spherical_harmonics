@@ -1103,19 +1103,24 @@ function traceMagneticFieldLine(
             &&
             radius <= minimumRadius
         ) {
-            const surfacePoint =
+            points.push(
                 position
                     .clone()
                     .normalize()
-                    .multiplyScalar(1.001);
+                    .multiplyScalar(1.001)
+            );
 
-            points.push(surfacePoint);
-
-            break;
+            return {
+                points,
+                completed: true
+            };
         }
 
         if (radius > maximumRadius) {
-            return [];
+            return {
+                points,
+                completed: false
+            };
         }
 
         points.push(position.clone());
@@ -1128,32 +1133,55 @@ function traceMagneticFieldLine(
             );
 
         if (nextPosition === null) {
-            break;
+            return {
+                points,
+                completed: false
+            };
         }
 
         position.copy(nextPosition);
     }
 
-    return points;
+    /*
+     * The line exhausted maximumSteps without
+     * returning to the surface.
+     */
+    return {
+        points,
+        completed: false
+    };
 }
 
 function createHarmonicFieldLine(seed) {
-    const backwardPoints =
+    const backwardTrace =
         traceMagneticFieldLine(
             seed,
             -1
         );
 
-    const forwardPoints =
+    const forwardTrace =
         traceMagneticFieldLine(
             seed,
             1
         );
 
     /*
-     * Join the two trajectories at the seed.
-     * Remove one duplicate seed point.
+     * Do not draw lines with an incomplete half.
      */
+    if (
+        !backwardTrace.completed
+        ||
+        !forwardTrace.completed
+    ) {
+        return null;
+    }
+
+    const backwardPoints =
+        backwardTrace.points;
+
+    const forwardPoints =
+        forwardTrace.points;
+
     backwardPoints.reverse();
 
     const points = [
@@ -1164,6 +1192,8 @@ function createHarmonicFieldLine(seed) {
     if (points.length < 4) {
         return null;
     }
+
+    // Continue with the existing curve and material code.
 
     const curve =
         new THREE.CatmullRomCurve3(
