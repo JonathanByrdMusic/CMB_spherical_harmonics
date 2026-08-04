@@ -1098,17 +1098,21 @@ function traceMagneticFieldLine(
     ) {
         const radius = position.length();
 
+        /*
+         * The trajectory has returned to the sphere.
+         */
         if (
             step > 0
             &&
             radius <= minimumRadius
         ) {
-            points.push(
+            const surfacePoint =
                 position
                     .clone()
                     .normalize()
-                    .multiplyScalar(1.001)
-            );
+                    .multiplyScalar(1.001);
+
+            points.push(surfacePoint);
 
             return {
                 points,
@@ -1116,6 +1120,10 @@ function traceMagneticFieldLine(
             };
         }
 
+        /*
+         * The trajectory escaped beyond the
+         * permitted tracing region.
+         */
         if (radius > maximumRadius) {
             return {
                 points,
@@ -1132,6 +1140,10 @@ function traceMagneticFieldLine(
                 directionSign
             );
 
+        /*
+         * The field direction became numerically
+         * unusable before the line completed.
+         */
         if (nextPosition === null) {
             return {
                 points,
@@ -1143,8 +1155,8 @@ function traceMagneticFieldLine(
     }
 
     /*
-     * The line exhausted maximumSteps without
-     * returning to the surface.
+     * The trajectory reached maximumSteps without
+     * returning to the sphere.
      */
     return {
         points,
