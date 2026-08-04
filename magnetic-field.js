@@ -1141,21 +1141,6 @@ function traceMagneticFieldLine(
 
         points.push(position.clone());
 
-        const field =
-            magneticFieldAtPoint(position);
-
-        if (
-            !Number.isFinite(field.x)
-            ||
-            !Number.isFinite(field.y)
-            ||
-            !Number.isFinite(field.z)
-            ||
-            field.lengthSq() < 1e-24
-        ) {
-            break;
-        }
-
         const nextPosition =
             advanceMagneticFieldLineRK4(
                 position,
