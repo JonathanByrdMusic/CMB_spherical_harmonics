@@ -1286,10 +1286,7 @@ function buildHarmonicFieldLines() {
     ];
 
     const azimuthCount = 10;
-    const seedRadius =
-        magneticSingleModeCheckbox.checked
-            ? 1.08
-            : 1.025;
+    const seedRadius = 1.025;
 
     for (
         let azimuthIndex = 0;
