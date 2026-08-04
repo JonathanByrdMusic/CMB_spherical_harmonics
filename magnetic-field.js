@@ -1151,7 +1151,7 @@ function traceMagneticFieldLine(
             ||
             !Number.isFinite(field.z)
             ||
-            field.lengthSq() < 1e-12
+            field.lengthSq() < 1e-24
         ) {
             break;
         }
