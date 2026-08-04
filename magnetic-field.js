@@ -1100,7 +1100,7 @@ function traceMagneticFieldLine(
      * open or numerically unstable trajectories. It is
      * independent of the visible simulator window.
      */
-    const maximumRadius = 12;
+    const maximumRadius = 14;
 
     for (
         let step = 0;
