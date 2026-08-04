@@ -60,6 +60,10 @@
     letter-spacing: -0.02em;
 }
 
+.pythonNote {
+    margin-top: 8px;
+}
+
 .indentedParagraph {
     text-indent: 2em;
 }
