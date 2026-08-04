@@ -973,6 +973,111 @@ function magneticFieldAtPoint(position) {
     );
 }
 
+function magneticFieldDirectionAtPoint(
+    position,
+    directionSign
+) {
+    const field =
+        magneticFieldAtPoint(position);
+
+    if (
+        !Number.isFinite(field.x)
+        ||
+        !Number.isFinite(field.y)
+        ||
+        !Number.isFinite(field.z)
+        ||
+        field.lengthSq() < 1e-12
+    ) {
+        return null;
+    }
+
+    return field
+        .normalize()
+        .multiplyScalar(directionSign);
+}
+
+
+function advanceMagneticFieldLineRK4(
+    position,
+    stepSize,
+    directionSign
+) {
+    const k1 =
+        magneticFieldDirectionAtPoint(
+            position,
+            directionSign
+        );
+
+    if (k1 === null) {
+        return null;
+    }
+
+    const k2 =
+        magneticFieldDirectionAtPoint(
+            position
+                .clone()
+                .addScaledVector(
+                    k1,
+                    stepSize / 2
+                ),
+            directionSign
+        );
+
+    if (k2 === null) {
+        return null;
+    }
+
+    const k3 =
+        magneticFieldDirectionAtPoint(
+            position
+                .clone()
+                .addScaledVector(
+                    k2,
+                    stepSize / 2
+                ),
+            directionSign
+        );
+
+    if (k3 === null) {
+        return null;
+    }
+
+    const k4 =
+        magneticFieldDirectionAtPoint(
+            position
+                .clone()
+                .addScaledVector(
+                    k3,
+                    stepSize
+                ),
+            directionSign
+        );
+
+    if (k4 === null) {
+        return null;
+    }
+
+    return position
+        .clone()
+        .addScaledVector(
+            k1,
+            stepSize / 6
+        )
+        .addScaledVector(
+            k2,
+            stepSize / 3
+        )
+        .addScaledVector(
+            k3,
+            stepSize / 3
+        )
+        .addScaledVector(
+            k4,
+            stepSize / 6
+        );
+}
+
 function traceMagneticFieldLine(
     seed,
     directionSign
@@ -980,10 +1085,22 @@ function traceMagneticFieldLine(
     const points = [];
     const position = seed.clone();
 
-    const stepSize = 0.035;
-    const maximumSteps = 320;
-    const minimumRadius = 1.005;
-    const maximumRadius = 5.5;
+    /*
+     * Smaller steps give smoother and more accurate
+     * trajectories. More steps allow long lines to
+     * continue until they return to Earth.
+     */
+    const stepSize = 0.025;
+    const maximumSteps = 1200;
+
+    const minimumRadius = 1.002;
+
+    /*
+     * This is now only an emergency limit for genuinely
+     * open or numerically unstable trajectories. It is
+     * independent of the visible simulator window.
+     */
+    const maximumRadius = 14;
 
     for (
         let step = 0;
@@ -992,12 +1109,34 @@ function traceMagneticFieldLine(
     ) {
         const radius = position.length();
 
+        /*
+         * Do not immediately stop at the seed, which is
+         * already close to Earth's surface. Wait until
+         * at least one step has been completed.
+         */
         if (
-            radius < minimumRadius
-            ||
-            radius > maximumRadius
+            step > 0
+            &&
+            radius <= minimumRadius
         ) {
+            /*
+             * Project the final point onto Earth's surface
+             * so the line visibly meets the sphere rather
+             * than ending slightly above it.
+             */
+            const surfacePoint =
+                position
+                    .clone()
+                    .normalize()
+                    .multiplyScalar(1.001);
+
+            points.push(surfacePoint);
+
             break;
+        }
+
+        if (radius > maximumRadius) {
+            return [];
         }
 
         points.push(position.clone());
@@ -1017,12 +1156,18 @@ function traceMagneticFieldLine(
             break;
         }
 
-        field.normalize();
+        const nextPosition =
+            advanceMagneticFieldLineRK4(
+                position,
+                stepSize,
+                directionSign
+            );
 
-        position.addScaledVector(
-            field,
-            directionSign * stepSize
-        );
+        if (nextPosition === null) {
+            break;
+        }
+
+        position.copy(nextPosition);
     }
 
     return points;
