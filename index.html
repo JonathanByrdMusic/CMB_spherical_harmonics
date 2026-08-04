@@ -115,7 +115,39 @@
 <div id="canvasRow">
 
     <section class="panel">
-        <h2>Single mode Y<sub>&ell;m</sub></h2>
+        <div class="orbitalPanelHeader">
+            <h2>
+                Single mode Y<sub>&ell;m</sub>
+            </h2>
+
+            <div
+                class="harmonicLegend harmonicLegendPanel"
+                role="group"
+                aria-label="Spherical harmonic color legend"
+            >
+                <span class="harmonicLegendItem">
+                    <span
+                        class="harmonicLegendSwatch harmonicLegendPositive"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>Positive</span>
+                </span>
+
+                <span class="harmonicLegendItem">
+                    <span
+                        class="harmonicLegendSwatch harmonicLegendNegative"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>Negative</span>
+                </span>
+
+                <span class="harmonicLegendMagnitude">
+                    Saturation indicates magnitude
+                </span>
+            </div>
+        </div>
 
         <div
             id="orbitalViewer"
@@ -176,7 +208,7 @@
 
     <label class="controlItem checkboxItem">
     <input id="singleEllCheckbox" type="checkbox">
-    Show only current (ℓ, m)
+    Show only current (&ell;, m)
     </label>
 
     <button id="buildUniverseButton" type="button">
