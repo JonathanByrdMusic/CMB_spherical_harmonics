@@ -346,6 +346,31 @@ h1 {
     margin-bottom: 0;
 }
 
+.orbitalPanelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+
+    padding: 0 1.25rem;
+}
+
+.orbitalPanelHeader h2 {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+.harmonicLegendPanel {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1.25rem;
+
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
 button {
     min-height: 54px;
     margin: 0;
@@ -833,6 +858,23 @@ footer {
     .siteMenu {
         top: 58px;
         right: 0;
+    }
+
+    .orbitalPanelHeader {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.65rem;
+
+        padding: 0 1rem;
+    }
+
+    .harmonicLegendPanel {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 0.55rem 1rem;
+
+        font-size: 0.82rem;
+        white-space: normal;
     }
 }
 
