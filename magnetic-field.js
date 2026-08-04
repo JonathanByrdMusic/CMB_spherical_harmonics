@@ -1085,10 +1085,21 @@ function traceMagneticFieldLine(
     const points = [];
     const position = seed.clone();
 
+    /*
+     * Smaller steps give smoother and more accurate
+     * trajectories. More steps allow long lines to
+     * continue until they return to Earth.
+     */
     const stepSize = 0.03;
     const maximumSteps = 1400;
 
     const minimumRadius = 1.002;
+
+    /*
+     * This is now only an emergency limit for genuinely
+     * open or numerically unstable trajectories. It is
+     * independent of the visible simulator window.
+     */
     const maximumRadius = 14;
 
     for (
@@ -1099,13 +1110,20 @@ function traceMagneticFieldLine(
         const radius = position.length();
 
         /*
-         * The trajectory has returned to the sphere.
+         * Do not immediately stop at the seed, which is
+         * already close to Earth's surface. Wait until
+         * at least one step has been completed.
          */
         if (
             step > 0
             &&
             radius <= minimumRadius
         ) {
+            /*
+             * Project the final point onto Earth's surface
+             * so the line visibly meets the sphere rather
+             * than ending slightly above it.
+             */
             const surfacePoint =
                 position
                     .clone()
@@ -1114,24 +1132,29 @@ function traceMagneticFieldLine(
 
             points.push(surfacePoint);
 
-            return {
-                points,
-                completed: true
-            };
+            break;
         }
 
-        /*
-         * The trajectory escaped beyond the
-         * permitted tracing region.
-         */
         if (radius > maximumRadius) {
-            return {
-                points,
-                completed: false
-            };
+            return [];
         }
 
         points.push(position.clone());
+
+        const field =
+            magneticFieldAtPoint(position);
+
+        if (
+            !Number.isFinite(field.x)
+            ||
+            !Number.isFinite(field.y)
+            ||
+            !Number.isFinite(field.z)
+            ||
+            field.lengthSq() < 1e-12
+        ) {
+            break;
+        }
 
         const nextPosition =
             advanceMagneticFieldLineRK4(
@@ -1140,60 +1163,33 @@ function traceMagneticFieldLine(
                 directionSign
             );
 
-        /*
-         * The field direction became numerically
-         * unusable before the line completed.
-         */
         if (nextPosition === null) {
-            return {
-                points,
-                completed: false
-            };
+            break;
         }
 
         position.copy(nextPosition);
     }
 
-    /*
-     * The trajectory reached maximumSteps without
-     * returning to the sphere.
-     */
-    return {
-        points,
-        completed: false
-    };
+    return points;
 }
 
 function createHarmonicFieldLine(seed) {
-    const backwardTrace =
+    const backwardPoints =
         traceMagneticFieldLine(
             seed,
             -1
         );
 
-    const forwardTrace =
+    const forwardPoints =
         traceMagneticFieldLine(
             seed,
             1
         );
 
     /*
-     * Do not draw lines with an incomplete half.
+     * Join the two trajectories at the seed.
+     * Remove one duplicate seed point.
      */
-    if (
-        !backwardTrace.completed
-        ||
-        !forwardTrace.completed
-    ) {
-        return null;
-    }
-
-    const backwardPoints =
-        backwardTrace.points;
-
-    const forwardPoints =
-        forwardTrace.points;
-
     backwardPoints.reverse();
 
     const points = [
@@ -1204,8 +1200,6 @@ function createHarmonicFieldLine(seed) {
     if (points.length < 4) {
         return null;
     }
-
-    // Continue with the existing curve and material code.
 
     const curve =
         new THREE.CatmullRomCurve3(
