@@ -384,7 +384,7 @@ h1 {
     flex-wrap: wrap;
     gap: 8px 18px;
 
-    margin: 0;
+    margin: 0 0 0 18px;
 
     color: rgba(255, 255, 255, 0.82);
     font-size: 0.84rem;
@@ -885,7 +885,7 @@ footer {
         justify-content: flex-start;
         gap: 6px 13px;
 
-        margin: 0;
+        margin: 0 0 0 18px;
 
         font-size: 0.75rem;
         white-space: normal;
