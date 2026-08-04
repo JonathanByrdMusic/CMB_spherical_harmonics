@@ -105,7 +105,7 @@ h1 {
     flex-wrap: wrap;
     gap: 10px 26px;
 
-    margin-top: 54px;
+    margin-top: 0;
 
     color: var(--space-text);
     font-size: 0.95rem;
@@ -347,28 +347,49 @@ h1 {
 }
 
 .orbitalPanelHeader {
+    position: absolute;
+    top: 17px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1.25rem;
-
-    padding: 0 1.25rem;
+    justify-content: flex-start;
+    gap: 1.4rem;
 }
 
-.orbitalPanelHeader h2 {
+/*
+ * Override the general .panel h2 absolute positioning.
+ */
+.panel .orbitalPanelHeader h2 {
+    position: static;
+
     flex: 0 0 auto;
+
     margin: 0;
+
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 1rem;
+    line-height: 1.2;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-align: left;
 }
 
-.harmonicLegendPanel {
+.harmonicLegend.harmonicLegendPanel {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 1.25rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px 18px;
 
     margin: 0;
-    font-size: 0.9rem;
-    white-space: nowrap;
+
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.84rem;
+    line-height: 1.2;
+    font-weight: 400;
 }
 
 button {
@@ -672,11 +693,6 @@ footer {
         padding: 24px;
     }
 
-    .harmonicLegend {
-        margin-top: 28px;
-        gap: 10px 20px;
-    }
-
     #canvasRow,
     #controlsRow {
         grid-template-columns: 1fr;
@@ -711,15 +727,6 @@ footer {
 
     #titleBlock {
         align-self: start;
-    }
-
-    .harmonicLegend {
-        margin-top: 16px;
-
-        gap: 10px 18px;
-
-        font-size: 0.86rem;
-        line-height: 1.3;
     }
 
     .harmonicLegendMagnitude {
@@ -861,20 +868,34 @@ footer {
     }
 
     .orbitalPanelHeader {
+        top: 14px;
+        left: 16px;
+        right: 16px;
+
         align-items: flex-start;
         flex-direction: column;
-        gap: 0.65rem;
-
-        padding: 0 1rem;
+        gap: 0.45rem;
     }
 
-    .harmonicLegendPanel {
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: 0.55rem 1rem;
+    .panel .orbitalPanelHeader h2 {
+        font-size: 0.9rem;
+    }
 
-        font-size: 0.82rem;
+    .harmonicLegend.harmonicLegendPanel {
+        justify-content: flex-start;
+        gap: 6px 13px;
+
+        margin: 0;
+
+        font-size: 0.75rem;
         white-space: normal;
+    }
+
+    /*
+     * Leave room for the two-row header.
+     */
+    #orbitalViewer {
+        top: 82px;
     }
 }
 
