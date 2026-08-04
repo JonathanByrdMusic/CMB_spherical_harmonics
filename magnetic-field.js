@@ -1090,8 +1090,8 @@ function traceMagneticFieldLine(
      * trajectories. More steps allow long lines to
      * continue until they return to Earth.
      */
-    const stepSize = 0.025;
-    const maximumSteps = 1200;
+    const stepSize = 0.03;
+    const maximumSteps = 1000;
 
     const minimumRadius = 1.002;
 
@@ -1100,7 +1100,7 @@ function traceMagneticFieldLine(
      * open or numerically unstable trajectories. It is
      * independent of the visible simulator window.
      */
-    const maximumRadius = 14;
+    const maximumRadius = 12;
 
     for (
         let step = 0;
