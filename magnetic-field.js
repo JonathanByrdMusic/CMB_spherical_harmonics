@@ -1091,7 +1091,7 @@ function traceMagneticFieldLine(
      * continue until they return to Earth.
      */
     const stepSize = 0.03;
-    const maximumSteps = 1000;
+    const maximumSteps = 1400;
 
     const minimumRadius = 1.002;
 
