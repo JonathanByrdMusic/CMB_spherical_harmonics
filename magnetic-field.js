@@ -33,7 +33,7 @@ const earthLikeFieldButton =
         "earthLikeFieldButton"
     );
 
-const MAGNETIC_SINGLE_MODE_SCALE = 1e10;
+const MAGNETIC_SINGLE_MODE_SCALE = 1e8;
 
 /*
  * Three.js scene
