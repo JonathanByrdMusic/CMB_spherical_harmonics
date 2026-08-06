@@ -175,7 +175,11 @@ function clearMagneticFieldLines() {
         magneticFieldLineGroup.children.length > 0
     ) {
         const object =
-            magneticFieldLineGroup.children.pop();
+            magneticFieldLineGroup.children[0];
+
+        magneticFieldLineGroup.remove(
+            object
+        );
 
         object.geometry?.dispose();
         object.material?.dispose();
@@ -588,13 +592,13 @@ function finishMagneticFieldLineUpdate() {
 }
 
 /*
- * Qualitative Earth-like geomagnetic model.
+ * Qualitative, dipole-dominated Earth-like model.
+ *
+ * These are illustrative coefficients, not measured
+ * IGRF or geomagnetic Gauss coefficients.
  *
  * Each entry contains:
  * [ell, m, coefficient]
- *
- * The dipole dominates, while progressively
- * higher modes have smaller amplitudes.
  */
 const earthLikeMagneticTerms = [
     [1,  0,  1.000],
@@ -603,23 +607,30 @@ const earthLikeMagneticTerms = [
     [2,  1, -0.140],
     [2, -2,  0.100],
 
+    [3,  0,  0.070],
     [3, -1,  0.090],
     [3,  2,  0.070],
 
+    [4,  0, -0.045],
     [4,  1,  0.050],
     [4, -3, -0.040],
 
+    [5,  0,  0.030],
     [5, -2,  0.034],
     [5,  3, -0.029],
 
+    [6,  0, -0.022],
     [6,  1,  0.024],
     [6, -4, -0.020],
 
+    [7,  0,  0.015],
     [7,  2,  0.016],
     [7, -5,  0.013],
 
     [8,  0,  0.011],
-    [8,  6, -0.009]
+    [8,  6, -0.009], 
+    [8,  7,  0.007],
+    [8, -8, -0.005]
 ];
 
 function getAllowedEarthLikeTerms() {
@@ -833,144 +844,423 @@ function updateEarthSurfaceColors() {
 
 }
 
-function evaluateMagneticPotential(
+/*
+ * Analytic magnetic field
+ *
+ * For one exterior spherical-harmonic term,
+ *
+ *     V = coefficient * Y_lm(theta, phi) / r^(ell + 1)
+ *
+ * and
+ *
+ *     B = -grad(V)
+ *
+ * We calculate the spherical components directly,
+ * then convert them to Cartesian coordinates.
+ */
+
+
+/*
+ * Return P_ell^m(x), treating ell < m as zero.
+ *
+ * This is useful in the derivative recurrence when
+ * ell = m and P_(ell - 1)^m does not exist as a
+ * regular associated Legendre function.
+ */
+function associatedLegendreSafe(
+    ell,
+    m,
+    x
+) {
+    if (ell < m) {
+        return 0;
+    }
+
+    return associatedLegendre(
+        ell,
+        m,
+        x
+    );
+}
+
+
+/*
+ * Evaluate one real spherical harmonic together with
+ * its theta and phi derivatives.
+ */
+function realSphericalHarmonicWithDerivatives(
+    ell,
+    m,
+    theta,
+    phi
+) {
+    const absM =
+        Math.abs(m);
+
+    const cosTheta =
+        Math.cos(theta);
+
+    const sinTheta =
+        Math.sin(theta);
+
+    /*
+     * Avoid division by exactly zero at the coordinate
+     * singularities. The field-line seeds do not begin
+     * at the poles, but a trajectory may approach one.
+     */
+    const safeSinTheta =
+        Math.max(
+            Math.abs(sinTheta),
+            1e-10
+        );
+
+    const normalization =
+        getNormalization(
+            ell,
+            absM
+        );
+
+    const legendre =
+        associatedLegendreSafe(
+            ell,
+            absM,
+            cosTheta
+        );
+
+    const previousLegendre =
+        associatedLegendreSafe(
+            ell - 1,
+            absM,
+            cosTheta
+        );
+
+    /*
+     * Associated-Legendre derivative:
+     *
+     * dP_l^m(cos(theta)) / dtheta
+     *
+     *     =
+     *
+     * [l cos(theta) P_l^m
+     *  - (l + m) P_(l-1)^m]
+     * / sin(theta)
+     */
+    const legendreThetaDerivative =
+        (
+            ell
+            *
+            cosTheta
+            *
+            legendre
+            -
+            (ell + absM)
+            *
+            previousLegendre
+        )
+        /
+        safeSinTheta;
+
+    let angularFactor;
+    let phiDerivativeFactor;
+
+    if (m === 0) {
+        angularFactor = 1;
+        phiDerivativeFactor = 0;
+    } else if (m > 0) {
+        angularFactor =
+            Math.sqrt(2)
+            *
+            Math.cos(
+                absM * phi
+            );
+
+        phiDerivativeFactor =
+            Math.sqrt(2)
+            *
+            (
+                -absM
+                *
+                Math.sin(
+                    absM * phi
+                )
+            );
+    } else {
+        angularFactor =
+            Math.sqrt(2)
+            *
+            Math.sin(
+                absM * phi
+            );
+
+        phiDerivativeFactor =
+            Math.sqrt(2)
+            *
+            (
+                absM
+                *
+                Math.cos(
+                    absM * phi
+                )
+            );
+    }
+
+    const value =
+        normalization
+        *
+        legendre
+        *
+        angularFactor;
+
+    const thetaDerivative =
+        normalization
+        *
+        legendreThetaDerivative
+        *
+        angularFactor;
+
+    const phiDerivative =
+        normalization
+        *
+        legendre
+        *
+        phiDerivativeFactor;
+
+    return {
+        value,
+        thetaDerivative,
+        phiDerivative
+    };
+}
+
+
+/*
+ * Add one exterior multipole term to a magnetic-field
+ * vector expressed in spherical components.
+ */
+function addMagneticFieldTerm(
+    components,
+    ell,
+    m,
+    coefficient,
     radius,
     theta,
     phi
 ) {
-    const selectedEll =
-        Number(magneticLSlider.value);
-
-    const selectedM =
-        Number(magneticMSlider.value);
-
-    /*
-     * Show one selected spherical-harmonic mode.
-     */
-    if (magneticSingleModeCheckbox.checked) {
-        return (
-            realSphericalHarmonic(
-                selectedEll,
-                selectedM,
-                theta,
-                phi
-            )
-            /
-            Math.pow(
-                radius,
-                selectedEll + 1
-            )
-        );
-    }
-
-    /*
-     * Earth-like accumulated field:
-     *
-     * include all prescribed terms through
-     * selectedEll and through |m| = |selectedM|.
-     */
-    const maximumAbsM =
-        Math.abs(selectedM);
-
-    let potential = 0;
-
-    const activeTerms =
-        getAllowedEarthLikeTerms();
-
-    for (
-        const [
+    const harmonic =
+        realSphericalHarmonicWithDerivatives(
             ell,
             m,
-            coefficient
-        ] of activeTerms
-    ) {
-        potential +=
-            coefficient
-            *
-            realSphericalHarmonic(
-                ell,
-                m,
-                theta,
-                phi
-            )
-            /
-            Math.pow(
-                radius,
-                ell + 1
-            );
-    }
+            theta,
+            phi
+        );
 
-    return potential;
+    const radialFactor =
+        coefficient
+        /
+        Math.pow(
+            radius,
+            ell + 2
+        );
+
+    /*
+     * B_r =
+     *
+     *     (ell + 1) Y_lm / r^(ell + 2)
+     */
+    components.radial +=
+        radialFactor
+        *
+        (ell + 1)
+        *
+        harmonic.value;
+
+    /*
+     * B_theta =
+     *
+     *     -(dY_lm / dtheta) / r^(ell + 2)
+     */
+    components.theta -=
+        radialFactor
+        *
+        harmonic.thetaDerivative;
+
+    /*
+     * B_phi =
+     *
+     *     -(dY_lm / dphi)
+     *     /
+     *     [r^(ell + 2) sin(theta)]
+     */
+    const sinTheta =
+        Math.sin(theta);
+
+    const safeSinTheta =
+        Math.max(
+            Math.abs(sinTheta),
+            1e-10
+        );
+
+    components.phi -=
+        radialFactor
+        *
+        harmonic.phiDerivative
+        /
+        safeSinTheta;
 }
 
-function magneticPotentialAtPoint(position) {
+
+/*
+ * Calculate B directly at a Cartesian point.
+ */
+function magneticFieldAtPoint(position) {
     const x = position.x;
     const y = position.y;
     const z = position.z;
 
-    const radius = Math.sqrt(
-        x * x + y * y + z * z
-    );
+    const radius =
+        Math.sqrt(
+            x * x
+            +
+            y * y
+            +
+            z * z
+        );
 
-    if (radius < 1) {
-        return 0;
+    if (
+        !Number.isFinite(radius)
+        ||
+        radius <= 1
+    ) {
+        return new THREE.Vector3(
+            0,
+            0,
+            0
+        );
     }
 
-    const theta = Math.acos(
-        Math.max(-1, Math.min(1, y / radius))
-    );
+    /*
+     * This project uses y as the polar axis.
+     */
+    const cosTheta =
+        Math.max(
+            -1,
+            Math.min(
+                1,
+                y / radius
+            )
+        );
 
-    const phi = Math.atan2(z, x);
+    const theta =
+        Math.acos(
+            cosTheta
+        );
 
-    return evaluateMagneticPotential(
-        radius,
-        theta,
-        phi
-    );
-}
+    const phi =
+        Math.atan2(
+            z,
+            x
+        );
 
-function magneticFieldAtPoint(position) {
-    const h = 0.002;
+    const components = {
+        radial: 0,
+        theta: 0,
+        phi: 0
+    };
 
-    const dx = new THREE.Vector3(h, 0, 0);
-    const dy = new THREE.Vector3(0, h, 0);
-    const dz = new THREE.Vector3(0, 0, h);
+    if (magneticSingleModeCheckbox.checked) {
+        const ell =
+            Number(
+                magneticLSlider.value
+            );
 
-    const dVdx = (
-        magneticPotentialAtPoint(
-            position.clone().add(dx)
+        const m =
+            Number(
+                magneticMSlider.value
+            );
+
+        addMagneticFieldTerm(
+            components,
+            ell,
+            m,
+            1,
+            radius,
+            theta,
+            phi
+        );
+    } else {
+        const activeTerms =
+            getAllowedEarthLikeTerms();
+
+        for (
+            const [
+                ell,
+                m,
+                coefficient
+            ] of activeTerms
+        ) {
+            addMagneticFieldTerm(
+                components,
+                ell,
+                m,
+                coefficient,
+                radius,
+                theta,
+                phi
+            );
+        }
+    }
+
+    /*
+     * Spherical unit vectors for the convention
+     *
+     * x = r sin(theta) cos(phi)
+     * y = r cos(theta)
+     * z = r sin(theta) sin(phi)
+     */
+
+    const sinTheta =
+        Math.sin(theta);
+
+    const cosPhi =
+        Math.cos(phi);
+
+    const sinPhi =
+        Math.sin(phi);
+
+    const radialUnit =
+        new THREE.Vector3(
+            sinTheta * cosPhi,
+            cosTheta,
+            sinTheta * sinPhi
+        );
+
+    const thetaUnit =
+        new THREE.Vector3(
+            cosTheta * cosPhi,
+            -sinTheta,
+            cosTheta * sinPhi
+        );
+
+    const phiUnit =
+        new THREE.Vector3(
+            -sinPhi,
+            0,
+            cosPhi
+        );
+
+    return new THREE.Vector3()
+        .addScaledVector(
+            radialUnit,
+            components.radial
         )
-        -
-        magneticPotentialAtPoint(
-            position.clone().sub(dx)
+        .addScaledVector(
+            thetaUnit,
+            components.theta
         )
-    ) / (2 * h);
-
-    const dVdy = (
-        magneticPotentialAtPoint(
-            position.clone().add(dy)
-        )
-        -
-        magneticPotentialAtPoint(
-            position.clone().sub(dy)
-        )
-    ) / (2 * h);
-
-    const dVdz = (
-        magneticPotentialAtPoint(
-            position.clone().add(dz)
-        )
-        -
-        magneticPotentialAtPoint(
-            position.clone().sub(dz)
-        )
-    ) / (2 * h);
-
-    return new THREE.Vector3(
-        -dVdx,
-        -dVdy,
-        -dVdz
-    );
+        .addScaledVector(
+            phiUnit,
+            components.phi
+        );
 }
 
 function magneticFieldDirectionAtPoint(
@@ -1090,8 +1380,8 @@ function traceMagneticFieldLine(
      * trajectories. More steps allow long lines to
      * continue until they return to Earth.
      */
-    const stepSize = 0.03;
-    const maximumSteps = 1400;
+    const stepSize = 0.025;
+    const maximumSteps = 1600;
 
     const minimumRadius = 1.002;
 
@@ -1191,13 +1481,19 @@ function createHarmonicFieldLine(seed) {
             points
         );
 
+    const tubularSegments =
+        Math.min(
+            1200,
+            Math.max(
+                48,
+                points.length
+            )
+        );
+
     const geometry =
         new THREE.TubeGeometry(
             curve,
-            Math.max(
-                24,
-                points.length * 2
-            ),
+            tubularSegments,
             0.009,
             5,
             false
@@ -1222,14 +1518,23 @@ function createHarmonicFieldLine(seed) {
     const phi =
         Math.atan2(seed.z, seed.x);
 
-    const surfaceValue =
-        evaluateMagneticSurfaceField(
-            theta,
-            phi
+    const seedField =
+        magneticFieldAtPoint(
+            seed
+        );
+
+    const radialDirection =
+        seed
+            .clone()
+            .normalize();
+
+    const radialField =
+        seedField.dot(
+            radialDirection
         );
 
     const color =
-        surfaceValue >= 0
+        radialField >= 0
             ? 0xf2a522
             : 0x4db6e8;
 
@@ -1250,27 +1555,63 @@ function createHarmonicFieldLine(seed) {
 function buildHarmonicFieldLines() {
     clearMagneticFieldLines();
 
-    /*
-     * Seed curves just outside Earth's surface.
-     * Several latitudes and azimuths provide a
-     * three-dimensional field architecture.
-     */
-    const northernThetas = [
-        0.48,
-        0.68,
-        0.88,
-        1.08,
-        1.30
-    ];
+    const selectedEll =
+        Number(magneticLSlider.value);
 
-    const seedThetas = [
-        ...northernThetas,
-        ...northernThetas.map(
-            theta => Math.PI - theta
-        )
-    ];
+    const selectedM =
+        Number(magneticMSlider.value);
 
-    const azimuthCount = 10;
+    const absM =
+        Math.abs(selectedM);
+
+    const thetaCount =
+        magneticSingleModeCheckbox.checked
+            ? Math.min(
+                12,
+                Math.max(
+                    8,
+                    selectedEll + 4
+                )
+            )
+            : 10;
+
+    const seedThetas =
+        Array.from(
+            {
+                length: thetaCount
+            },
+            (
+                _,
+                thetaIndex
+            ) => (
+                (thetaIndex + 0.5)
+                *
+                Math.PI
+                /
+                thetaCount
+            )
+        );
+
+    const azimuthCount =
+        magneticSingleModeCheckbox.checked
+            ? Math.min(
+                20,
+                Math.max(
+                    10,
+                    2 * absM
+                )
+            )
+            : 10;
+
+    const phaseOffset =
+        magneticSingleModeCheckbox.checked
+        &&
+        selectedM < 0
+        &&
+        absM > 0
+            ? Math.PI / (2 * absM)
+            : 0;
+
     const seedRadius = 1.025;
 
     for (
@@ -1279,13 +1620,17 @@ function buildHarmonicFieldLines() {
         azimuthIndex += 1
     ) {
         const phi =
-            2
-            *
-            Math.PI
-            *
-            azimuthIndex
-            /
-            azimuthCount;
+            (
+                2
+                *
+                Math.PI
+                *
+                azimuthIndex
+                /
+                azimuthCount
+            )
+            +
+            phaseOffset;
 
         for (
             const theta of seedThetas
@@ -1318,7 +1663,7 @@ function buildHarmonicFieldLines() {
                 );
             }
         }
-        }
+    }
 
     magneticRenderer.render(
         magneticScene,
@@ -1461,6 +1806,15 @@ earthLikeFieldButton.addEventListener(
         magneticMSlider.value = "6";
 
         updateMagneticControls();
+
+        if (magneticSliderUpdateTimer !== null) {
+            clearTimeout(
+                magneticSliderUpdateTimer
+            );
+
+            magneticSliderUpdateTimer = null;
+        }
+
         animateMagneticFieldBuild();
     }
 );
