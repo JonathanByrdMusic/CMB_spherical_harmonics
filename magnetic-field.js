@@ -260,7 +260,7 @@ function animateMagneticFieldBuild() {
         buildHarmonicFieldLines();
 
         magneticTitle.textContent =
-            `Magnetic mode built: &ell; = ${
+            `Magnetic mode built: ℓ = ${
                 magneticLSlider.value
             }, m = ${
                 magneticMSlider.value
@@ -300,7 +300,7 @@ function animateMagneticFieldBuild() {
         buildHarmonicFieldLines();
 
         magneticTitle.textContent =
-            `Building field: added &ell; = ${ell}, m = ${m}`
+            `Building field: added ℓ = ${ell}, m = ${m}`
             +
             ` (${magneticActiveTermCount}/${allowedTerms.length})`;
 
@@ -323,7 +323,7 @@ function animateMagneticFieldBuild() {
             buildHarmonicFieldLines();
 
             magneticTitle.textContent =
-                `Earth-like field built through &ell; = ${
+                `Earth-like field built through ℓ = ${
                     magneticLSlider.value
                 }, |m| ≤ ${
                     magneticMSlider.value
@@ -397,12 +397,12 @@ function updateMagneticControls() {
         magneticTitle.textContent =
             ell === 1 && m === 0
                 ? "Magnetic mode: dipole"
-                : `Magnetic mode: &ell; = ${ell}, m = ${m}`;
+                : `Magnetic mode: ℓ = ${ell}, m = ${m}`;
     } else {
         magneticTitle.textContent =
             ell === 1
                 ? `Earth-like field: dipole, |m| ≤ ${m}`
-                : `Earth-like field through &ell; = ${ell}, |m| ≤ ${m}`;
+                : `Earth-like field through ℓ = ${ell}, |m| ≤ ${m}`;
     }
 
     cancelMagneticBuildAnimation();

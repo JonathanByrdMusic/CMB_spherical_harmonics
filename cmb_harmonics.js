@@ -603,7 +603,7 @@ function generateCoefficients() {
         }
 
         // Planck removes the observed dipole, so borrow the quadrupole
-        // simply so &ell; = 1 has a visible amplitude.
+        // simply so ℓ = 1 has a visible amplitude.
         if (l === 1) {
             let D2 = planckPower[2] || 1;
             Cl = (2 * Math.PI * D2) / (2 * 3);
@@ -700,10 +700,10 @@ function requestSkyCalculation(
 
         if (singleMode) {
             skyTitle.textContent =
-                `Selected harmonic: (&ell;, m) = (${selectedL}, ${selectedM})`;
+                `Selected harmonic: (ℓ, m) = (${selectedL}, ${selectedM})`;
         } else {
             skyTitle.textContent =
-                `Calculating sky through &ell; = ${lmax}...`;
+                `Calculating sky through ℓ = ${lmax}...`;
         }
     }
 
@@ -939,7 +939,7 @@ async function startBuildUniverse() {
 
     /*
      * The build animation represents the cumulative universe,
-     * not one selected (&ell;,m) mode.
+     * not one selected (ℓ,m) mode.
      */
     singleEllCheckbox.checked = false;
 
@@ -972,7 +972,7 @@ async function startBuildUniverse() {
         }
 
         skyTitle.textContent =
-            `Building universe: &ell; = ${currentL} of ${finalL}`;
+            `Building universe: ℓ = ${currentL} of ${finalL}`;
 
         const result =
             await requestSkyCalculation(
@@ -1018,7 +1018,7 @@ async function startBuildUniverse() {
         stopBuildUniverse();
 
         skyTitle.textContent =
-            `Accumulated sky through &ell; = ${completedL}`;
+            `Accumulated sky through ℓ = ${completedL}`;
     }
 }
 
@@ -1090,10 +1090,10 @@ function updateSliderFill(sliderElement) {
 function updateSkyTitle() {
     if (singleEllCheckbox.checked) {
         skyTitle.textContent =
-            `Selected harmonic: (&ell;, m) = (${slider.value}, ${mSlider.value})`;
+            `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
     } else {
         skyTitle.textContent =
-            `Accumulated sky through &ell; = ${slider.value}`;
+            `Accumulated sky through ℓ = ${slider.value}`;
     }
 }
 
@@ -1137,10 +1137,10 @@ slider.addEventListener("input", function () {
 
     if (singleEllCheckbox.checked) {
         skyTitle.textContent =
-            `Selected harmonic: (&ell;, m) = (${slider.value}, ${mSlider.value})`;
+            `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
     } else {
         skyTitle.textContent =
-            `Waiting to calculate sky through &ell; = ${slider.value}...`;
+            `Waiting to calculate sky through ℓ = ${slider.value}...`;
     }
 
     sliderDrawTimer = setTimeout(function () {
@@ -1199,10 +1199,10 @@ skyWorker.addEventListener("message", function (event) {
 
         if (buildIsRunning) {
             skyTitle.textContent =
-                `Building universe: &ell; = ${requestedL} of ${buildFinalL} (${percent}%)`;
+                `Building universe: ℓ = ${requestedL} of ${buildFinalL} (${percent}%)`;
         } else {
             skyTitle.textContent =
-                `Calculating sky through &ell; = ${requestedL}: ${percent}%`;
+                `Calculating sky through ℓ = ${requestedL}: ${percent}%`;
         }
 
         return;
@@ -1243,7 +1243,7 @@ skyWorker.addEventListener("message", function (event) {
 
         if (elapsed !== null) {
             console.log(
-                `Sky through &ell;=${message.lmax} calculated in ` +
+                `Sky through ℓ=${message.lmax} calculated in ` +
                 `${elapsed.toFixed(1)} ms`
             );
         }
@@ -1352,7 +1352,7 @@ async function loadPlanckSpectrum() {
             row.Dl >= 0
         );
 
-    // Build a fast lookup table indexed by &ell;
+    // Build a fast lookup table indexed by ℓ
     for (const row of planckSpectrum) {
 
         let ell = Math.round(row.ell);
