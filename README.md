@@ -24,24 +24,6 @@ Three.js and WebGL are used for the 3D visualizations. The CMB map is rendered w
 
 Planck CMB power-spectrum data are stored locally as text files rather than accessed through a live external API.
 
-## Running locally
-
-Clone or download the repository, then start a local web server from the project directory. For example:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open:
-
-```text
-http://localhost:8000
-```
-
-in a web browser.
-
-A local server is required because browsers restrict some file loading and Web Worker behavior when HTML files are opened directly from the filesystem.
-
 ## Purpose
 
 This project is an exploratory and educational tool to make spherical harmonics easier to see, manipulate, and connect to physical examples.
