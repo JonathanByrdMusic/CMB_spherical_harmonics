@@ -14,7 +14,7 @@ The site began as a way to visualize individual spherical harmonics and develope
 * A spherical-harmonic model of a supernova remnant
 * An approximate Earth-like magnetic-field model
 * Mouse and touch interaction with the 3D models
-* * An interactive explanation of the mathematics behind spherical harmonics
+* An interactive explanation of the mathematics behind spherical harmonics
 
 ## How it works
 
