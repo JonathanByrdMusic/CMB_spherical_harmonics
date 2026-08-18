@@ -3,3 +3,13 @@ git commit -m "Move simulator files to GitHub Pages root"
 git push
 
 python3 -m http.server 8000
+
+new site:
+
+git add .
+git status
+
+Then: 
+
+git commit -m "Update polarization power spectrum"
+git push
