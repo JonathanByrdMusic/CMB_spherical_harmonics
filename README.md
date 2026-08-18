@@ -18,7 +18,7 @@ The site began as a way to visualize individual spherical harmonics and develope
 
 ## How it works
 
-The website runs primarily in the browser using HTML, CSS, and JavaScript.
+The website runs in the browser using HTML, CSS, and JavaScript.
 
 Three.js and WebGL are used for the 3D visualizations. The CMB map is rendered with the HTML Canvas API, with some of the heavier spherical-harmonic calculations performed in a Web Worker.
 
