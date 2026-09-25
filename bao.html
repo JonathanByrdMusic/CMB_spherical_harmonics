@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <!-- Google tag (gtag.js) -->
+    <script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"
+    ></script>
+
+    <script>
+        window.dataLayer =
+            window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag("js", new Date());
+        gtag("config", "G-90WMD4PJQP");
+    </script>
+
+    <title>Baryon Acoustic Oscillations</title>
+
+    <link
+        rel="icon"
+        href="media/Simons_logo_small.ico"
+        type="image/x-icon"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="bao.css">
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [
+                    ["\\(", "\\)"],
+                    ["$", "$"]
+                ],
+
+                displayMath: [
+                    ["\\[", "\\]"]
+                ]
+            },
+
+            svg: {
+                fontCache: "global"
+            }
+        };
+    </script>
+
+    <script
+        async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
+    ></script>
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h1>Baryon Acoustic Oscillations</h1>
+
+        <div class="subtitle">
+            designed by Jonathan Byrd
+        </div>
+    </div>
+
+    <div class="menuContainer">
+
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Simulation pages"
+            hidden
+        >
+            <a href="index.html">
+                CMB simulation
+            </a>
+
+            <a href="bao.html" aria-current="page">
+                Baryon Acoustic Oscillations
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+    </div>
+
+</div>
+
+<main id="pageContent">
+
+    <section
+        class="coulombWidget"
+        aria-labelledby="coulombWidgetTitle"
+    >
+        <h2
+            id="coulombWidgetTitle"
+            class="visuallyHidden"
+        >
+            Interactive Coulomb force visualization
+        </h2>
+
+        <div class="coulombControlsPane">
+
+            <div class="coulombFormula">
+                \[
+                F
+                =
+                k\frac{q_1q_2}{r^2}
+                \]
+            </div>
+
+            <div
+                id="coulombCalculation"
+                class="coulombCalculation"
+                aria-live="polite"
+            >
+                \[
+                F
+                =
+                k\frac{q_1q_2}{r^2}
+                =
+                \frac{8.99(0.5)(-0.5)}{4^2}
+                =
+                -0.14\,\mathrm{N}
+                \]
+            </div>
+
+            <div class="coulombSliderGroup">
+
+                <label
+                    class="coulombControlRow"
+                    for="q1Slider"
+                >
+                    <span class="coulombSymbol">
+                        \(q_1\)
+                    </span>
+
+                    <span
+                        id="q1Value"
+                        class="coulombValue"
+                    >
+                        0.5
+                    </span>
+
+                    <span class="coulombUnit">
+                        C
+                    </span>
+
+                    <input
+                        id="q1Slider"
+                        class="coulombRange"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        step="0.1"
+                        value="0.5"
+                    >
+                </label>
+
+                <label
+                    class="coulombControlRow"
+                    for="q2Slider"
+                >
+                    <span class="coulombSymbol">
+                        \(q_2\)
+                    </span>
+
+                    <span
+                        id="q2Value"
+                        class="coulombValue"
+                    >
+                        -0.5
+                    </span>
+
+                    <span class="coulombUnit">
+                        C
+                    </span>
+
+                    <input
+                        id="q2Slider"
+                        class="coulombRange"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        step="0.1"
+                        value="-0.5"
+                    >
+                </label>
+
+                <label
+                    class="coulombControlRow"
+                    for="rSlider"
+                >
+                    <span class="coulombSymbol">
+                        \(r\)
+                    </span>
+
+                    <span
+                        id="rValue"
+                        class="coulombValue"
+                    >
+                        4.0
+                    </span>
+
+                    <span class="coulombUnit">
+                        m
+                    </span>
+
+                    <input
+                        id="rSlider"
+                        class="coulombRange"
+                        type="range"
+                        min="1"
+                        max="8"
+                        step="0.1"
+                        value="4"
+                    >
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="coulombVisualPane">
+
+            <svg
+                id="coulombDiagram"
+                viewBox="0 0 720 420"
+                role="img"
+                aria-labelledby="coulombDiagramTitle coulombDiagramDescription"
+            >
+                <title id="coulombDiagramTitle">
+                    Two charges interacting through the Coulomb force
+                </title>
+
+                <desc id="coulombDiagramDescription">
+                    A positive blue charge and a negative green charge
+                    with force arrows showing attraction or repulsion.
+                </desc>
+
+                <defs>
+                    <radialGradient
+                        id="positiveChargeGradient"
+                        cx="36%"
+                        cy="30%"
+                        r="70%"
+                    >
+                        <stop
+                            offset="0%"
+                            stop-color="#ffffff"
+                            stop-opacity="0.96"
+                        ></stop>
+
+                        <stop
+                            offset="18%"
+                            stop-color="#79a8ff"
+                            stop-opacity="0.92"
+                        ></stop>
+
+                        <stop
+                            offset="100%"
+                            stop-color="#397de8"
+                        ></stop>
+                    </radialGradient>
+
+                    <radialGradient
+                        id="negativeChargeGradient"
+                        cx="36%"
+                        cy="30%"
+                        r="70%"
+                    >
+                        <stop
+                            offset="0%"
+                            stop-color="#ffffff"
+                            stop-opacity="0.96"
+                        ></stop>
+
+                        <stop
+                            offset="18%"
+                            stop-color="#9fd3aa"
+                            stop-opacity="0.92"
+                        ></stop>
+
+                        <stop
+                            offset="100%"
+                            stop-color="#58ad72"
+                        ></stop>
+                    </radialGradient>
+
+                    <marker
+                        id="forceArrowBlue"
+                        markerWidth="10"
+                        markerHeight="10"
+                        refX="9"
+                        refY="5"
+                        orient="auto"
+                        markerUnits="strokeWidth"
+                    >
+                        <path
+                            d="M 0 0 L 10 5 L 0 10 z"
+                            fill="#3d83eb"
+                        ></path>
+                    </marker>
+                </defs>
+
+                <g
+                    id="fieldLines"
+                    fill="none"
+                    stroke="#2f5f9d"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                    opacity="0.42"
+                    stroke-dasharray="9 13"
+                >
+                    <path
+                        id="fieldLineUpper"
+                        d="M250 205 C330 140 390 140 470 205"
+                    ></path>
+
+                    <path
+                        id="fieldLineMiddle"
+                        d="M250 210 C330 210 390 210 470 210"
+                    ></path>
+
+                    <path
+                        id="fieldLineLower"
+                        d="M250 215 C330 280 390 280 470 215"
+                    ></path>
+                </g>
+
+                <line
+                    id="leftForceArrow"
+                    class="forceArrow"
+                    x1="235"
+                    y1="130"
+                    x2="300"
+                    y2="130"
+                    marker-end="url(#forceArrowBlue)"
+                ></line>
+
+                <line
+                    id="rightForceArrow"
+                    class="forceArrow"
+                    x1="485"
+                    y1="130"
+                    x2="420"
+                    y2="130"
+                    marker-end="url(#forceArrowBlue)"
+                ></line>
+
+                <circle
+                    id="positiveCharge"
+                    cx="230"
+                    cy="210"
+                    r="55"
+                    fill="url(#positiveChargeGradient)"
+                    stroke="#d9e1e5"
+                    stroke-width="3"
+                ></circle>
+
+                <circle
+                    id="negativeCharge"
+                    cx="490"
+                    cy="210"
+                    r="55"
+                    fill="url(#negativeChargeGradient)"
+                    stroke="#d9e1e5"
+                    stroke-width="3"
+                ></circle>
+
+                <text
+                    id="positiveChargeLabel"
+                    x="230"
+                    y="221"
+                    text-anchor="middle"
+                    class="chargeText"
+                >
+                    +
+                </text>
+
+                <text
+                    id="negativeChargeLabel"
+                    x="490"
+                    y="221"
+                    text-anchor="middle"
+                    class="chargeText"
+                >
+                    −
+                </text>
+            </svg>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script src="bao.js"></script>
+
+</body>
+</html>
