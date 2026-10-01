@@ -745,8 +745,16 @@ function requestSkyCalculation(
     if (showCalculatingTitle) {
 
         if (singleMode) {
-            skyTitle.textContent =
-                `Selected harmonic: (ℓ, m) = (${selectedL}, ${selectedM})`;
+
+            if (useSecondHarmonic) {
+                skyTitle.textContent =
+                    `Superposition: (ℓ, m) = (${selectedL}, ${selectedM}) + ` +
+                    `(${secondL}, ${secondM})`;
+            } else {
+                skyTitle.textContent =
+                    `Selected harmonic: (ℓ, m) = (${selectedL}, ${selectedM})`;
+            }
+
         } else {
             skyTitle.textContent =
                 `Calculating sky through ℓ = ${lmax}...`;
@@ -1159,9 +1167,18 @@ function updateSecondMSlider() {
 }
 
 function updateSkyTitle() {
+
     if (singleEllCheckbox.checked) {
-        skyTitle.textContent =
-            `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
+
+        if (secondHarmonicCheckbox.checked) {
+            skyTitle.textContent =
+                `Superposition: (ℓ, m) = (${slider.value}, ${mSlider.value}) + ` +
+                `(${secondLSlider.value}, ${secondMSlider.value})`;
+        } else {
+            skyTitle.textContent =
+                `Selected harmonic: (ℓ, m) = (${slider.value}, ${mSlider.value})`;
+        }
+
     } else {
         skyTitle.textContent =
             `Accumulated sky through ℓ = ${slider.value}`;
