@@ -1779,12 +1779,11 @@
         </div>
 
         <p>
-            This is a special equation. Consider the simplest case,
-            \(m=0\). The term containing \(m^2\) disappears. Requiring
-            the solution to remain finite and smooth over
+            Consider the simplest case, \(m=0\). The term containing \(m^2\) disappears. 
+            Requiring the solution to remain finite and smooth over
             \(-1\leq x\leq 1\) restricts the separation constant to
             \(\lambda=\ell(\ell+1)\), where \(\ell\) is a nonnegative integer.
-            Using prime notation, this is the ordinary <strong>Legendre equation</strong>:
+            Using prime notation, this is called the ordinary <strong>Legendre equation</strong>:
         </p>
 
         <div class="displayEquation">
@@ -1840,9 +1839,8 @@
         </div>
 
         <p>
-            For the more general case \(m\neq0\), the additional term
-            \(-m^2/(1-x^2)\) modifies the ordinary Legendre equation. This more
-            general equation is called the <strong>associated Legendre equation</strong>,
+            The more general case (\(m\neq0\)), is called the 
+            <strong>associated Legendre equation</strong>,
             and its acceptable finite solutions are the
             <strong>associated Legendre functions</strong>
             \(P_\ell^m(x)\), with \(|m|\leq\ell\).
@@ -1851,78 +1849,15 @@
         <div class="displayEquation">
             \[
             \boxed{
-            (1-x^2)\frac{d^2\Theta}{dx^2}
-            -
-            2x\frac{d\Theta}{dx}
-            +
-            \left[
-            \lambda
-            -
-            \frac{m^2}{1-x^2}
-            \right]\Theta
+            P_\ell^m(x)
             =
-            0
-            }
+            (-1)^m(1-x^2)^{m/2}
+            \left(\frac{d}{dx}\right)^mP_\ell(x)}
             \]
         </div>
 
         <p>
-            You may already see the problem. Having \(1-x^2\) in the denominator 
-            may cause a singularity at the poles where \(\cos\theta = \pm 1.\)
-            In the next step, requiring the solutions to remain 
-            finite and smooth at the poles will restrict the separation 
-            constant to \(\lambda=\ell(\ell+1)\), where \(\ell\) is a 
-            nonnegative integer and \(|m|\leq\ell\). Acceptable solutions 
-            will become the associated Legendre functions \(P_\ell^m(x).\)
-        </p>
-
-        <p>
-            To see how this works, consider \(m=0\). Using prime 
-            notation for the derivatives, the equation 
-            above reduces to the ordinary Legendre equation:
-        </p>
-
-        <div class="displayEquation">
-            \[
-            (1-x^2)P_\ell''
-            -
-            2xP_\ell'
-            +
-            \ell(\ell+1)P_\ell
-            =
-            0
-            \]
-        </div>
-
-        <p>
-            For each non-negative integer \(\ell\), this equation has a polynomial 
-            solution called \(P_\ell(x)\):
-        </p>
-
-        <div class="displayEquation">
-            \[
-            P_0(x)=1
-            \qquad
-            P_1(x)=x
-            \qquad
-            P_2(x)
-            =
-            \frac{1}{2}
-            \left(
-                3x^2-1
-            \right)
-            \qquad
-            P_3(x)
-            =
-            \frac{1}{2}
-            \left(
-                5x^3-3x
-            \right)
-            \]
-        </div>
-
-        <p>
-            For \(m=1\):
+            For \(l=2, m=1\):
         </p>
 
         <div class="displayEquation">
@@ -1945,7 +1880,7 @@
         </div>
 
         <p>
-            For \(m=2\):
+            For \(l=2,m=2\):
         </p>
 
         <div class="displayEquation">
@@ -1970,9 +1905,9 @@
         <p>
             In spherical harmonics, the input is \(x=\cos\theta,\)
             so we get information about what value the function 
-            has from pole to pole. \(\ell\) tells us which polynomial 
-            solution to use, and \(m\) controls the azimuthal behavior 
-            through \(e^{im\phi}\). 
+            has from pole to pole. \(\ell\) sets the overall angular complexity 
+            while \(m\) affects the associated Legendre function \(P_\ell^m(\cos\theta)\) 
+            and controls the azimuthal behavior through \(e^{im\phi}\). 
         </p>
 
     </article>
