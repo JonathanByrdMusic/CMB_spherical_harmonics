@@ -1757,7 +1757,95 @@
         </div>
 
         <p>
-            If we expand the derivative, we get the associated Legendre equation.
+            Expanding the derivative gives:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \boxed{
+            (1-x^2)\frac{d^2\Theta}{dx^2}
+            -
+            2x\frac{d\Theta}{dx}
+            +
+            \left[
+            \lambda
+            -
+            \frac{m^2}{1-x^2}
+            \right]\Theta
+            =
+            0
+            }
+            \]
+        </div>
+
+        <p>
+            This is a special equation. Consider the simplest case,
+            \(m=0\). The term containing \(m^2\) disappears. Requiring
+            the solution to remain finite and smooth over
+            \(-1\leq x\leq 1\) restricts the separation constant to
+            \(\lambda=\ell(\ell+1)\), where \(\ell\) is a nonnegative integer.
+            Using prime notation, this is the ordinary <strong>Legendre equation</strong>:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            (1-x^2)P_\ell''
+            -
+            2xP_\ell'
+            +
+            \ell(\ell+1)P_\ell
+            =
+            0
+            \]
+        </div>
+
+        <p>
+            For each nonnegative integer \(\ell\), this equation has a
+            polynomial solution called the <strong>Legendre polynomial</strong>
+            \(P_\ell(x)\). These can all be generated from Rodrigues' formula:
+        </p>
+
+        <div class="displayEquation">
+            \[
+            \boxed{
+            P_\ell(x)
+            =
+            \frac{1}{2^\ell\ell!}
+            \left(\frac{d}{dx}\right)^\ell
+            \left(x^2-1\right)^\ell
+            }
+            \]
+        </div>
+
+        <div class="displayEquation">
+            \[
+            P_0(x)=1
+            \qquad
+            P_1(x)=x
+            \qquad
+            P_2(x)
+            =
+            \frac{1}{2}
+            \left(
+                3x^2-1
+            \right)
+            \qquad
+            P_3(x)
+            =
+            \frac{1}{2}
+            \left(
+                5x^3-3x
+            \right)
+            \]
+        </div>
+
+        <p>
+            For the more general case \(m\neq0\), the additional term
+            \(-m^2/(1-x^2)\) modifies the ordinary Legendre equation. This more
+            general equation is called the <strong>associated Legendre equation</strong>,
+            and its acceptable finite solutions are the
+            <strong>associated Legendre functions</strong>
+            \(P_\ell^m(x)\), with \(|m|\leq\ell\).
         </p>
 
         <div class="displayEquation">
