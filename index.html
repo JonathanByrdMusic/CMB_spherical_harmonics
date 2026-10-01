@@ -170,38 +170,78 @@
 
     <div class="controlColumn leftControls">
 
-    <label class="controlItem">
-        <span class="controlLabel">Maximum &ell;:</span>
-        <input
-            id="lmaxSlider"
-            type="range"
-            min="1"
-            max="30"
-            value="1"
-            aria-describedby="lmaxValue"
-        >
-        <span id="lmaxValue">1</span>
-    </label>
+        <label class="controlItem">
+            <span class="controlLabel">Maximum &ell;:</span>
+            <input
+                id="lmaxSlider"
+                type="range"
+                min="1"
+                max="30"
+                value="1"
+                aria-describedby="lmaxValue"
+            >
+            <span id="lmaxValue">1</span>
+        </label>
 
-    <label class="controlItem">
-        <span class="controlLabel">m:</span>
-        <input
-            id="mSlider"
-            type="range"
-            min="0"
-            max="1"
-            value="0"
-            aria-describedby="mValue"
-        >
-        <span id="mValue">0</span>
-    </label>
+        <label class="controlItem">
+            <span class="controlLabel">m:</span>
+            <input
+                id="mSlider"
+                type="range"
+                min="0"
+                max="1"
+                value="0"
+                aria-describedby="mValue"
+            >
+            <span id="mValue">0</span>
+        </label>
 
-</div>
+        <div class="secondHarmonicControls">
+
+            <label class="secondHarmonicToggle">
+                <input
+                    id="secondHarmonicCheckbox"
+                    type="checkbox"
+                >
+                <span>Superpose second harmonic</span>
+            </label>
+
+            <label class="controlItem secondHarmonicControl">
+                <span class="controlLabel">Second &ell;:</span>
+                <input
+                    id="secondLSlider"
+                    type="range"
+                    min="1"
+                    max="30"
+                    value="1"
+                    aria-describedby="secondLValue"
+                    disabled
+                >
+                <span id="secondLValue">1</span>
+            </label>
+
+            <label class="controlItem secondHarmonicControl">
+                <span class="controlLabel">Second m:</span>
+                <input
+                    id="secondMSlider"
+                    type="range"
+                    min="-1"
+                    max="1"
+                    value="0"
+                    aria-describedby="secondMValue"
+                    disabled
+                >
+                <span id="secondMValue">0</span>
+            </label>
+
+        </div>
+
+    </div>
 
     <div class="controlColumn rightControls">
 
     <label class="controlItem checkboxItem">
-    <input id="singleEllCheckbox" type="checkbox">
+    <input id="singleEllCheckbox" type="checkbox" checked>
     Show only current (&ell;, m)
     </label>
 

@@ -45,7 +45,10 @@ self.addEventListener("message", function (event) {
         if (message.singleMode) {
             result = calculateSingleMode(
                 message.selectedL,
-                message.selectedM
+                message.selectedM,
+                message.useSecondHarmonic,
+                message.secondL,
+                message.secondM
             );
         } else {
             result = calculateSky(
@@ -239,117 +242,163 @@ function calculateSky(lmax, coefficients, requestId) {
     return values;
 }
 
-function calculateSingleMode(l, m) {
-
-    const pixelCount = width * height;
-    const values = new Float32Array(pixelCount);
+function realHarmonicValue(
+    l,
+    m,
+    theta,
+    phi
+) {
 
     const absM = Math.abs(m);
 
-    for (let pixel = 0; pixel < pixelCount; pixel++) {
+    const x = Math.cos(theta);
 
-        const theta = thetaGrid[pixel];
-        const phi = phiGrid[pixel];
+    const sinTheta = Math.sqrt(
+        Math.max(0, 1 - x * x)
+    );
+
+    let normalizedLegendre =
+        1 / Math.sqrt(4 * Math.PI);
+
+    for (
+        let order = 1;
+        order <= absM;
+        order++
+    ) {
+        normalizedLegendre *=
+            -Math.sqrt(
+                (2 * order + 1) /
+                (2 * order)
+            ) *
+            sinTheta;
+    }
+
+    if (l > absM) {
+
+        let previous =
+            normalizedLegendre;
+
+        let current =
+            Math.sqrt(2 * absM + 3) *
+            x *
+            previous;
+
+        if (l === absM + 1) {
+            normalizedLegendre = current;
+        } else {
+
+            for (
+                let degree = absM + 2;
+                degree <= l;
+                degree++
+            ) {
+
+                const denominator =
+                    degree * degree -
+                    absM * absM;
+
+                const a = Math.sqrt(
+                    (4 * degree * degree - 1) /
+                    denominator
+                );
+
+                const b = Math.sqrt(
+                    (
+                        (2 * degree + 1) *
+                        (
+                            (degree - 1) *
+                            (degree - 1) -
+                            absM * absM
+                        )
+                    ) /
+                    (
+                        (2 * degree - 3) *
+                        denominator
+                    )
+                );
+
+                const next =
+                    a * x * current -
+                    b * previous;
+
+                previous = current;
+                current = next;
+            }
+
+            normalizedLegendre = current;
+        }
+    }
+
+    if (m > 0) {
+        return (
+            Math.sqrt(2) *
+            normalizedLegendre *
+            Math.cos(absM * phi)
+        );
+    }
+
+    if (m < 0) {
+        return (
+            Math.sqrt(2) *
+            normalizedLegendre *
+            Math.sin(absM * phi)
+        );
+    }
+
+    return normalizedLegendre;
+}
+
+function calculateSingleMode(
+    l,
+    m,
+    useSecondHarmonic,
+    secondL,
+    secondM
+) {
+
+    const pixelCount =
+        width * height;
+
+    const values =
+        new Float32Array(pixelCount);
+
+    for (
+        let pixel = 0;
+        pixel < pixelCount;
+        pixel++
+    ) {
+
+        const theta =
+            thetaGrid[pixel];
+
+        const phi =
+            phiGrid[pixel];
 
         if (!Number.isFinite(theta)) {
             values[pixel] = 0;
             continue;
         }
 
-        const x = Math.cos(theta);
-        const sinTheta = Math.sqrt(
-            Math.max(0, 1 - x * x)
-        );
+        let value =
+            realHarmonicValue(
+                l,
+                m,
+                theta,
+                phi
+            );
 
-        /*
-         * Construct normalized Pbar_m^m.
-         */
-        let normalizedLegendre =
-            1 / Math.sqrt(4 * Math.PI);
-
-        for (let order = 1; order <= absM; order++) {
-            normalizedLegendre *=
-                -Math.sqrt(
-                    (2 * order + 1) /
-                    (2 * order)
-                ) *
-                sinTheta;
+        if (useSecondHarmonic) {
+            value +=
+                realHarmonicValue(
+                    secondL,
+                    secondM,
+                    theta,
+                    phi
+                );
         }
 
-        /*
-         * Climb from degree absM to degree l while
-         * keeping the order fixed.
-         */
-        if (l > absM) {
-
-            let previous =
-                normalizedLegendre;
-
-            let current =
-                Math.sqrt(2 * absM + 3) *
-                x *
-                previous;
-
-            if (l === absM + 1) {
-                normalizedLegendre = current;
-            } else {
-
-                for (
-                    let degree = absM + 2;
-                    degree <= l;
-                    degree++
-                ) {
-
-                    const denominator =
-                        degree * degree -
-                        absM * absM;
-
-                    const a = Math.sqrt(
-                        (4 * degree * degree - 1) /
-                        denominator
-                    );
-
-                    const b = Math.sqrt(
-                        (
-                            (2 * degree + 1) *
-                            (
-                                (degree - 1) *
-                                (degree - 1) -
-                                absM * absM
-                            )
-                        ) /
-                        (
-                            (2 * degree - 3) *
-                            denominator
-                        )
-                    );
-
-                    const next =
-                        a * x * current -
-                        b * previous;
-
-                    previous = current;
-                    current = next;
-                }
-
-                normalizedLegendre = current;
-            }
-        }
-
-        if (m > 0) {
-            values[pixel] =
-                Math.sqrt(2) *
-                normalizedLegendre *
-                Math.cos(absM * phi);
-        } else if (m < 0) {
-            values[pixel] =
-                Math.sqrt(2) *
-                normalizedLegendre *
-                Math.sin(absM * phi);
-        } else {
-            values[pixel] =
-                normalizedLegendre;
-        }
+        values[pixel] =
+            value;
     }
 
     return values;

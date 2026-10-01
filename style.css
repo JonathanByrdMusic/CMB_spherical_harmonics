@@ -527,7 +527,9 @@ input[type="range"]:hover::-moz-range-thumb {
 }
 
 #lmaxSlider,
-#mSlider {
+#mSlider,
+#secondLSlider,
+#secondMSlider {
     --slider-color: #c7ccd6;
 }
 
@@ -789,6 +791,38 @@ footer {
     color: white;
     background: var(--so-orange);
     outline: none;
+}
+
+.secondHarmonicControls {
+    margin-top: 12px;
+    padding-top: 16px;
+
+    border-top: 1px solid var(--space-border);
+}
+
+.secondHarmonicToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.secondHarmonicControls .controlItem + .controlItem {
+    margin-top: 14px;
+}
+
+.secondHarmonicControl input:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.secondHarmonicControl:has(input:disabled) {
+    opacity: 0.6;
 }
 
 /* ---------- Responsive adjustments ---------- */

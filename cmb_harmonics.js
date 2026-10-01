@@ -28,6 +28,21 @@ const newSeedButton = document.getElementById("newSeedButton");
 const mSlider = document.getElementById("mSlider");
 const mValue = document.getElementById("mValue");
 
+const secondHarmonicCheckbox =
+    document.getElementById("secondHarmonicCheckbox");
+
+const secondLSlider =
+    document.getElementById("secondLSlider");
+
+const secondLValue =
+    document.getElementById("secondLValue");
+
+const secondMSlider =
+    document.getElementById("secondMSlider");
+
+const secondMValue =
+    document.getElementById("secondMValue");
+
 const buildUniverseButton =
     document.getElementById("buildUniverseButton");
 
@@ -45,7 +60,7 @@ let buildFinalL = null;
  */
 const pendingSkyRequests = new Map();
 
-const skyWorker = new Worker("sky-worker.js");
+const skyWorker = new Worker("sky-worker.js?v=2");
 
 let skyWorkerReady = false;
 let skyRequestId = 0;
@@ -364,6 +379,12 @@ function drawOrbital() {
     let l = parseInt(slider.value);
     let m = parseInt(mSlider.value);
 
+    let secondL = parseInt(secondLSlider.value);
+    let secondM = parseInt(secondMSlider.value);
+
+    const useSecondHarmonic =
+        secondHarmonicCheckbox.checked;
+
     if (orbitalMesh) {
         orbitalScene.remove(orbitalMesh);
         orbitalMesh.geometry.dispose();
@@ -385,7 +406,23 @@ function drawOrbital() {
         for (let j = 0; j <= phiSteps; j++) {
             let phi = 2 * Math.PI * j / phiSteps;
 
-            let y = sphericalHarmonicReal(l, m, theta, phi);
+            let y =
+                sphericalHarmonicReal(
+                    l,
+                    m,
+                    theta,
+                    phi
+                );
+
+            if (useSecondHarmonic) {
+                y +=
+                    sphericalHarmonicReal(
+                        secondL,
+                        secondM,
+                        theta,
+                        phi
+                    );
+            }
 
             let normalizedY = Math.tanh(3 * y);
 
@@ -681,6 +718,15 @@ function requestSkyCalculation(
     const singleMode =
         singleEllCheckbox.checked;
 
+    const useSecondHarmonic =
+        secondHarmonicCheckbox.checked;
+
+    const secondL =
+        parseInt(secondLSlider.value);
+
+    const secondM =
+        parseInt(secondMSlider.value);
+
     const selectedL =
         parseInt(slider.value);
 
@@ -725,8 +771,13 @@ function requestSkyCalculation(
                 lmax: lmax,
 
                 singleMode: singleMode,
+
                 selectedL: selectedL,
                 selectedM: selectedM,
+
+                useSecondHarmonic: useSecondHarmonic,
+                secondL: secondL,
+                secondM: secondM,
 
                 coefficientBuffer:
                     flatCoefficients.buffer
@@ -1087,6 +1138,26 @@ function updateSliderFill(sliderElement) {
     );
 }
 
+function updateSecondMSlider() {
+
+    const l =
+        parseInt(secondLSlider.value);
+
+    secondMSlider.min = -l;
+    secondMSlider.max = l;
+
+    if (parseInt(secondMSlider.value) < -l) {
+        secondMSlider.value = -l;
+    }
+
+    if (parseInt(secondMSlider.value) > l) {
+        secondMSlider.value = l;
+    }
+
+    secondMValue.textContent =
+        secondMSlider.value;
+}
+
 function updateSkyTitle() {
     if (singleEllCheckbox.checked) {
         skyTitle.textContent =
@@ -1129,9 +1200,12 @@ slider.addEventListener("input", function () {
     lmaxValue.textContent = slider.value;
 
     updateMSlider();
+    updateSecondMSlider();
 
     updateSliderFill(slider);
     updateSliderFill(mSlider);
+    updateSliderFill(secondLSlider);
+    updateSliderFill(secondMSlider);
 
     drawOrbital();
 
@@ -1296,6 +1370,60 @@ skyWorker.addEventListener("messageerror", function (event) {
         "BUILD UNIVERSE";
 });
 
+secondHarmonicCheckbox.addEventListener("change", function () {
+
+    const enabled =
+        secondHarmonicCheckbox.checked;
+
+    secondLSlider.disabled = !enabled;
+    secondMSlider.disabled = !enabled;
+
+    drawOrbital();
+
+    if (singleEllCheckbox.checked) {
+        requestSkyCalculation();
+    }
+});
+
+
+secondLSlider.addEventListener("input", function () {
+
+    secondLValue.textContent =
+        secondLSlider.value;
+
+    updateSecondMSlider();
+
+    updateSliderFill(secondLSlider);
+    updateSliderFill(secondMSlider);
+
+    if (secondHarmonicCheckbox.checked) {
+
+        drawOrbital();
+
+        if (singleEllCheckbox.checked) {
+            requestSkyCalculation();
+        }
+    }
+});
+
+
+secondMSlider.addEventListener("input", function () {
+
+    secondMValue.textContent =
+        secondMSlider.value;
+
+    updateSliderFill(secondMSlider);
+
+    if (secondHarmonicCheckbox.checked) {
+
+        drawOrbital();
+
+        if (singleEllCheckbox.checked) {
+            requestSkyCalculation();
+        }
+    }
+});
+
 singleEllCheckbox.addEventListener("change", function () {
 
     cancelBuildIfRunning();
@@ -1305,6 +1433,12 @@ singleEllCheckbox.addEventListener("change", function () {
 newSeedButton.addEventListener("click", function () {
 
     cancelBuildIfRunning();
+
+    /*
+     * A new random universe represents the full accumulated sky,
+     * not one selected (ℓ,m) mode.
+     */
+    singleEllCheckbox.checked = false;
 
     seed =
         Math.floor(Math.random() * 4294967296);
@@ -1375,8 +1509,12 @@ loadPlanckSpectrum()
         resizeOrbitalViewer();
 
         updateMSlider();
+        updateSecondMSlider();
+
         updateSliderFill(slider);
         updateSliderFill(mSlider);
+        updateSliderFill(secondLSlider);
+        updateSliderFill(secondMSlider);
 
         drawOrbital();
     })
