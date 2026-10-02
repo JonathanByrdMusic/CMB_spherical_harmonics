@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NC State Football Physics Simulator </title>
+    <!-- Tailwind CSS for UI layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for smooth mathematical trajectory plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #CC0000;
+            color: #f3f4f6;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+        .bg-field-pattern {
+            background-color: #0d2818;
+            background-image: repeating-linear-gradient(90deg, #10381e, #10381e 50px, #0d2818 50px, #0d2818 100px);
+        }
+        .glow-green {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-100 antialiased overflow-x-hidden">
+
+    <!-- Top Header -->
+    <header class="bg-slate-900/80 backdrop-blur border-b border-slate-800 sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-500/20 p-2 rounded-xl text-emerald-400 border border-emerald-500/30">
+                    <! <i class="fa-solid fa-football text-xl"></i> 
+                    <img src="https://1000logos.net/wp-content/uploads/2019/11/North-Carolina-State-Wolfpack-Logo.png" alt="A descriptive summary of the image" width="100" height="100">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-wide leading-tight">NC State Football Physics Lab</h1>
+                    <p class="text-xs text-slate-400">Go Pack! Flight Simulator</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 text-xs">
+                <span class="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                    <i class="fa-solid fa-atom text-cyan-400 mr-1.5"></i>Physics Engine: RK2 Integration
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+        
+        <!-- SIDEBAR CONTROLS (4 Columns on LG) -->
+        <aside class="lg:col-span-4 flex flex-col gap-5">
+            
+            <!-- Controls Box -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h2 class="font-semibold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-emerald-400"></i> Simulation Parameters
+                    </h2>
+                    <button id="reset-btn" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-right"></i> Reset
+                    </button>
+                </div>
+
+                <!-- Drag Coefficient Preset Selector -->
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5">Preset Drag Coefficient ($C_d$)</label>
+                    <select id="preset-select" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 transition">
+                        <option value="0.00">Vacuum ($C_d = 0.00$ - No Air Resistance)</option>
+                        <option value="0.15">Tight Spiral ($C_d = 0.15$ - Low Resistance)</option>
+                        <option value="0.25" selected>Average Pass ($C_d = 0.25$ - Standard Ball)</option>
+                        <option value="0.40">Tumbling / Wobbly ($C_d = 0.40$ - High Resistance)</option>
+                        <option value="0.55">End-over-End Kick ($C_d = 0.55$ - Field Goal)</option>
+                    </select>
+                </div>
+
+                <!-- Cd Custom Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">Drag Coefficient ($C_d$)</span>
+                        <span id="cd-val" class="font-mono text-emerald-400 font-semibold">0.25</span>
+                    </div>
+                    <input type="range" id="cd-slider" min="0.00" max="0.60" step="0.01" value="0.25"
+                           class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <span>0.00 (Sleek)</span>
+                        <span>0.30</span>
+                        <span>0.60 (Blunt)</span>
+                    </div>
+                </div>
+
+                <!-- Launch Speed Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">Launch Velocity ($v_0$)</span>
+                        <span id="speed-val" class="font-mono text-emerald-400 font-semibold">55 mph (24.6 m/s)</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="15" max="80" step="1" value="55"
+                           class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <span>15 mph</span>
+                        <span>50 mph</span>
+                        <span>80 mph</span>
+                    </div>
+                </div>
+
+                <!-- Launch Angle Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">Launch Angle ($\theta$)</span>
+                        <span id="angle-val" class="font-mono text-emerald-400 font-semibold">35°</span>
+                    </div>
+                    <input type="range" id="angle-slider" min="5" max="75" step="1" value="35"
+                           class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <span>5° (Drive)</span>
+                        <span>45° (Max)</span>
+                        <span>75° (High Hail Mary)</span>
+                    </div>
+                </div>
+
+                <!-- Release Height Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">Release Height</span>
+                        <span id="height-val" class="font-mono text-emerald-400 font-semibold">2.0 m (6.6 ft)</span>
+                    </div>
+                    <input type="range" id="height-slider" min="0.0" max="3.0" step="0.1" value="2.0"
+                           class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                </div>
+
+                <!-- Wind Speed Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-300">Headwind / Tailwind</span>
+                        <span id="wind-val" class="font-mono text-amber-400 font-semibold">0 mph (Calm)</span>
+                    </div>
+                    <input type="range" id="wind-slider" min="-30" max="30" step="1" value="0"
+                           class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
+                        <span>-30 mph (Headwind)</span>
+                        <span>0</span>
+                        <span>+30 mph (Tailwind)</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                    <button id="add-compare-btn" class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-lg shadow-cyan-900/30">
+                        <i class="fa-solid fa-plus"></i> Save Curve
+                    </button>
+                    <button id="clear-compare-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-slate-700">
+                        <i class="fa-solid fa-trash-can"></i> Clear All
+                    </button>
+                </div>
+
+                <button id="animate-btn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition glow-green">
+                    <i class="fa-solid fa-play"></i> Animate Flight Pass
+                </button>
+            </div>
+
+            <!-- Saved Comparison List -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col gap-3">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                    <span>Saved Trajectories</span>
+                    <span id="saved-count" class="bg-slate-800 text-cyan-400 px-2 py-0.5 rounded-full text-[10px]">0</span>
+                </h3>
+                <div id="saved-list" class="flex flex-col gap-2 max-h-40 overflow-y-auto pr-1 text-xs text-slate-400">
+                    <p class="text-slate-500 italic text-center py-2">No saved trajectories yet. Click "Save Curve" to compare curves on the chart.</p>
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- MAIN CANVAS & CHART DISPLAY (8 Columns on LG) -->
+        <section class="lg:col-span-8 flex flex-col gap-5">
+            
+            <!-- Live Telemetry Stats Dashboard -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col">
+                    <span class="text-[11px] font-medium text-slate-400">Total Distance</span>
+                    <span id="stat-dist" class="text-xl font-bold text-emerald-400 font-mono mt-0.5">0.0 yds</span>
+                    <span id="stat-dist-m" class="text-[10px] text-slate-500">0.0 meters</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col">
+                    <span class="text-[11px] font-medium text-slate-400">Max Height (Apex)</span>
+                    <span id="stat-apex" class="text-xl font-bold text-cyan-400 font-mono mt-0.5">0.0 yds</span>
+                    <span id="stat-apex-m" class="text-[10px] text-slate-500">0.0 meters</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col">
+                    <span class="text-[11px] font-medium text-slate-400">Hang Time</span>
+                    <span id="stat-time" class="text-xl font-bold text-amber-400 font-mono mt-0.5">0.00 s</span>
+                    <span id="stat-impact-angle" class="text-[10px] text-slate-500">Impact: 0°</span>
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-3.5 flex flex-col">
+                    <span class="text-[11px] font-medium text-slate-400">Landing Velocity</span>
+                    <span id="stat-v-final" class="text-xl font-bold text-purple-400 font-mono mt-0.5">0.0 mph</span>
+                    <span id="stat-drag-loss" class="text-[10px] text-slate-500">Energy loss: 0%</span>
+                </div>
+            </div>
+
+            <!-- Animated Canvas Field Pitch -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-gamepad text-emerald-400"></i> Visual Field Pass Simulation
+                    </span>
+                    <span class="text-[11px] text-slate-400"> <! <Scale: 1 Yard = Hash Grid</span> 
+                </div>
+                <div class="relative w-full h-64 sm:h-72 rounded-xl overflow-hidden border border-slate-800 bg-field-pattern">
+                    <canvas id="fieldCanvas" class="w-full h-full block"></canvas>
+                </div>
+            </div>
+
+            <!-- Mathematical Trajectory Chart Plot -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col gap-2">
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-cyan-400"></i> Vertical and Horizontal Distance view
+                    </span>
+                    <span class="text-[11px] text-slate-400">Yards vs. Height (Yards)</span>
+                </div>
+                <div class="relative w-full h-64 bg-slate-950/50 rounded-xl p-2 border border-slate-800/80">
+                    <canvas id="trajectoryChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+        <p>Interactive Physics Web Application • Real-time Euler/Runge-Kutta Ballistic Integration • Drag $F_d = \frac{1}{2} \rho v^2 C_d A$</p>
+    </footer>
+
+    <!-- SIMULATION LOGIC SCRIPT -->
+    <script>
+        // Physics constants
+        const G = 9.81;            // Gravity (m/s^2)
+        const RHO = 1.225;         // Air density at sea level (kg/m^3)
+        const MASS = 0.42;         // American Football Mass (~14.8 oz or 0.42 kg)
+        const AREA = 0.038;        // Cross-sectional frontal area (~0.038 m^2)
+        const MPS_TO_MPH = 2.23694;
+        const MPH_TO_MPS = 0.44704;
+        const M_TO_YD = 1.09361;
+
+        // UI Element References
+        const cdSlider = document.getElementById('cd-slider');
+        const cdVal = document.getElementById('cd-val');
+        const presetSelect = document.getElementById('preset-select');
+        const speedSlider = document.getElementById('speed-slider');
+        const speedVal = document.getElementById('speed-val');
+        const angleSlider = document.getElementById('angle-slider');
+        const angleVal = document.getElementById('angle-val');
+        const heightSlider = document.getElementById('height-slider');
+        const heightVal = document.getElementById('height-val');
+        const windSlider = document.getElementById('wind-slider');
+        const windVal = document.getElementById('wind-val');
+
+        const statDist = document.getElementById('stat-dist');
+        const statDistM = document.getElementById('stat-dist-m');
+        const statApex = document.getElementById('stat-apex');
+        const statApexM = document.getElementById('stat-apex-m');
+        const statTime = document.getElementById('stat-time');
+        const statImpactAngle = document.getElementById('stat-impact-angle');
+        const statVFinal = document.getElementById('stat-v-final');
+        const statDragLoss = document.getElementById('stat-drag-loss');
+
+        const animateBtn = document.getElementById('animate-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const addCompareBtn = document.getElementById('add-compare-btn');
+        const clearCompareBtn = document.getElementById('clear-compare-btn');
+        const savedList = document.getElementById('saved-list');
+        const savedCount = document.getElementById('saved-count');
+
+        const canvas = document.getElementById('fieldCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // State variables
+        let currentTrajectory = [];
+        let savedTrajectories = [];
+        let chartInstance = null;
+        let animationFrameId = null;
+        let animationProgress = 1.0; // 1.0 = fully finished animation
+
+        const colorPalette = [
+            '#38bdf8', '#f43f5e', '#a855f7', '#f59e0b', '#10b981', '#ec4899', '#6366f1'
+        ];
+
+        /**
+         * Calculates full trajectory path using Runge-Kutta 2nd Order Integration
+         */
+        function calculateTrajectory(cd, v0_mph, angle_deg, release_h, wind_mph) {
+            const v0 = v0_mph * MPH_TO_MPS;
+            const angle_rad = (angle_deg * Math.PI) / 180;
+            const wind_m_s = wind_mph * MPH_TO_MPS;
+
+            let x = 0;
+            let y = release_h;
+            let vx = v0 * Math.cos(angle_rad);
+            let vy = v0 * Math.sin(angle_rad);
+
+            const dt = 0.008; // Small time step for high accuracy
+            let t = 0;
+
+            const path = [];
+            let apexY = release_h;
+
+            while (y >= 0 && t < 15) {
+                path.push({ t, x, y, vx, vy });
+
+                if (y > apexY) apexY = y;
+
+                // Relative velocity with wind vector
+                const v_rel_x = vx - wind_m_s;
+                const v_rel_y = vy;
+                const v_rel = Math.hypot(v_rel_x, v_rel_y);
+
+                // Drag magnitude: F_d = 0.5 * rho * v_rel^2 * Cd * Area
+                const f_drag = 0.5 * RHO * (v_rel ** 2) * cd * AREA;
+
+                // Acceleration vectors
+                const ax = v_rel === 0 ? 0 : -(f_drag / MASS) * (v_rel_x / v_rel);
+                const ay = v_rel === 0 ? -G : -G - (f_drag / MASS) * (v_rel_y / v_rel);
+
+                // Update position & velocity
+                x += vx * dt;
+                y += vy * dt;
+                vx += ax * dt;
+                vy += ay * dt;
+                t += dt;
+            }
+
+            // Interpolate exact ground impact point y = 0
+            if (path.length > 1) {
+                const pPrev = path[path.length - 1];
+                if (pPrev.y < 0) {
+                    const ratio = pPrev.y / (pPrev.y - y);
+                    x = pPrev.x - ratio * (x - pPrev.x);
+                    y = 0;
+                    path[path.length - 1].x = x;
+                    path[path.length - 1].y = 0;
+                }
+            }
+
+            const totalDistYds = x * M_TO_YD;
+            const apexYds = apexY * M_TO_YD;
+            const finalV = Math.hypot(vx, vy);
+            const impactAngle = Math.atan2(Math.abs(vy), Math.abs(vx)) * (180 / Math.PI);
+            const initialEnergy = 0.5 * MASS * (v0 ** 2);
+            const finalEnergy = 0.5 * MASS * (finalV ** 2);
+            const energyLossPct = Math.max(0, ((initialEnergy - finalEnergy) / initialEnergy) * 100);
+
+            return {
+                points: path,
+                cd: cd,
+                v0_mph: v0_mph,
+                angle_deg: angle_deg,
+                wind_mph: wind_mph,
+                totalDistanceM: x,
+                totalDistanceYds: totalDistYds,
+                apexM: apexY,
+                apexYds: apexYds,
+                flightTime: t,
+                finalV_mph: finalV * MPS_TO_MPH,
+                impactAngle: impactAngle,
+                energyLossPct: energyLossPct
+            };
+        }
+
+        function initChart() {
+            const ctxChart = document.getElementById('trajectoryChart').getContext('2d');
+            chartInstance = new Chart(ctxChart, {
+                type: 'line',
+                data: {
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            title: { display: true, text: 'Distance (Yards)', color: '#94a3b8', font: { size: 11 } },
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } },
+                            min: 0
+                        },
+                        y: {
+                            title: { display: true, text: 'Height (Yards)', color: '#94a3b8', font: { size: 11 } },
+                            grid: { color: 'rgba(51, 65, 85, 0.4)' },
+                            ticks: { color: '#94a3b8', font: { size: 10 } },
+                            min: 0
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f3f4f6', font: { size: 11 }, boxWidth: 12 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: (${context.parsed.x.toFixed(1)} yds, ${context.parsed.y.toFixed(1)} yds high)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart() {
+            if (!chartInstance) return;
+
+            const datasets = [];
+
+            // Add saved trajectories
+            savedTrajectories.forEach((traj, idx) => {
+                const color = colorPalette[idx % colorPalette.length];
+                datasets.push({
+                    label: `Cd=${traj.cd.toFixed(2)} (${traj.totalDistanceYds.toFixed(1)} yds)`,
+                    data: traj.points.map(p => ({ x: p.x * M_TO_YD, y: p.y * M_TO_YD })),
+                    borderColor: color,
+                    borderWidth: 2,
+                    borderDash: [4, 4],
+                    pointRadius: 0,
+                    tension: 0.2
+                });
+            });
+
+            // Add current active trajectory
+            if (currentTrajectory && currentTrajectory.points) {
+                const animatedPointsCount = Math.floor(currentTrajectory.points.length * animationProgress);
+                const visiblePoints = currentTrajectory.points.slice(0, Math.max(1, animatedPointsCount));
+
+                datasets.push({
+                    label: `Active: Cd=${currentTrajectory.cd.toFixed(2)} (${currentTrajectory.v0_mph} mph)`,
+                    data: visiblePoints.map(p => ({ x: p.x * M_TO_YD, y: p.y * M_TO_YD })),
+                    borderColor: '#10b981',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    tension: 0.2
+                });
+            }
+
+            chartInstance.data.datasets = datasets;
+            chartInstance.update();
+        }
+
+        function drawCanvasField() {
+            const width = canvas.width = canvas.parentElement.clientWidth;
+            const height = canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            if (!currentTrajectory || !currentTrajectory.points) return;
+
+            // Define field coordinate boundaries (in yards)
+            const maxFieldX = Math.max(70, (currentTrajectory.totalDistanceYds + 10));
+            const maxFieldY = Math.max(25, (currentTrajectory.apexYds + 8));
+
+            // Margins
+            const paddingLeft = 40;
+            const paddingBottom = 35;
+            const paddingTop = 25;
+            const paddingRight = 20;
+
+            const plotWidth = width - paddingLeft - paddingRight;
+            const plotHeight = height - paddingTop - paddingBottom;
+
+            // Scale conversion helpers: yards to screen pixels
+            const toScreenX = (xYds) => paddingLeft + (xYds / maxFieldX) * plotWidth;
+            const toScreenY = (yYds) => height - paddingBottom - (yYds / maxFieldY) * plotHeight;
+
+            // Draw Ground / Turf Baseline
+            const groundY = toScreenY(0);
+            ctx.fillStyle = '#0f3d23';
+            ctx.fillRect(paddingLeft, groundY, plotWidth, height - groundY);
+
+            ctx.strokeStyle = '#22c55e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, groundY);
+            ctx.lineTo(width - paddingRight, groundY);
+            ctx.stroke();
+
+            // Draw 10-Yard Hash Marks on Pitch
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.font = '10px Inter';
+            ctx.textAlign = 'center';
+
+            for (let yd = 0; yd <= maxFieldX; yd += 10) {
+                const sx = toScreenX(yd);
+                ctx.beginPath();
+                ctx.moveTo(sx, groundY);
+                ctx.lineTo(sx, groundY + 8);
+                ctx.stroke();
+
+                ctx.fillText(`${yd}y`, sx, groundY + 20);
+            }
+
+            // Draw Goalpost at 50 or 100 yards if within scale
+            if (100 <= maxFieldX) {
+                const gpX = toScreenX(100);
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(gpX, groundY);
+                ctx.lineTo(gpX, toScreenY(10)); // Goalpost crossbar
+                ctx.lineTo(gpX + 5, toScreenY(10));
+                ctx.stroke();
+            }
+
+            // Draw saved comparison curves on canvas
+            savedTrajectories.forEach((traj, idx) => {
+                const color = colorPalette[idx % colorPalette.length];
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 1.5;
+                ctx.setLineDash([3, 3]);
+                ctx.beginPath();
+
+                traj.points.forEach((pt, i) => {
+                    const sx = toScreenX(pt.x * M_TO_YD);
+                    const sy = toScreenY(pt.y * M_TO_YD);
+                    if (i === 0) ctx.moveTo(sx, sy);
+                    else ctx.lineTo(sx, sy);
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            // Draw current active trajectory path
+            const activePoints = currentTrajectory.points;
+            const pointsToDraw = Math.max(1, Math.floor(activePoints.length * animationProgress));
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+
+            for (let i = 0; i < pointsToDraw; i++) {
+                const pt = activePoints[i];
+                const sx = toScreenX(pt.x * M_TO_YD);
+                const sy = toScreenY(pt.y * M_TO_YD);
+                if (i === 0) ctx.moveTo(sx, sy);
+                else ctx.lineTo(sx, sy);
+            }
+            ctx.stroke();
+
+            // Draw Ball Marker at current flight head position
+            if (pointsToDraw > 0) {
+                const currentPt = activePoints[pointsToDraw - 1];
+                const ballX = toScreenX(currentPt.x * M_TO_YD);
+                const ballY = toScreenY(currentPt.y * M_TO_YD);
+
+                // Football glow
+                ctx.shadowColor = '#38bdf8';
+                ctx.shadowBlur = 10;
+                
+                // Draw Football Icon shape
+                ctx.fillStyle = '#b45309';
+                ctx.beginPath();
+                ctx.ellipse(ballX, ballY, 8, 5, Math.atan2(currentPt.vy, currentPt.vx), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.shadowBlur = 0; // Reset shadow
+            }
+        }
+
+        function runSimulation() {
+            const cd = parseFloat(cdSlider.value);
+            const speed = parseFloat(speedSlider.value);
+            const angle = parseFloat(angleSlider.value);
+            const height = parseFloat(heightSlider.value);
+            const wind = parseFloat(windSlider.value);
+
+            currentTrajectory = calculateTrajectory(cd, speed, angle, height, wind);
+
+            // Update Telemetry Display
+            statDist.textContent = `${currentTrajectory.totalDistanceYds.toFixed(1)} yds`;
+            statDistM.textContent = `${currentTrajectory.totalDistanceM.toFixed(1)} meters`;
+
+            statApex.textContent = `${currentTrajectory.apexYds.toFixed(1)} yds`;
+            statApexM.textContent = `${currentTrajectory.apexM.toFixed(1)} meters`;
+
+            statTime.textContent = `${currentTrajectory.flightTime.toFixed(2)} s`;
+            statImpactAngle.textContent = `Impact Angle: ${currentTrajectory.impactAngle.toFixed(1)}°`;
+
+            statVFinal.textContent = `${currentTrajectory.finalV_mph.toFixed(1)} mph`;
+            statDragLoss.textContent = `Energy Loss: ${currentTrajectory.energyLossPct.toFixed(0)}%`;
+
+            // Draw field and chart
+            drawCanvasField();
+            updateChart();
+        }
+
+        function animateFlight() {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            animationProgress = 0;
+            const duration = Math.min(2500, Math.max(800, currentTrajectory.flightTime * 400));
+            const startTime = performance.now();
+
+            function step(timestamp) {
+                const elapsed = timestamp - startTime;
+                animationProgress = Math.min(1.0, elapsed / duration);
+
+                drawCanvasField();
+                updateChart();
+
+                if (animationProgress < 1.0) {
+                    animationFrameId = requestAnimationFrame(step);
+                }
+            }
+
+            animationFrameId = requestAnimationFrame(step);
+        }
+
+        function updateSavedListUI() {
+            savedCount.textContent = savedTrajectories.length;
+
+            if (savedTrajectories.length === 0) {
+                savedList.innerHTML = `<p class="text-slate-500 italic text-center py-2">No saved trajectories yet. Click "Save Curve" to compare curves on the chart.</p>`;
+                return;
+            }
+
+            savedList.innerHTML = '';
+            savedTrajectories.forEach((traj, idx) => {
+                const color = colorPalette[idx % colorPalette.length];
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between bg-slate-800/60 p-2 rounded-lg border border-slate-700/50';
+                item.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${color}"></span>
+                        <span class="font-mono text-slate-200">$C_d$: ${traj.cd.toFixed(2)}</span>
+                        <span class="text-[10px] text-slate-400">(${traj.v0_mph}mph @ ${traj.angle_deg}°)</span>
+                    </div>
+                    <span class="font-bold text-emerald-400 font-mono">${traj.totalDistanceYds.toFixed(1)} yds</span>
+                `;
+                savedList.appendChild(item);
+            });
+        }
+
+        // Slider inputs
+        cdSlider.addEventListener('input', (e) => {
+            cdVal.textContent = parseFloat(e.target.value).toFixed(2);
+            runSimulation();
+        });
+
+        presetSelect.addEventListener('change', (e) => {
+            const val = parseFloat(e.target.value);
+            cdSlider.value = val;
+            cdVal.textContent = val.toFixed(2);
+            runSimulation();
+        });
+
+        speedSlider.addEventListener('input', (e) => {
+            const v = e.target.value;
+            speedVal.textContent = `${v} mph (${(v * MPH_TO_MPS).toFixed(1)} m/s)`;
+            runSimulation();
+        });
+
+        angleSlider.addEventListener('input', (e) => {
+            angleVal.textContent = `${e.target.value}°`;
+            runSimulation();
+        });
+
+        heightSlider.addEventListener('input', (e) => {
+            const h = parseFloat(e.target.value);
+            heightVal.textContent = `${h.toFixed(1)} m (${(h * M_TO_YD * 3).toFixed(1)} ft)`;
+            runSimulation();
+        });
+
+        windSlider.addEventListener('input', (e) => {
+            const w = parseInt(e.target.value);
+            if (w === 0) windVal.textContent = '0 mph (Calm)';
+            else if (w > 0) windVal.textContent = `+${w} mph (Tailwind)`;
+            else windVal.textContent = `${w} mph (Headwind)`;
+            runSimulation();
+        });
+
+        // Button clicks
+        animateBtn.addEventListener('click', animateFlight);
+
+        addCompareBtn.addEventListener('click', () => {
+            if (currentTrajectory) {
+                // Add clone to saved trajectories
+                savedTrajectories.push(JSON.parse(JSON.stringify(currentTrajectory)));
+                updateSavedListUI();
+                updateChart();
+                drawCanvasField();
+            }
+        });
+
+        clearCompareBtn.addEventListener('click', () => {
+            savedTrajectories = [];
+            updateSavedListUI();
+            updateChart();
+            drawCanvasField();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            presetSelect.value = "0.25";
+            cdSlider.value = 0.25;
+            cdVal.textContent = "0.25";
+
+            speedSlider.value = 55;
+            speedVal.textContent = "55 mph (24.6 m/s)";
+
+            angleSlider.value = 35;
+            angleVal.textContent = "35°";
+
+            heightSlider.value = 2.0;
+            heightVal.textContent = "2.0 m (6.6 ft)";
+
+            windSlider.value = 0;
+            windVal.textContent = "0 mph (Calm)";
+
+            savedTrajectories = [];
+            animationProgress = 1.0;
+
+            updateSavedListUI();
+            runSimulation();
+        });
+
+        window.addEventListener('resize', () => {
+            drawCanvasField();
+        });
+
+        // Initialize on page load
+        window.onload = () => {
+            initChart();
+            runSimulation();
+        };
+    </script>
+</body>
+</html>
