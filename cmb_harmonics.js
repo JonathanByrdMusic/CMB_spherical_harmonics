@@ -625,7 +625,7 @@ function generateCoefficients() {
 
     coefficients = [];
 
-    for (let l = 1; l <= maxL; l++) {
+    for (let l = 0; l <= maxL; l++) {
 
         let ellCoeffs = [];
 
@@ -641,6 +641,12 @@ function generateCoefficients() {
 
         // Planck removes the observed dipole, so borrow the quadrupole
         // simply so ℓ = 1 has a visible amplitude.
+
+        if (l === 0) {
+            coefficients[l] = [1];
+            continue;
+        }
+
         if (l === 1) {
             let D2 = planckPower[2] || 1;
             Cl = (2 * Math.PI * D2) / (2 * 3);
@@ -683,7 +689,7 @@ function makeFlatCoefficients(lmax) {
         return flat;
     }
 
-    for (let l = 1; l <= lmax; l++) {
+    for (let l = 0; l <= lmax; l++) {
 
         const ellCoefficients = coefficients[l];
 
@@ -1018,7 +1024,7 @@ async function startBuildUniverse() {
         buildSequenceId;
 
     for (
-        let currentL = 1;
+        let currentL = 0;
         currentL <= finalL;
         currentL++
     ) {
