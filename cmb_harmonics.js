@@ -5,6 +5,13 @@ let orbitalCamera;
 let orbitalRenderer;
 let orbitalMesh;
 
+let orbitalRotationX = 0.35;
+let orbitalRotationY = -0.6;
+
+let orbitalDragging = false;
+let orbitalLastPointerX = 0;
+let orbitalLastPointerY = 0;
+
 const singleEllCheckbox = document.getElementById("singleEllCheckbox");
 const canvas = document.getElementById("cmbCanvas");
 
@@ -342,6 +349,68 @@ function setupOrbitalViewer() {
     orbitalScene.add(ambient);
 }
 
+orbitalViewer.addEventListener("pointerdown", function (event) {
+
+    orbitalDragging = true;
+
+    orbitalLastPointerX = event.clientX;
+    orbitalLastPointerY = event.clientY;
+
+    orbitalViewer.setPointerCapture(event.pointerId);
+});
+
+
+orbitalViewer.addEventListener("pointermove", function (event) {
+
+    if (!orbitalDragging || !orbitalMesh) {
+        return;
+    }
+
+    const deltaX =
+        event.clientX - orbitalLastPointerX;
+
+    const deltaY =
+        event.clientY - orbitalLastPointerY;
+
+    orbitalLastPointerX = event.clientX;
+    orbitalLastPointerY = event.clientY;
+
+    const rotationSpeed = 0.008;
+
+    orbitalRotationY +=
+        deltaX * rotationSpeed;
+
+    orbitalRotationX +=
+        deltaY * rotationSpeed;
+
+    orbitalMesh.rotation.x =
+        orbitalRotationX;
+
+    orbitalMesh.rotation.y =
+        orbitalRotationY;
+
+    orbitalRenderer.render(
+        orbitalScene,
+        orbitalCamera
+    );
+});
+
+
+orbitalViewer.addEventListener("pointerup", function (event) {
+
+    orbitalDragging = false;
+
+    orbitalViewer.releasePointerCapture(
+        event.pointerId
+    );
+});
+
+
+orbitalViewer.addEventListener("pointercancel", function () {
+
+    orbitalDragging = false;
+});
+
 function resizeOrbitalViewer() {
 
     if (!orbitalRenderer || !orbitalCamera) {
@@ -476,8 +545,8 @@ function drawOrbital() {
     });
 
     orbitalMesh = new THREE.Mesh(geometry, material);
-    orbitalMesh.rotation.x = 0.35;
-    orbitalMesh.rotation.y = -0.6;
+    orbitalMesh.rotation.x = orbitalRotationX;
+    orbitalMesh.rotation.y = orbitalRotationY;
 
     orbitalScene.add(orbitalMesh);
 

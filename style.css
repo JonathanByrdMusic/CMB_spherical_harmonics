@@ -574,6 +574,15 @@ input[type="range"]:hover::-moz-range-thumb {
     overflow: hidden;
 }
 
+#orbitalViewer {
+    cursor: grab;
+    touch-action: none;
+}
+
+#orbitalViewer:active {
+    cursor: grabbing;
+}
+
 #orbitalViewer canvas,
 #supernovaViewer canvas,
 #magneticViewer canvas {
