@@ -403,6 +403,8 @@ orbitalViewer.addEventListener("pointerup", function (event) {
     orbitalViewer.releasePointerCapture(
         event.pointerId
     );
+
+    requestSkyCalculation();
 });
 
 
@@ -861,6 +863,9 @@ function requestSkyCalculation(
                 useSecondHarmonic: useSecondHarmonic,
                 secondL: secondL,
                 secondM: secondM,
+
+                rotationX: orbitalRotationX,
+                rotationY: orbitalRotationY,
 
                 coefficientBuffer:
                     flatCoefficients.buffer
