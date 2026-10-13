@@ -5,8 +5,8 @@ let orbitalCamera;
 let orbitalRenderer;
 let orbitalMesh;
 
-let orbitalRotationX = 0.35;
-let orbitalRotationY = -0.6;
+let orbitalRotationX = 0;
+let orbitalRotationY = 0;
 
 let orbitalDragging = false;
 let orbitalLastPointerX = 0;
