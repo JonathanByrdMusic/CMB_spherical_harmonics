@@ -19,6 +19,99 @@ function lmIndex(l, m) {
     return l * l + (m + l);
 }
 
+function rotateSamplingDirection(
+    theta,
+    phi,
+    rotationX,
+    rotationY
+) {
+
+    /*
+     * Convert the Mollweide direction to a unit vector.
+     *
+     * This matches the coordinate convention used by
+     * the Three.js orbital viewer:
+     *
+     * x = sin(theta) cos(phi)
+     * y = cos(theta)
+     * z = sin(theta) sin(phi)
+     */
+
+    const sinTheta = Math.sin(theta);
+
+    const x =
+        sinTheta * Math.cos(phi);
+
+    const y =
+        Math.cos(theta);
+
+    const z =
+        sinTheta * Math.sin(phi);
+
+
+    /*
+     * The orbital mesh itself is rotated by
+     *
+     *     rotation.x = rotationX
+     *     rotation.y = rotationY
+     *
+     * A fixed Mollweide pixel therefore needs the
+     * inverse rotation to determine which original
+     * point on the sphere has rotated into view.
+     */
+
+
+    // Undo the x rotation.
+
+    const cosX = Math.cos(rotationX);
+    const sinX = Math.sin(rotationX);
+
+    const x1 = x;
+
+    const y1 =
+        cosX * y +
+        sinX * z;
+
+    const z1 =
+        -sinX * y +
+        cosX * z;
+
+
+    // Undo the y rotation.
+
+    const cosY = Math.cos(rotationY);
+    const sinY = Math.sin(rotationY);
+
+    const x2 =
+        cosY * x1 -
+        sinY * z1;
+
+    const y2 = y1;
+
+    const z2 =
+        sinY * x1 +
+        cosY * z1;
+
+
+    /*
+     * Convert back to spherical coordinates.
+     */
+
+    const rotatedTheta =
+        Math.acos(
+            Math.max(-1, Math.min(1, y2))
+        );
+
+    const rotatedPhi =
+        Math.atan2(z2, x2);
+
+
+    return {
+        theta: rotatedTheta,
+        phi: rotatedPhi
+    };
+}
+
 self.addEventListener("message", function (event) {
 
     const message = event.data;
@@ -48,13 +141,17 @@ self.addEventListener("message", function (event) {
                 message.selectedM,
                 message.useSecondHarmonic,
                 message.secondL,
-                message.secondM
+                message.secondM,
+                message.rotationX,
+                message.rotationY
             );
         } else {
             result = calculateSky(
                 message.lmax,
                 new Float64Array(message.coefficientBuffer),
-                message.requestId
+                message.requestId,
+                message.rotationX,
+                message.rotationY
             );
         }
 
@@ -70,7 +167,13 @@ self.addEventListener("message", function (event) {
     }
 });
 
-function calculateSky(lmax, coefficients, requestId) {
+function calculateSky(
+    lmax,
+    coefficients,
+    requestId,
+    rotationX,
+    rotationY
+) {
 
     const pixelCount = width * height;
     const values = new Float32Array(pixelCount);
@@ -86,13 +189,27 @@ function calculateSky(lmax, coefficients, requestId) {
             continue;
         }
 
-        const x = Math.cos(theta);
+        const rotated =
+            rotateSamplingDirection(
+                theta,
+                phi,
+                rotationX,
+                rotationY
+            );
+
+        const sampleTheta =
+            rotated.theta;
+
+        const samplePhi =
+            rotated.phi;
+
+        const x = Math.cos(sampleTheta);
         const sinTheta = Math.sqrt(
             Math.max(0, 1 - x * x)
         );
 
-        const cosPhi = Math.cos(phi);
-        const sinPhi = Math.sin(phi);
+        const cosPhi = Math.cos(samplePhi);
+        const sinPhi = Math.sin(samplePhi);
 
         /*
          * cosM and sinM will successively become:
@@ -353,7 +470,9 @@ function calculateSingleMode(
     m,
     useSecondHarmonic,
     secondL,
-    secondM
+    secondM,
+    rotationX,
+    rotationY
 ) {
 
     const pixelCount =
@@ -379,12 +498,26 @@ function calculateSingleMode(
             continue;
         }
 
+        const rotated =
+            rotateSamplingDirection(
+                theta,
+                phi,
+                rotationX,
+                rotationY
+            );
+
+        const sampleTheta =
+            rotated.theta;
+
+        const samplePhi =
+            rotated.phi;
+
         let value =
             realHarmonicValue(
                 l,
                 m,
-                theta,
-                phi
+                sampleTheta,
+                samplePhi
             );
 
         if (useSecondHarmonic) {
@@ -392,8 +525,8 @@ function calculateSingleMode(
                 realHarmonicValue(
                     secondL,
                     secondM,
-                    theta,
-                    phi
+                    sampleTheta,
+                    samplePhi
                 );
         }
 
