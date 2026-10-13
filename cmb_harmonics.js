@@ -12,6 +12,8 @@ let orbitalDragging = false;
 let orbitalLastPointerX = 0;
 let orbitalLastPointerY = 0;
 
+let orbitalSkyUpdateTimer = null;
+
 const singleEllCheckbox = document.getElementById("singleEllCheckbox");
 const canvas = document.getElementById("cmbCanvas");
 
@@ -393,6 +395,17 @@ orbitalViewer.addEventListener("pointermove", function (event) {
         orbitalScene,
         orbitalCamera
     );
+
+    if (orbitalSkyUpdateTimer === null) {
+
+        orbitalSkyUpdateTimer = setTimeout(function () {
+
+            requestSkyCalculation();
+
+            orbitalSkyUpdateTimer = null;
+
+        }, 40);
+    }
 });
 
 
