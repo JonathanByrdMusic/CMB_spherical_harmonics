@@ -1531,6 +1531,8 @@ loadPlanckSpectrum()
         setupOrbitalViewer();
         resizeOrbitalViewer();
 
+        lmaxValue.textContent = slider.value;
+
         updateMSlider();
         updateSecondMSlider();
 
