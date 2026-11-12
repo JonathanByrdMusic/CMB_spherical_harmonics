@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-90WMD4PJQP');
+    </script>
+
+    <title>Spherical Harmonics simulator</title>
+
+    <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h1>Spherical Harmonics simulator</h1>
+
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+    </div>
+
+    <div class="menuContainer">
+
+        <nav class="mainNav" aria-label="Main navigation">
+            <a href="index.html" class="active">
+                Home
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Mobile navigation"
+            hidden
+        >
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+    </div>
+
+</div>
+
+<main id="pageContent">
+
+<div id="canvasRow">
+
+    <section class="panel">
+        <div class="orbitalPanelHeader">
+            <h2>
+                Single mode Y<sub>&ell;m</sub>
+            </h2>
+
+            <div
+                class="harmonicLegend harmonicLegendPanel"
+                role="group"
+                aria-label="Spherical harmonic color legend"
+            >
+                <span class="harmonicLegendItem">
+                    <span
+                        class="harmonicLegendSwatch harmonicLegendPositive"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>Positive</span>
+                </span>
+
+                <span class="harmonicLegendItem">
+                    <span
+                        class="harmonicLegendSwatch harmonicLegendNegative"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>Negative</span>
+                </span>
+
+                <span class="harmonicLegendMagnitude">
+                    Saturation indicates magnitude
+                </span>
+            </div>
+        </div>
+
+        <div
+            id="orbitalViewer"
+            role="img"
+            aria-label="Three-dimensional visualization of the selected spherical harmonic"
+        ></div>
+    </section>
+
+    <section class="panel">
+        <h2 id="skyTitle">Accumulated sky</h2>
+
+        <div class="cmbCanvasWrapper">
+            <canvas
+                id="cmbCanvas"
+                width="500"
+                height="250"
+                role="img"
+                aria-label="Simulated Cosmic Microwave Background sky map"
+            ></canvas>
+        </div>
+    </section>
+
+</div>
+
+<div id="controlsRow">
+
+    <div class="controlColumn leftControls">
+
+        <label class="controlItem">
+            <span class="controlLabel">Maximum &ell;:</span>
+            <input
+                id="lmaxSlider"
+                type="range"
+                min="0"
+                max="30"
+                value="0"
+                aria-describedby="lmaxValue"
+            >
+            <span id="lmaxValue">1</span>
+        </label>
+
+        <label class="controlItem">
+            <span class="controlLabel">m:</span>
+            <input
+                id="mSlider"
+                type="range"
+                min="0"
+                max="1"
+                value="0"
+                aria-describedby="mValue"
+            >
+            <span id="mValue">0</span>
+        </label>
+
+        <div class="secondHarmonicControls">
+
+            <label class="secondHarmonicToggle">
+                <input
+                    id="secondHarmonicCheckbox"
+                    type="checkbox"
+                >
+                <span>Superpose second harmonic</span>
+            </label>
+
+            <label class="controlItem secondHarmonicControl">
+                <span class="controlLabel">Second &ell;:</span>
+                <input
+                    id="secondLSlider"
+                    type="range"
+                    min="1"
+                    max="30"
+                    value="1"
+                    aria-describedby="secondLValue"
+                    disabled
+                >
+                <span id="secondLValue">1</span>
+            </label>
+
+            <label class="controlItem secondHarmonicControl">
+                <span class="controlLabel">Second m:</span>
+                <input
+                    id="secondMSlider"
+                    type="range"
+                    min="-1"
+                    max="1"
+                    value="0"
+                    aria-describedby="secondMValue"
+                    disabled
+                >
+                <span id="secondMValue">0</span>
+            </label>
+
+        </div>
+
+    </div>
+
+    <div class="controlColumn rightControls">
+
+    <label class="controlItem checkboxItem">
+    <input id="singleEllCheckbox" type="checkbox" checked>
+    Show only current (&ell;, m)
+    </label>
+
+    <button id="buildUniverseButton" type="button">
+        BUILD UNIVERSE
+    </button>
+
+    <button id="newSeedButton" type="button">
+        NEW RANDOM UNIVERSE
+    </button>
+
+</div>
+
+</div>
+
+<article id="explanation">
+
+    <h2>Atomic Orbitals, Music, and the Early Universe</h2>
+
+    <p>
+        If you've seen pictures of atomic orbitals in chemistry, the first panel should look familiar.
+        It shows a single spherical harmonic as a three-dimensional wave pattern including radial 
+        displacement from the origin, analogous to the probability of finding an 
+        electron some distance from the nucleus. The numbers <strong>&ell;</strong> and 
+        <strong>m</strong> determine the pattern's complexity and orientation. Move the sliders and 
+        see what happens. To see what superposition does, check "Superpose second harmonic" and select a second pair of 
+        <strong>&ell;</strong> and <strong>m</strong> values. 
+    </p>
+
+    <p>
+        The second panel shows a simulated Cosmic Microwave Background (CMB) sky, using observed 
+        angular spectra from 
+        <a
+            href="https://www.cosmos.esa.int/web/planck/home"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Planck collaboration 
+        </a>
+        data. Only the angular coordinates are kept and the 
+        value is represented using color across the surface of a sphere, projected onto a flat canvas 
+        using a Mollweide projection. 
+    </p>
+
+    <p>
+        Unchecking <strong>Show only current (&ell;, m)</strong> displays a 'heat map' 
+        formed by <strong>superposing</strong> many spherical harmonics with different amplitudes up 
+        to the maximum <strong>&ell;</strong> you selected with the first slider. Increasing the maximum 
+        <strong>&ell;</strong> adds progressively finer wave patterns, revealing more detailed structure 
+        in the simulated universe. 
+    </p>
+
+    <p>
+        Pressing <strong>Build Universe</strong> starts an animation that adds modes up to the current maximum
+        <strong>&ell;</strong> value on the slider. Notice how the largest features appear first,
+        while smaller details emerge as higher-order harmonics are added. This is the same mathematical 
+        framework cosmologists use to describe the temperature fluctuations of the real CMB.
+    </p>
+
+    <p>
+        Maybe you've heard someone online break down a song into “stems.”
+        Software can separate the bass, guitar, keyboards, and vocals.
+        These programs use Fourier methods to decompose complex sounds into simpler components
+        that can then be recombined to reproduce the song.
+    </p>
+
+    <p class="closing">
+        Just as a musical chord can be decomposed into individual notes, any sufficiently smooth function 
+        on a sphere, such as the temperature pattern of the CMB, can be decomposed into spherical harmonics. 
+        The real CMB contains significant power well beyond <strong>&ell; = 200</strong>. Reproducing 
+        those finer details requires the superposition of tens of thousands of spherical harmonic 
+        modes—far more computation than is practical in a web browser.
+    </p>
+
+</article>
+
+</main>
+
+<footer>
+    Built using Planck CMB power spectrum data.
+</footer>
+
+<script src="cmb_harmonics.js"></script>
+
+<script>
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const siteMenu =
+        document.getElementById("siteMenu");
+
+    function closeSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        siteMenu.hidden = true;
+    }
+
+    function openSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        siteMenu.hidden = false;
+    }
+
+    menuButton.addEventListener("click", () => {
+        const isOpen =
+            menuButton.getAttribute("aria-expanded")
+            === "true";
+
+        if (isOpen) {
+            closeSiteMenu();
+        } else {
+            openSiteMenu();
+        }
+    });
+
+    document.addEventListener("click", event => {
+        const clickedInsideMenu =
+            event.target.closest(".menuContainer");
+
+        if (!clickedInsideMenu) {
+            closeSiteMenu();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeSiteMenu();
+            menuButton.focus();
+        }
+    });
+</script>
+
+</body>
+</html>
