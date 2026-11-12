@@ -1,0 +1,409 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>CMB Simulator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+		rel="stylesheet"
+	>
+
+	<link
+		rel="shortcut icon"
+		href="Simulator/media/img/Simons_logo_small.ico"
+		type="image/x-icon"
+	>
+
+	<link rel="stylesheet" href="Simulator/media/css/ui.css">
+	<link rel="stylesheet" href="Simulator/media/css/style.css">
+
+	<script src="Simulator/media/js/jquery-1.10.0.min.js"></script>
+	<script src="Simulator/media/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="Simulator/media/js/raphael-min.js"></script>
+	<script src="Simulator/media/js/audio.js"></script>
+	<script src="Simulator/media/js/simulator.js"></script>
+	<script>
+	$(document).ready(function(){
+
+		// Load the Simulator
+		var sim = $.simulator({
+			'omega_b': 'omega_b',	// The ID for the Omega_baryon
+			'omega_c': 'omega_c',	// The ID for the Omega_darkmatter
+			'omega_l': 'omega_l',	// The ID for the Omega_darkenergy
+			'ps': 'powerspectrum',	// The ID for the powerspectrum HTML element
+			'map': 'map',	// The ID for the map HTML element
+			'dir': 'Simulator/db_0.025/',
+			'fixedscale' : true
+		});
+
+	});
+	</script>
+</head>
+<body>
+
+	<div id="msg">
+		<div id="error"></div>
+		<div id="warning"></div>
+	</div>
+
+	<div id="header">
+    <img
+		class="logo"
+		src="Simulator/media/img/Simons_logo_small.gif"
+		alt="Simons Observatory logo"
+	>
+
+    <h1>
+        CMB Simulator
+        <span class="subtitle">Designed by Jonathan Byrd</span>
+    </h1>
+</div>
+	
+	<div id="about">
+
+		<h3>The cosmic microwave background — by <a href="https://profiles.cardiff.ac.uk/staff/northce" target="_blank" rel="noopener noreferrer">Chris North</a></h3>
+		<p>For the first 400,000 years after the Big Bang, the Universe was filled with hot, dense plasma that was opaque to light.  As the Universe expanded, the plasma cooled and thinned out, becoming transparent.  The last-scattered light appears as the cosmic microwave background (CMB). The <a href="http://www.esa.int/planck" target="_blank" rel="noopener noreferrer">Planck</a> satellite has been capturing<sup class="footnoteRef">1</sup> the variations in the brightness of the cosmic microwave background over the entire sky at the highest precision ever achieved.</p>
+
+		<h3>Ingredients of the Universe</h3>
+		<p><strong class="b">Normal matter</strong> - The stuff you see around you: tables, buildings, planets, stars, etc.</p>
+		<p><strong class="c">Dark matter</strong> - Cold, dark, matter can not be seen or felt, and has not been detected in laboratories. Its gravitational influence can be seen in the rotation of galaxies. It is called "dark" because it doesn't give off light.</p>
+		<p><strong class="l">Dark energy</strong> - Dark energy exerts a kind of pressure that is causing the expansion of the Universe to speed up. It is called "dark" because we don't know what it is.</p>
+		
+		<h3>What is the power spectrum?</h3>
+		<p>A power spectrum is a mathematical function that can be used to describe the distribution of a quantity (any quantity) in space. This concept can be illustrated by considering a city with a variety of buildings in it and assessing the different types of people that live in each type of building. A survey like this might start with counting how many buildings there are of each size: how many one-family houses, how many two-family houses, how many skyscraper blocks, and so on. It doesn't matter if, on an individual street, there is a tiny one family house nearby a huge apartment block – what matters is how many of each size of buildings there are in the overall architecture of the city, to study how this influences the behaviour of the population. Plotting the number of buildings as a function of their size is an example of what it means to ‘measure the power spectrum’ of the city's urban development.</p>
+
+		<h3>What is the power spectrum of the distribution of matter in the Universe?</h3>
+		<p>When cosmologists study the formation and evolution of cosmic structure in the Universe, they do something very similar to the analysis of the city's urban structure: they plot the relative number of cosmic structures on different sizes in a power spectrum. The shape of this graph reveals the ‘power’ of structures that populate the Universe on each scale. For example, there may be very few structures at very large scales. But counting all of these very large structures’ contributions together gives a measure of their cumulative power. If the power is to be matched with only smaller structures, a much larger number of them are needed.</p>
+		
+		<h3>Why are cosmologists interested in the power spectrum of cosmic structure?</h3>
+		<p>Cosmic structures – stars, galaxies, galaxy clusters – grow under the influence of gravity, which causes them to become denser and denser. However, other forces may act against the attractive pull of gravity; for example, the expansion of the Universe or radiation pressure – the pressure force exerted by photons. Every structure that we observe in the Universe is the result of the balance between all these effects during the infancy of the Universe. To understand how exactly all of these structures emerged from the almost smooth distribution of matter in the early Universe, it is important to know how many structures of each size there are in the Universe at the present epoch, and how many there were at past times in cosmic history – information that is summarised in the power spectrum.</p>
+		
+		<h3>What was the distribution of these primordial fluctuations?</h3>
+		<p>The simplest model of inflation predicts that at the end of this phase of accelerated expansion (inflation) the fluctuations present in the density of matter are such that their contribution is almost independent of their scale. This means that the cumulative power of all fluctuations of a given scale is the same. Taking the example of the size of buildings in a city, this would mean that, if there is a given number of large apartment blocks, there should be a higher number of smaller, double-family houses and an even higher number of even smaller, single-family houses, to keep the buildings on all scales having the same ‘power’, that is, equal numbers of people living in each kind of structure.</p>
+		<p>If fluctuations in the distribution of matter in the primordial Universe have equal power on all spatial scales, cosmologists say that their power spectrum is 'scale-invariant'. This is characterised with a parameter known as the spectral index, n<sub>s</sub>. For a perfectly scale-invariant spectrum, n<sub>s</sub> = 1. If n<sub>s</sub> is smaller than 1, it means that fluctuations on larger scales are dominant, since they are more abundant (in terms of their cumulative power) than those on smaller scales; vice versa, if n<sub>s</sub> is larger than 1, fluctuations on small scales are the dominant ones.</p>
+		
+		<h3>How does this relate to the fluctuations in the cosmic microwave background?</h3>
+		<p>The fluctuations in the temperature of the cosmic microwave background (CMB) are a snapshot of the distribution of matter at a much later cosmic epoch than inflation, as they date back to 380,000 years after inflation ended. In the meantime, the distribution of matter (the power spectrum) at small scales has been modified, but at very large scales an imprint of the original power spectrum that derives from inflation is still present. In particular, CMB fluctuations on very large scales carry information about the primordial spectral index n<sub>s</sub> and allow cosmologists to constrain the distribution of fluctuations as it was at the time of inflation. Furthermore, by measuring the spectral index and how much it is different from n<sub>s</sub> = 1, cosmologists can learn how long the phase of inflationary expansion lasted and how it ended, before the slower expansion rate began. The end of inflation is a particularly interesting epoch in cosmic history, because it is at this time that particles of matter were created for the first time.</p>
+
+		<h3>About Planck</h3>
+		<p>The <a href="http://www.esa.int/planck" target="_blank" rel="noopener noreferrer">Planck</a> satellite - a European Space Agency (ESA) mission launched in May 2009 - surveyed the entire sky to search for the origin of the universe. One of the most technologically advanced satellites ever launched, its first cosmological results were released in March 2013<sup class="footnoteRef">1</sup>. </p>
+
+		<h3>Credits</h3>
+		<p>This CMB Simulator was created for the Royal Society Summer Exhibition 2013. The CMB Simulator <a href="https://github.com/chrisnorth/planckapps/tree/master/Simulator" target="_blank" rel="noopener noreferrer">code is on GitHub</a>. The simulated power spectrum data are from <a href="http://camb.info/" target="_blank" rel="noopener noreferrer">CAMB</a>.</p>
+
+		<section class="footnotes" aria-labelledby="footnote-label">
+    <h3 id="footnote-label" class="visuallyHidden">Footnotes</h3>
+
+    <ol>
+        <li id="footnote-1">
+            The Planck satellite was decommissioned in October 2013.
+            Polarization data was released by the team in 2015, and the
+            final mission papers were released in July 2018.
+        </li>
+    </ol>
+</section>
+
+	</div>
+
+	<noscript><p>Oh no! Either you don't have Javascript or it is disabled. This CMB Simulator needs Javascript to let you change the parameters of the Universe. :-(</p><p>This is what our Universe looks like:</p><img src="Simulator/media/img/ouruniverse.jpg" class="our"></noscript>
+
+	<div id="app" class="scriptonly">
+
+		<div id="container">
+		
+			<div id="parameters" class="column">
+				 <div id="observationMode" class="observationMode">
+					<label>
+						<input
+							type="radio"
+							name="observationMode"
+							value="temperature"
+							checked
+						>
+						<span>Temperature</span>
+					</label>
+
+					<label>
+						<input
+							type="radio"
+							name="observationMode"
+							value="polarization"
+						>
+						<span>Polarization</span>
+					</label>
+				</div>
+
+				<form id="omegas">
+					<div id="omega_b_holder" class="parameter">
+						<label for="omega_b">Normal Matter <span class="advanced">(&Omega;<sub>b</sub><span class="omega_b"></span>)</span></label>
+						<select name="omega_b" id="omega_b">
+							<option>0.000</option>
+							<option>0.025</option>
+							<option>0.050</option>
+							<option>0.075</option>
+							<option>0.100</option>
+							<option>0.125</option>
+							<option>0.150</option>
+							<option>0.175</option>
+							<option>0.200</option>
+							<option>0.225</option>
+							<option>0.250</option>
+							<option>0.275</option>
+							<option>0.300</option>
+							<option>0.325</option>
+							<option>0.350</option>
+							<option>0.375</option>
+							<option>0.400</option>
+							<option>0.425</option>
+							<option>0.450</option>
+							<option>0.475</option>
+							<option>0.500</option>
+							<option>0.525</option>
+							<option>0.550</option>
+							<option>0.575</option>
+							<option>0.600</option>
+							<option>0.625</option>
+							<option>0.650</option>
+							<option>0.675</option>
+							<option>0.700</option>
+							<option>0.725</option>
+							<option>0.750</option>
+							<option>0.775</option>
+							<option>0.800</option>
+							<option>0.825</option>
+							<option>0.850</option>
+							<option>0.875</option>
+							<option>0.900</option>
+							<option>0.925</option>
+							<option>0.950</option>
+							<option>0.975</option>
+							<option>1.000</option>
+						</select>
+					</div>
+					<div id="omega_c_holder" class="parameter">
+						<label for="omega_c">Dark Matter <span class="advanced">(&Omega;<sub>c</sub><span class="omega_c"></span>)</span></label>
+						<select name="omega_c" id="omega_c">
+							<option>0.000</option>
+							<option>0.025</option>
+							<option>0.050</option>
+							<option>0.075</option>
+							<option>0.100</option>
+							<option>0.125</option>
+							<option>0.150</option>
+							<option>0.175</option>
+							<option>0.200</option>
+							<option>0.225</option>
+							<option>0.250</option>
+							<option>0.275</option>
+							<option>0.300</option>
+							<option>0.325</option>
+							<option>0.350</option>
+							<option>0.375</option>
+							<option>0.400</option>
+							<option>0.425</option>
+							<option>0.450</option>
+							<option>0.475</option>
+							<option>0.500</option>
+							<option>0.525</option>
+							<option>0.550</option>
+							<option>0.575</option>
+							<option>0.600</option>
+							<option>0.625</option>
+							<option>0.650</option>
+							<option>0.675</option>
+							<option>0.700</option>
+							<option>0.725</option>
+							<option>0.750</option>
+							<option>0.775</option>
+							<option>0.800</option>
+							<option>0.825</option>
+							<option>0.850</option>
+							<option>0.875</option>
+							<option>0.900</option>
+							<option>0.925</option>
+							<option>0.950</option>
+							<option>0.975</option>
+							<option>1.000</option>
+						</select>
+					</div>
+					<div id="omega_l_holder" class="parameter">
+						<label for="omega_l">Dark Energy <span class="advanced">(&Omega;<sub>&Lambda;</sub><span class="omega_l"></span>)</span></label>
+						<select name="omega_l" id="omega_l">
+							<option>0.000</option>
+							<option>0.025</option>
+							<option>0.050</option>
+							<option>0.075</option>
+							<option>0.100</option>
+							<option>0.125</option>
+							<option>0.150</option>
+							<option>0.175</option>
+							<option>0.200</option>
+							<option>0.225</option>
+							<option>0.250</option>
+							<option>0.275</option>
+							<option>0.300</option>
+							<option>0.325</option>
+							<option>0.350</option>
+							<option>0.375</option>
+							<option>0.400</option>
+							<option>0.425</option>
+							<option>0.450</option>
+							<option>0.475</option>
+							<option>0.500</option>
+							<option>0.525</option>
+							<option>0.550</option>
+							<option>0.575</option>
+							<option>0.600</option>
+							<option>0.625</option>
+							<option>0.650</option>
+							<option>0.675</option>
+							<option>0.700</option>
+							<option>0.725</option>
+							<option>0.750</option>
+							<option>0.775</option>
+							<option>0.800</option>
+							<option>0.825</option>
+							<option>0.850</option>
+							<option>0.875</option>
+							<option>0.900</option>
+							<option>0.925</option>
+							<option>0.950</option>
+							<option>0.975</option>
+							<option>1.000</option>
+						</select>
+					</div>
+				</form>
+			</div>
+
+			<div id="powerSpectrumColumn" class="column advanced">
+				<div id="powerspectrum"></div>
+
+				<label class="normalizeScaleControl">
+					<input
+						type="checkbox"
+						id="normalizeScaleCheckbox"
+					>
+					<span>Normalize scale</span>
+				</label>
+			</div>
+
+			<div id="fft" class="column columnspecific">
+				<canvas id="spectrum"></canvas>
+			</div>
+
+			<div class="column columnspecific">
+				<div id="map">
+					<canvas id="result"></canvas>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+	
+	<div id="footer" class="padded">
+		<div id="options" class="column"></div>
+		<div id="output" class="column">
+			<div id="age"></div>
+			<div id="curvature"></div>
+			<div id="firstpeak"></div>
+			<div id="similarity"></div>
+		</div>
+	</div>
+
+	<section id="simulatorExplanation">
+		<h2>Build a Universe</h2>
+
+		<div id="temperatureExplanation">
+
+			<p>
+				The colored image is a simulated map of the oldest light we can observe: 
+				the Cosmic Microwave Background. Small temperature differences in the light, called 
+				<strong>anisotropies</strong>, carry information about the contents and history of the 
+				universe. Move the sliders to change the amounts of <strong>normal matter</strong>, 
+				<strong>dark matter</strong>, and <strong>dark energy</strong>, and see how that changes 
+				the universe's age, geometry, and temperature fluctuations. Press spacebar or touch the 
+				volume slider to hear the changes as sound. 
+			</p>
+
+		</div>
+
+		<div id="polarizationExplanation" hidden>
+
+			<p>
+				The white 'sticks' show another property of the oldest light we can
+				observe: the orientation of its electric field. Polarized sunglasses block light 
+				from above and below, and allow light from the sides. A <strong>quadrupole</strong>
+				has a similar four-lobed symmetry—two directions with a stronger signal, and two 
+				with a weaker one. CMB light becomes linearly polarized when it scatters from 
+				free electrons that see a quadrupole pattern in the incoming radiation. The resulting 
+				polarization carries information about conditions in the early universe that 
+				complements the temperature anisotropies. Move the sliders to change the amounts of
+				<strong>normal matter</strong>, <strong>dark matter</strong>, and
+				<strong>dark energy</strong>, and see how that changes the universe's age,
+				geometry, and polarization pattern. Press spacebar or touch the volume
+				slider to hear the changes as sound.
+			</p>
+
+		</div>
+
+		<p>
+			Click the "<strong>i</strong>" button to read more about the CMB. The next button brings 
+			up a <strong>power spectrum</strong>, which groups CMB fluctuations or polarization patterns by 
+			their apparent size on the sky; the most common anisotropies are peaks in the graph. Checking 
+			"Normalize scale" adjusts the range of the power spectrum to keep the peaks visible within 
+			the plot window. Clicking the <strong>audio</strong> button, pressing the spacebar, or 
+			touching the volume slider generates a sound based on the same data. The <strong>refresh</strong> 
+			button generates a new random universe. 
+		</p>
+
+		<div id="temperatureAudioExplanation">
+
+			<p> 
+				The sound you hear is a type of random noise that has equal power across
+				human hearing sensitivity. As anisotropies become more frequent across the sky, 
+				peaks in the power spectrum shift right, and the sound becomes higher in pitch. 
+				As the overall temperature of the CMB increases, peaks grow larger, and the sound becomes 
+				louder and "brighter," favoring higher frequencies.
+			</p>
+
+		</div>
+
+		<div id="polarizationAudioExplanation" hidden>
+
+			<p>
+				The peak frequencies of the polarization audio follow the shape of the E-mode 
+				power spectrum; smaller-scale polarization generates higher audio 
+				frequencies. As the total polarization strength increases, the
+				sound gets louder. As the polarization becomes less locally coherent, 
+				the sound begins to swirl more. 
+			</p>
+
+		</div>
+
+		<p>
+			Normal matter and dark matter both affect gravity, but they interact
+			differently with the early universe. Dark energy mainly affects the
+			universe's later expansion. Together, the three sliders determine
+			whether the model universe is open, flat, or closed and how long it has
+			taken to reach its present state.
+		</p>
+
+		<p>
+			Press <strong>Normal Matter Only</strong> to see what happens without
+			dark matter or dark energy. Press <strong>Our Universe</strong> to return
+			to values close to those measured in the real universe. "<strong>NEW SKY</strong>"
+			creates a different view with the same cosmological parameters—like 
+			turning to a different part of our universe or looking out into another universe with the 
+			same starting conditions as ours. Bring up several new skies without changing parameters—
+			what is similar about them? 
+		</p>
+	</section>
+	
+</body>
+</html>

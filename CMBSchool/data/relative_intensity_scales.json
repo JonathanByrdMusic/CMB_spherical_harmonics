@@ -1,0 +1,50 @@
+{
+  "quantity": "representative energy per logarithmic spectral interval",
+  "units": "W m^-2 sr^-1",
+  "physical": {
+    "radio": 5.218736808379934e-13,
+    "microwave": {
+      "30": 1.7161519230700796e-08,
+      "44": 4.7232466078527e-08,
+      "70": 1.4568564664909687e-07,
+      "100": 3.0608608362665693e-07,
+      "143": 5.4070336633617e-07,
+      "217": 7.324217198821196e-07,
+      "353": 4.595549666088057e-07,
+      "545": 9.465979257387497e-08,
+      "857": 2.7842526931738883e-08
+    },
+    "infrared": 1.3530707940202423e-07,
+    "visible": 3.517969263512574e-07,
+    "ultraviolet": 1.957819285805815e-08,
+    "xray": 2.611589760835683e-13,
+    "gamma": 2.4978902756639245e-12
+  },
+  "relative_to_global_max": {
+    "radio": 7.125316831428577e-07,
+    "microwave": {
+      "30": 0.023431199218754566,
+      "44": 0.06448807401032411,
+      "70": 0.19890951168480422,
+      "100": 0.41790962135300996,
+      "143": 0.7382404858545076,
+      "217": 1.0,
+      "353": 0.6274458472951475,
+      "545": 0.12924219749942711,
+      "857": 0.03801433815510008
+    },
+    "infrared": 0.18473930486906012,
+    "visible": 0.48032017183744596,
+    "ultraviolet": 0.026730764976780296,
+    "xray": 3.565691308630236e-07,
+    "gamma": 3.4104535786649668e-06
+  },
+  "notes": {
+    "xray": "Approximate ROSAT diffuse X-ray energy intensity using representative photon energies of 0.25, 0.75, and 1.5 keV. Not a full PSPC spectral forward-fold.",
+    "planck_30_353": "CMB monopole plus differential K_CMB map median.",
+    "infrared": "Median across representative 12, 25, 60, and 100 micron SED values.",
+    "visible": "Median of Pioneer B and R lambda*I_lambda.",
+    "ultraviolet": "GALEX diffuse NUV background at 2316 Angstrom.",
+    "gamma": "Median E^2 dN/dE across the Fermi diffuse+isotropic energy grid."
+  }
+}

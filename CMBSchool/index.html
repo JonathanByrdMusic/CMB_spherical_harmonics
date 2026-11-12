@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-90WMD4PJQP');
+    </script>
+
+    <title>The Hidden Universe | CMB Data Preschool</title>
+
+    <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="CMBStyle.css">
+
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h3>CMB School: Part I</h3>
+        <h1>The Hidden Universe</h1>
+
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+    </div>
+
+    <div class="menuContainer">
+
+        <nav class="mainNav" aria-label="Main navigation">
+            <a href="index.html" class="active">
+                Home
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Mobile navigation"
+            hidden
+        >
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+    </div>
+
+</div>
+
+<main id="pageContent">
+
+<div id="canvasRow">
+
+    <section class="panel">
+        <h2 id="skyPanelTitle">Milky Way Across the Spectrum</h2>
+
+        <div class="skyImageWrapper">
+            <img
+                id="skyImage"
+                src=""
+                alt="Milky Way observed in the selected electromagnetic band"
+            >
+        </div>
+        <div id="skyCredit" class="skyCredit"></div>
+    </section>
+
+    <section class="panel">
+        <h2 id="spectrumPanelTitle">Present-Day Cosmic Photon Background</h2>
+
+        <div class="spectrumCanvasWrapper">
+            <canvas
+                id="spectrumCanvas"
+                width="700"
+                height="420"
+                role="img"
+                aria-label="Present-day cosmic photon background spectrum"
+            ></canvas>
+        </div>
+    </section>
+
+</div>
+
+<div id="controlsRow">
+
+    <div class="controlColumn bandControls">
+
+        <fieldset class="bandSelector">
+            <legend>Frequency Band</legend>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="radio">
+                Radio
+            </label>
+
+            <label>
+                <input
+                    type="radio"
+                    name="broadbandBand"
+                    value="microwave"
+                    checked
+                >
+                Microwave
+            </label>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="infrared">
+                Infrared
+            </label>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="visible">
+                Visible
+            </label>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="ultraviolet">
+                UV
+            </label>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="xray">
+                X-ray
+            </label>
+
+            <label>
+                <input type="radio" name="broadbandBand" value="gamma">
+                Gamma ray
+            </label>
+        </fieldset>
+
+
+        <div id="microwaveControls">
+
+            <fieldset class="microwaveBandSelector">
+                <legend>Planck Microwave Band</legend>
+
+                <label><input type="radio" name="microwaveBand" value="30">30</label>
+                <label><input type="radio" name="microwaveBand" value="44">44</label>
+                <label><input type="radio" name="microwaveBand" value="70">70</label>
+                <label><input type="radio" name="microwaveBand" value="100">100</label>
+
+                <label>
+                    <input
+                        type="radio"
+                        name="microwaveBand"
+                        value="143"
+                        checked
+                    >
+                    143
+                </label>
+
+                <label><input type="radio" name="microwaveBand" value="217">217</label>
+                <label><input type="radio" name="microwaveBand" value="353">353</label>
+                <label><input type="radio" name="microwaveBand" value="545">545</label>
+                <label><input type="radio" name="microwaveBand" value="857">857</label>
+
+                <span class="unitLabel">GHz</span>
+            </fieldset>
+
+        </div>
+
+    </div>
+
+
+    <div class="controlColumn">
+
+        <label class="checkboxItem">
+            <input
+                id="relativeIntensityCheckbox"
+                type="checkbox"
+            >
+            Relative Intensity
+        </label>
+
+    </div>
+
+</div>
+
+</div>
+
+<article id="explanation">
+
+    <h2>How Bright Is The CMB?</h2>
+
+    <p>
+        Our eyes are most senstive to the peak frequencies of sunlight, but
+        telescopes can detect frequencies that are invisible to us. Use the 
+        buttons below the first panel to see the Milky Way in different 
+        frequency bands. The second panel shows the range of the collecting 
+        telescope. 
+    </p>
+
+    <p>
+        Under 'Microwave,' you can select a specific Planck frequency band. 
+        The second panel overlays the Planck CMB power spectrum on top of 
+        the microwave band you've chosen. 
+    </p>
+
+    <p>
+        All the bands are normalized to their own maximum intensity to 
+        make their visual data most useful to scientists looking for features 
+        in those specific bands. But they are not all equally bright in
+        the sky, and you might wonder how much gamma radiation is out there 
+        compared to visible light, or infrared compared to microwaves. 
+    </p>
+
+    <p class="closing">
+        Click <strong>Relative Intensity</strong> to see how the different 
+        bands of the electromagnetic spectrum compare to each other. Some 
+        bands will produce a black image; that's not an error. Look at how
+        they compare on the plot. Which bands are the brightest?
+    </p>
+
+    <p>
+        About 99.9% of the photons in the Universe are cosmic microwave 
+        background radiation. Despite their low energy, they contribute 
+        roughly 95% of the electromagnetic radiation in the sky. You could 
+        say, to a good approximation, that until we learned to see the 
+        microwave sky, we had never seen the Universe.
+    </p>
+
+</article>
+
+</main>
+
+<footer>
+    <div class="footerInner">
+        This site uses image, instrument response, bandpass, and calibrated 
+        intensity data from the Planck mission (ESA), the Haslam 408 MHz all-sky 
+        survey and its Remazeilles et al. reprocessing, WISE and IRAS/IRIS, the 
+        Digitized Sky Survey (DSS/STScI), GALEX, the ROSAT All-Sky Survey, and 
+        the Fermi Large Area Telescope (Fermi-LAT). Pioneer 10/11 IPP measurements 
+        provided a calibrated reference for the visible-light portion of the 
+        relative intensity comparison. 
+    <div>
+</footer>
+
+<script src="lambda.js"></script>
+
+<script>
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const siteMenu =
+        document.getElementById("siteMenu");
+
+    function closeSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        siteMenu.hidden = true;
+    }
+
+    function openSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        siteMenu.hidden = false;
+    }
+
+    menuButton.addEventListener("click", () => {
+        const isOpen =
+            menuButton.getAttribute("aria-expanded")
+            === "true";
+
+        if (isOpen) {
+            closeSiteMenu();
+        } else {
+            openSiteMenu();
+        }
+    });
+
+    document.addEventListener("click", event => {
+        const clickedInsideMenu =
+            event.target.closest(".menuContainer");
+
+        if (!clickedInsideMenu) {
+            closeSiteMenu();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeSiteMenu();
+            menuButton.focus();
+        }
+    });
+</script>
+
+</body>
+</html>

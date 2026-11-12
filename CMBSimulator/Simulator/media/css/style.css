@@ -1,0 +1,1534 @@
+/* =========================================================
+   CMB Simulator
+   Simons Observatory visual styling
+   Original simulator layout retained
+   ========================================================= */
+
+:root {
+    --space-background: #0a0e1a;
+    --space-panel: #131829;
+    --space-panel-soft: #192038;
+
+    --space-title: #e8ecf4;
+    --space-text: #afb6d5;
+    --space-muted: #8a93b4;
+
+    --space-border: #1e2744;
+
+    --so-orange: #f26522;
+    --so-orange-dark: #d94f12;
+
+    --so-blue: #609cf8;
+    --so-blue-dark: #4f8be6;
+
+    --so-ink: var(--space-text);
+    --so-muted: var(--space-muted);
+    --so-background: var(--space-background);
+    --so-panel: var(--space-panel);
+    --so-panel-soft: var(--space-panel-soft);
+    --so-border: var(--space-border);
+
+    --slider-track: #eeeeee;
+    --slider-fill: #c7ccd6;
+    --slider-border: #a9a9a9;
+    --slider-thumb: #e8e8e8;
+}
+
+/* =========================================================
+   Foundation
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 32px 36px 48px;
+
+    color: var(--so-ink);
+    background: var(--so-background);
+
+    font-family: "Figtree", Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+::selection {
+    color: #ffffff;
+    background: var(--so-blue);
+}
+
+body .advanced {
+    display: none;
+}
+
+body #omegas .advanced {
+    display: inline-block;
+}
+
+body.adv .advanced {
+    display: inline-block;
+}
+
+/* =========================================================
+   Typography and links
+   ========================================================= */
+
+h1,
+h2,
+h3,
+p {
+    margin-top: 0;
+}
+
+h1 {
+    margin: 18px 0 0;
+
+    color: var(--space-title);
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+h1 small {
+    color: var(--so-muted);
+    font-size: 0.5em;
+    font-weight: 400;
+}
+
+.subtitle {
+    display: block;
+    margin-top: 12px;
+
+    color: var(--so-muted);
+    font-size: 0.95rem;
+    line-height: 1.35;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
+h2,
+h3 {
+    color: var(--so-blue);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+h3 {
+    margin: 32px 0 12px;
+    font-size: 1.25rem;
+}
+
+h3:first-child {
+    margin-top: 0;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--so-orange-dark);
+    text-decoration: none;
+}
+
+a:visited {
+    color: var(--so-orange-dark);
+}
+
+a:hover,
+a:focus-visible {
+    color: var(--so-orange);
+    text-decoration: underline;
+}
+
+a:active {
+    color: var(--so-ink);
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+#header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+
+    width: 100%;
+    max-width: 1536px;
+    margin: 0 auto 32px;
+}
+
+#header img.logo {
+    order: 1;
+}
+
+#header h1 {
+    order: 2;
+    flex: 1 1 auto;
+}
+
+img.logo {
+    width: 190px;
+    height: auto;
+    margin: 0;
+
+    flex: 0 0 auto;
+    float: none;
+}
+
+/* =========================================================
+   Circular menu
+   ========================================================= */
+
+#menu {
+    display: flex;
+    order: 3;
+    gap: 8px;
+
+    margin-left: auto;
+    padding-top: 8px;
+
+    flex: 0 0 auto;
+}
+
+.toggle {
+    width: 48px;
+    height: 48px;
+    margin: 0;
+
+    float: none;
+
+    font-size: 1.6rem;
+    line-height: 48px;
+    text-align: center;
+}
+
+.toggle a {
+    display: block;
+
+    width: 48px;
+    height: 48px;
+
+    color: var(--space-title);
+    background-color: var(--space-panel);
+    background-image: url("../img/icons.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+
+    border: 1px solid var(--space-border);
+    border-radius: 50%;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.toggle img {
+    width: 100%;
+    height: 100%;
+}
+
+.observationMode {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    margin-bottom: 34px;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.observationMode label {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    cursor: pointer;
+}
+
+.observationMode input[type="radio"] {
+    width: 19px;
+    height: 19px;
+    margin: 0;
+
+    accent-color: var(--so-blue);
+
+    cursor: pointer;
+}
+
+.observationMode label:hover span {
+    color: var(--space-title);
+}
+
+/* The help control contains two alternate links.
+   Show only the one appropriate to the current state. */
+
+#help .abouton,
+#help .aboutoff {
+    line-height: 46px;
+}
+
+#help a {
+    display: block;
+
+    width: 48px;
+    height: 48px;
+
+    color: var(--space-title);
+    background-image: none;
+
+    font-family: Georgia, serif;
+    font-size: 1.55rem;
+    font-style: italic;
+    line-height: 46px;
+    text-align: center;
+    text-decoration: none;
+}
+
+#help .abouton {
+    display: block;
+}
+
+#help .aboutoff {
+    display: none;
+}
+
+/* The JavaScript adds .on when the About panel is open. */
+#help.on .abouton {
+    display: none;
+}
+
+#help.on .aboutoff {
+    display: block;
+}
+
+#help a.abouton,
+#help a.aboutoff {
+    background-color: var(--space-panel-soft);
+    border: 1px solid #344267;
+    border-radius: 50%;
+}
+
+#help a:hover,
+#help a:focus-visible {
+    color: #ffffff;
+    background-color: var(--so-orange);
+    border-color: var(--so-orange);
+}
+
+.toggle a:hover,
+.toggle a:focus-visible {
+    background-color: var(--space-panel-soft);
+}
+
+body.adv #advancedtoggle a {
+    background-color: var(--so-blue);
+    border-color: var(--so-blue);
+}
+
+#configtoggle a {
+    background-position: 0 -48px;
+}
+
+#refreshtoggle a {
+    background-position: 0 -96px;
+}
+
+#audiotoggle a {
+    background-position: 0 -144px;
+}
+
+/* =========================================================
+   Status and warning messages
+   ========================================================= */
+
+#msg {
+    position: absolute;
+    z-index: 200;
+
+    top: 0;
+    right: 0;
+    left: 0;
+}
+
+a.close {
+    float: right;
+
+    width: 1.5em;
+
+    color: inherit;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+#error,
+#warning {
+    display: none;
+    padding: 0.75rem 1rem;
+}
+
+#error {
+    color: #ffffff;
+    background: #b83224;
+}
+
+#warning {
+    color: #332900;
+    background: #f4d675;
+}
+
+/* =========================================================
+   About panel
+   ========================================================= */
+
+#about {
+    display: block;
+
+    width: min(100%, 1100px);
+    margin: 0 auto 48px;
+    padding: 34px 38px;
+
+    color: var(--space-text);
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+
+    border-radius: 18px 34px 18px 34px;
+}
+
+#about h3 {
+    color: var(--space-title);
+}
+
+#about p {
+    color: var(--space-text);
+}
+
+/* Matter labels in the explanatory text */
+
+.b,
+.c,
+.l {
+    display: inline-block;
+    padding: 0.12em 0.35em;
+
+    border: 1px solid var(--space-border);
+    border-radius: 4px;
+}
+
+.b {
+    color: #ffad7a;
+    background: rgba(242, 101, 34, 0.16);
+}
+
+.c {
+    color: #8fbcff;
+    background: rgba(96, 156, 248, 0.15);
+}
+
+.l {
+    color: #b7c1df;
+    background: rgba(175, 182, 213, 0.12);
+}
+
+/* =========================================================
+   Main simulator layout
+   Original table layout retained
+   ========================================================= */
+
+#app {
+    display: table;
+
+    width: 100%;
+    max-width: 1536px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#container {
+    display: table-row;
+}
+
+#parameters,
+.column,
+#fft {
+    display: table-cell;
+}
+
+#parameters {
+    vertical-align: middle;
+}
+
+#parameters,
+#powerSpectrumColumn {
+    padding-right: 32px;
+}
+
+#powerspectrum {
+    width: 400px;
+    height: 300px;
+
+    color: var(--so-ink);
+    background: #ffffff;
+
+    line-height: 0;
+}
+
+#powerSpectrumColumn {
+    width: 400px;
+    vertical-align: middle;
+}
+
+.normalizeScaleControl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: fit-content;
+    margin: 14px auto 0;
+
+    color: var(--space-text);
+    font-family: "Figtree", Helvetica, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+
+    cursor: pointer;
+}
+
+.normalizeScaleControl input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+
+    accent-color: var(--so-blue);
+    cursor: pointer;
+}
+
+.normalizeScaleControl:hover span {
+    color: var(--space-title);
+}
+
+.normalizeScaleControl input[type="checkbox"]:focus-visible {
+    outline: 3px solid rgba(96, 156, 248, 0.35);
+    outline-offset: 3px;
+}
+
+#powerspectrum svg,
+#map canvas {
+    cursor: pointer;
+}
+
+body.fullscreen {
+    font-size: 1.5em;
+}
+
+body.fullscreen #powerspectrum {
+    background: #ffffff;
+}
+
+body .column.advanced {
+    display: none;
+}
+
+body.adv .column.advanced {
+    display: table-cell;
+}
+
+/*
+ * This class is toggled by the existing JavaScript.
+ * Keep it stronger than the table-cell rule.
+ */
+#powerspectrum.hidden {
+    display: none;
+}
+
+#fft {
+    display: none;
+}
+
+.columnspecific,
+#map,
+#fft {
+    width: 300px;
+    height: 300px;
+}
+
+/* =========================================================
+   Sliders
+   ========================================================= */
+
+.parameter {
+    margin-bottom: 32px;
+}
+
+#parameters .parameter:last-child {
+    margin-bottom: 0;
+}
+
+.parameter label {
+    display: block;
+    margin-bottom: 10px;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.parameter .ui-slider {
+    width: 100%;
+    margin-top: 0;
+}
+
+.ui-slider {
+    position: relative;
+    width: 100%;
+
+    cursor: pointer;
+}
+
+.ui-slider-horizontal {
+    height: 12px;
+}
+
+.ui-slider.ui-widget-content {
+    border: 1px solid #a9a9a9;
+    border-radius: 999px;
+
+    background: var(--slider-track);
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
+}
+
+#omega_b_holder .ui-widget-header,
+#omega_c_holder .ui-widget-header,
+#omega_l_holder .ui-widget-header,
+.ui-slider .ui-slider-range {
+    border: 0;
+    background: var(--slider-fill);
+}
+
+.ui-slider .ui-slider-handle {
+    position: absolute;
+    z-index: 2;
+    top: -7px;
+
+    width: 24px;
+    height: 24px;
+    margin-left: -12px;
+
+    border: 1px solid #999999;
+    border-radius: 50%;
+
+    background: #e8e8e8;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, 0.22);
+}
+
+.ui-slider .ui-slider-handle:hover {
+    background: #ffffff;
+}
+
+.ui-slider .ui-slider-handle:active {
+    cursor: grabbing;
+}
+
+.ui-slider .ui-slider-handle:focus-visible {
+    outline: 3px solid rgba(33, 70, 139, 0.28);
+    outline-offset: 3px;
+}
+
+.ui-widget,
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+    font-family: "Figtree", Helvetica, Arial, sans-serif;
+}
+
+/* =========================================================
+   Power spectrum and map panels
+   ========================================================= */
+
+#powerspectrum {
+    border: 1px solid var(--space-border);
+    border-radius: 4px;
+}
+
+#map,
+#fft {
+    border: 1px solid var(--space-border);
+    border-radius: 10px;
+}
+
+#map,
+#fft {
+    position: relative;
+
+    color: #000000;
+    background:
+        linear-gradient(
+            to bottom,
+            #45484d 0%,
+            #000000 100%
+        );
+
+    line-height: 0;
+    text-align: center;
+}
+
+#map {
+    color: #ffffff;
+}
+
+#map canvas,
+#map img,
+#fft canvas {
+    width: auto;
+    height: 100%;
+    margin: auto;
+}
+
+#map .label {
+    position: absolute;
+
+    padding: 0.35rem 0.5rem;
+
+    color: #ffffff;
+    background: rgba(70, 70, 70, 0.82);
+
+    font-size: 0.78rem;
+    line-height: 1.2;
+}
+
+#map .label.sim {
+    bottom: 0;
+    left: 0;
+
+    text-align: left;
+}
+
+#map .label.our {
+    top: 0;
+    right: 0;
+
+    text-align: right;
+}
+
+#map .label.scale {
+    right: 0.5em;
+    bottom: 0.5em;
+
+    width: 30px;
+    height: 30px;
+    padding: 0;
+
+    color: var(--so-ink);
+    background: rgba(255, 255, 255, 0.9);
+
+    border: 2px solid var(--so-ink);
+    border-radius: 50%;
+
+    font-weight: 700;
+    line-height: 30px;
+    text-align: center;
+}
+
+#options {
+    vertical-align: middle;
+}
+
+.mainVolumeControl {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-left: 22px;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.mainVolumeControl label {
+    color: var(--space-text);
+    font-weight: 400;
+}
+
+.mainVolumeControl input[type="range"] {
+    width: 150px;
+    height: 28px;
+    margin: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: transparent;
+    cursor: pointer;
+}
+
+.mainVolumeControl input[type="range"]::-webkit-slider-runnable-track {
+    height: 10px;
+
+    background: var(--slider-track);
+    border: 1px solid var(--slider-border);
+    border-radius: 999px;
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
+}
+
+.mainVolumeControl input[type="range"]::-webkit-slider-thumb {
+    width: 20px;
+    height: 20px;
+    margin-top: -6px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: var(--slider-thumb);
+    border: 1px solid #999999;
+    border-radius: 50%;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, 0.22);
+}
+
+.mainVolumeControl input[type="range"]::-moz-range-track {
+    height: 10px;
+
+    background: var(--slider-track);
+    border: 1px solid var(--slider-border);
+    border-radius: 999px;
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
+}
+
+.mainVolumeControl input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+
+    background: var(--slider-thumb);
+    border: 1px solid #999999;
+    border-radius: 50%;
+
+    box-shadow:
+        0 1px 3px
+        rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   Explanation of features
+   ========================================================= */
+
+#simulatorExplanation {
+    width: min(100%, 960px);
+    margin: 54px auto 0;
+    padding: 42px clamp(22px, 5vw, 54px);
+
+    color: var(--space-text);
+    text-align: left;
+
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+    border-radius: 18px 34px 18px 34px;
+}
+
+#simulatorExplanation h2 {
+    margin: 0 0 30px;
+
+    color: var(--space-title);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+#simulatorExplanation p {
+    max-width: 78ch;
+    margin: 0 0 22px;
+
+    font-size: 1.2rem;
+    line-height: 1.65;
+}
+
+#simulatorExplanation > p:last-child {
+    margin-bottom: 0;
+}
+
+#simulatorExplanation strong {
+    color: var(--so-orange);
+    font-weight: 700;
+}
+
+@media (max-width: 560px) {
+    #simulatorExplanation {
+        margin-top: 32px;
+        padding: 28px 20px;
+    }
+
+    #simulatorExplanation h2 {
+        font-size: 1.35rem;
+    }
+
+    #simulatorExplanation p {
+        font-size: 1.05rem;
+    }
+}
+
+/* =========================================================
+   Footer and output
+   ========================================================= */
+
+#footer {
+    display: table;
+
+    width: 100%;
+    max-width: 1536px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#options,
+#output {
+    display: table-cell;
+}
+
+#output {
+    text-align: right;
+}
+
+#output {
+    color: var(--space-text);
+}
+
+.property {
+    color: var(--space-title);
+}
+
+#age,
+#curvature,
+#firstpeak,
+#similarity {
+    color: var(--space-text);
+}
+
+.property {
+    font-size: 1.5em;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.padded {
+    margin: 32px 0 0;
+}
+
+/* =========================================================
+   Literary footnotes
+   ========================================================= */
+
+.footnoteRef {
+    margin-left: 0.08em;
+
+    font-size: 0.72em;
+    line-height: 0;
+    vertical-align: super;
+}
+
+.footnotes {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+
+    color: var(--space-muted);
+
+    border-top: 1px solid var(--space-border);
+
+    font-size: 0.88rem;
+    line-height: 1.55;
+}
+
+.footnotes ol {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.footnotes li {
+    padding-left: 0.35rem;
+}
+
+.visuallyHidden {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+
+    border: 0;
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 44px;
+    padding: 14px 28px;
+
+    color: #ffffff;
+    background: var(--so-orange);
+
+    border: 1px solid var(--so-orange);
+    border-radius: 999px;
+
+    font-family: "Figtree", Helvetica, Arial, sans-serif;
+    font-size: 0.98rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.08s ease;
+}
+
+a.button:hover,
+a.button:focus-visible {
+    color: #ffffff;
+    background: var(--space-panel-soft);
+    border-color: var(--space-border);
+    text-decoration: none;
+}
+
+a.button:active {
+    transform: translateY(1px);
+}
+
+#options a.button {
+    margin-left: 1em;
+}
+
+#options a.button:first-child {
+    margin-left: 0;
+}
+
+a.button.ouruniverse {
+    background: var(--so-blue);
+    border-color: var(--so-blue);
+    color: #ffffff;
+}
+
+a.button.ouruniverse:hover,
+a.button.ouruniverse:focus-visible {
+    color: #ffffff;
+    background: var(--space-panel-soft);
+    border-color: var(--space-border);
+}
+
+/* =========================================================
+   Configuration dialog
+   ========================================================= */
+
+#config {
+    display: none;
+
+    width: min(90%, 520px);
+    padding: 32px;
+
+    color: var(--space-text);
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+    border-radius: 18px 34px 18px 34px;
+}
+
+#config h2,
+#config h3 {
+    color: var(--space-title);
+}
+
+#config form {
+    color: var(--space-text);
+    font-size: 1.1rem;
+}
+
+#config .configoption {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 1rem;
+}
+
+#config .configoption:last-child {
+    margin-bottom: 0;
+}
+
+#config label {
+    color: var(--space-text);
+    cursor: pointer;
+}
+
+#config input[type="checkbox"] {
+    width: 1.35rem;
+    height: 1.35rem;
+    margin: 0;
+
+    accent-color: var(--so-blue);
+}
+
+#config input[type="range"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: transparent;
+}
+
+#config input[type="range"]::-webkit-slider-runnable-track {
+    height: 10px;
+
+    background: var(--slider-track);
+    border: 1px solid var(--slider-border);
+    border-radius: 999px;
+
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+#config input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 20px;
+    height: 20px;
+    margin-top: -6px;
+
+    background: var(--slider-thumb);
+    border: 1px solid #999999;
+    border-radius: 50%;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+#config input[type="range"]::-moz-range-track {
+    height: 10px;
+
+    background: var(--slider-track);
+    border: 1px solid var(--slider-border);
+    border-radius: 999px;
+
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.18);
+}
+
+#config input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+
+    background: var(--slider-thumb);
+    border: 1px solid #999999;
+    border-radius: 50%;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+#config select {
+    color: var(--space-text);
+    background: var(--space-panel-soft);
+
+    border: 1px solid var(--space-border);
+    border-radius: 8px;
+
+    font: inherit;
+}
+
+#config .close {
+    color: var(--space-muted);
+    font-size: 2rem;
+    line-height: 1;
+}
+
+#config .close:hover,
+#config .close:focus-visible {
+    color: var(--so-orange);
+    text-decoration: none;
+}
+
+.lightbox_bg {
+    position: fixed;
+    z-index: 101;
+    inset: 0;
+
+    background: rgba(5, 8, 17, 0.78);
+    backdrop-filter: blur(4px);
+}
+
+.lightbox_top {
+    position: absolute;
+    z-index: 102;
+
+    max-width: 520px;
+
+    color: var(--space-text);
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+
+    box-shadow:
+        0 18px 60px rgba(0, 0, 0, 0.52),
+        0 0 0 1px rgba(96, 156, 248, 0.04);
+}
+
+/* =========================================================
+   Visibility helpers
+   ========================================================= */
+
+.hidden {
+    display: none;
+}
+
+.scriptonly {
+    display: none !important;
+}
+
+/* =========================================================
+   Spherical-harmonics color system
+   ========================================================= */
+
+h1,
+h2,
+h3 {
+    color: var(--space-title);
+}
+
+.parameter label,
+#output,
+#age,
+#curvature,
+#firstpeak,
+#similarity {
+    color: var(--space-text);
+}
+
+.property {
+    color: var(--space-title);
+}
+
+#about {
+    color: var(--space-text);
+    background: var(--space-panel);
+    border-color: var(--space-border);
+}
+
+#about h3 {
+    color: var(--space-title);
+}
+
+#about p {
+    color: var(--space-text);
+}
+
+.toggle a,
+#help a.abouton,
+#help a.aboutoff {
+    background-color: var(--space-panel-soft);
+    border-color: #344267;
+}
+
+.toggle a:hover,
+.toggle a:focus-visible {
+    background-color: var(--so-orange);
+    border-color: var(--so-orange);
+}
+
+#help a.abouton:hover,
+#help a.abouton:focus-visible {
+    background-color: var(--so-orange);
+}
+
+#powerspectrum,
+#map,
+#fft {
+    border-color: var(--space-border);
+}
+
+.b,
+.c,
+.l {
+    border: 1px solid var(--space-border);
+}
+
+.b {
+    color: #ffad7a;
+    background: rgba(242, 101, 34, 0.16);
+}
+
+.c {
+    color: #8fbcff;
+    background: rgba(96, 156, 248, 0.15);
+}
+
+.l {
+    color: #b7c1df;
+    background: rgba(175, 182, 213, 0.12);
+}
+
+/* =========================================================
+   Responsive layout
+   Original stacking behavior retained
+   ========================================================= */
+
+@media (max-width: 1000px) {
+    #app,
+    #container {
+        display: block;
+    }
+
+    .parameter {
+        margin-bottom: 20px;
+    }
+
+    #parameters,
+    .column {
+        display: block;
+        width: 100%;
+        padding: 0;
+    }
+
+    #powerSpectrumColumn {
+        width: 100%;
+    }
+
+    #powerspectrum {
+        width: 100%;
+    }
+
+    body.adv .column.advanced {
+        display: block;
+    }
+
+    #parameters {
+        max-width: 700px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    #map,
+    #powerspectrum {
+        margin-top: 48px;
+    }
+
+    .column,
+    #map,
+    #map img,
+    #map canvas,
+    #map .labels {
+        width: 100%;
+        height: auto;
+    }
+
+    #map {
+        aspect-ratio: 1;
+    }
+
+    #powerspectrum {
+        height: 300px;
+    }
+
+    h1 small {
+        display: block;
+    }
+
+    .wide {
+        display: none;
+    }
+}
+
+@media (max-width: 760px) {
+    body {
+        padding: 24px 20px 40px;
+    }
+
+    #header {
+        align-items: center;
+    }
+
+    img.logo {
+        width: 140px;
+    }
+
+    h1 {
+        margin-top: 8px;
+    }
+
+    #about {
+        padding: 28px 24px;
+    }
+
+    .mainVolumeControl {
+        display: flex;
+        justify-content: center;
+
+        width: 100%;
+        margin: 18px 0 0;
+    }
+}
+
+@media (max-width: 560px) {
+    body {
+        padding: 20px 16px 36px;
+    }
+
+    #header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        text-align: center;
+    }
+
+    #header img.logo {
+        order: 1;
+    }
+
+    #header h1 {
+        order: 2;
+        flex: none;
+
+        margin: 0;
+        font-size: clamp(1.5rem, 8vw, 1.9rem);
+    }
+
+    #menu {
+        order: 3;
+        justify-content: center;
+
+        margin: 18px auto 0;
+        padding-top: 0;
+    }
+
+    img.logo {
+        display: block;
+
+        width: 110px;
+        margin: 0 auto 14px;
+    }
+
+    .subtitle {
+        margin-top: 8px;
+        font-size: 0.88rem;
+    }
+
+    #about {
+        margin-bottom: 32px;
+        padding: 24px 20px;
+    }
+
+    #map,
+    #powerspectrum {
+        margin-top: 32px;
+    }
+
+    #footer {
+        display: block;
+    }
+
+    #output,
+    body.adv #firstpeak.advanced,
+    #options {
+        display: block;
+        text-align: center;
+    }
+
+    #output,
+    #options {
+        margin-top: 16px;
+    }
+
+    #options a.button {
+        display: block;
+
+        width: 100%;
+        margin: 10px 0 0;
+    }
+
+    #options a.button:first-child {
+        margin-top: 0;
+    }
+
+    #config {
+        width: calc(100% - 32px);
+        padding: 24px 20px;
+    }
+
+    .toggle,
+    .toggle a,
+    #help a.abouton {
+        width: 44px;
+        height: 44px;
+    }
+
+    .toggle,
+    #help .abouton,
+    #help .aboutoff {
+        line-height: 44px;
+    }
+
+    .toggle a {
+        background-size: 44px auto;
+    }
+
+    #configtoggle a {
+        background-position: 0 -44px;
+    }
+
+    #refreshtoggle a {
+        background-position: 0 -88px;
+    }
+
+    #audiotoggle a {
+        background-position: 0 -132px;
+    }
+}

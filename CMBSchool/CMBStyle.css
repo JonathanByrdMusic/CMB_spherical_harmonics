@@ -1,0 +1,1200 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 32px 36px;
+
+    font-family: "Figtree", Helvetica, Arial, sans-serif;
+    color: var(--space-text);
+    text-align: center;
+
+    background: var(--space-background);
+}
+
+:root {
+    --space-background: #0a0e1a;
+    --space-panel: #131829;
+    --space-panel-soft: #192038;
+
+    --space-title: #e8ecf4;
+    --space-text: #afb6d5;
+    --space-muted: #8a93b4;
+
+    --space-border: #1e2744;
+
+    --so-orange: #f26522;
+    --so-orange-dark: #d94f12;
+
+    --so-blue: #609cf8;
+    --so-blue-dark: #4f8be6;
+
+    --harmonic-positive: #f26522;
+    --harmonic-negative: #2864c7;
+
+    --so-ink: var(--space-text);
+    --so-muted: var(--space-muted);
+    --so-background: var(--space-background);
+    --so-panel-soft: var(--space-panel-soft);
+    --so-border: var(--space-border);
+
+    --secondary-button: #609cf8;
+    --secondary-button-hover: #4f8be6;
+
+    --slider-fill: #c7ccd6;
+    --slider-empty: #eeeeee;
+}
+
+html {
+    width: 100%;
+}
+
+#pageContent {
+    width: 100%;
+    max-width: 1536px;
+    margin: 0 auto;
+}
+
+#header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 20px;
+
+    width: 100%;
+    max-width: 1536px;
+    margin: 0 auto 24px;
+}
+
+.logo {
+    width: 190px;
+    height: auto;
+    flex-shrink: 0;
+}
+
+#titleBlock {
+    flex: 1;
+    min-width: 0;
+
+    text-align: left;
+}
+
+h1 {
+    margin: 18px 0 0;
+
+    color: var(--space-title);
+    font-size: clamp(1.8rem, 3vw, 2.45rem);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+h3 {
+    margin: 18px 0 0;
+
+    color: var(--space-title);
+    font-size: clamp(1.2rem, 2vw, 2.05rem);
+    line-height: 1.12;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+}
+
+.subtitle {
+    margin-top: 12px;
+
+    color: var(--so-muted);
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
+.skyCredit {
+    min-height: 1.2em;
+    margin: 8px 22px 14px;
+
+    color: var(--so-muted);
+    font-size: 0.82rem;
+    font-weight: 400;
+    line-height: 1.25;
+    text-align: right;
+
+    opacity: 0.82;
+}
+
+.mainNav {
+    display: flex;
+    align-items: center;
+    gap: 1.35rem;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.mainNav a {
+    color: var(--space-text);
+    text-decoration: none;
+    white-space: nowrap;
+
+    padding-bottom: 3px;
+    border-bottom: 2px solid transparent;
+
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.mainNav a:hover,
+.mainNav a:focus-visible {
+    color: var(--so-orange);
+}
+
+.mainNav a.active {
+    color: var(--space-title);
+    border-bottom-color: var(--so-orange);
+}
+
+.bandSelector,
+.microwaveBandSelector {
+    width: 100%;
+    margin: 0;
+}
+
+#microwaveControls {
+    width: 100%;
+}
+
+.harmonicLegend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 26px;
+
+    margin-top: 0;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    line-height: 1;
+    font-weight: 400;
+}
+
+.harmonicLegendItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    white-space: nowrap;
+}
+
+.harmonicLegendSwatch {
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+
+    border-radius: 3px;
+
+    flex: 0 0 auto;
+}
+
+.harmonicLegendPositive {
+    background: var(--harmonic-positive);
+}
+
+.harmonicLegendNegative {
+    background: var(--harmonic-negative);
+}
+
+.harmonicLegendMagnitude {
+    white-space: nowrap;
+}
+
+#canvasRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    width: 100%;
+}
+
+#cmbCanvas {
+    image-rendering: auto;
+}
+
+.panel {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 500 / 340;
+
+    background: #050505;
+    border: 1px solid var(--so-border);
+
+    /*
+     * Square top-left and bottom-right,
+     * rounded top-right and bottom-left.
+     */
+    border-radius: 18px 34px 18px 34px;
+
+    overflow: hidden;
+}
+
+.panel h2 {
+    position: absolute;
+    top: 17px;
+    left: 20px;
+    z-index: 10;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 1rem;
+    line-height: 1.2;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+#controlsRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+
+    width: 100%;
+    margin-top: 18px;
+    font-size: 0.95rem;
+}
+
+.controlLabel,
+.checkboxItem {
+    color: var(--space-text);
+}
+
+#lmaxValue,
+#mValue {
+    color: var(--space-muted);
+}
+
+.controlColumn {
+    width: 100%;
+    min-width: 0;
+}
+
+.leftControls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.leftControls .controlItem {
+    display: grid;
+    grid-template-columns: 105px minmax(0, 1fr) 32px;
+    align-items: center;
+    column-gap: 8px;
+}
+
+.checkboxItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--space-text);
+}
+
+.rightControls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.applicationRow {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.55fr)
+        minmax(380px, 440px);
+
+    gap: 36px;
+    align-items: start;
+
+    width: 100%;
+    margin: 28px 0 42px;
+}
+
+.applicationVisual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    min-height: 420px;
+}
+
+.applicationInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+
+    min-width: 0;
+}
+
+.applicationControls {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    width: 100%;
+}
+
+.applicationControls .controlItem {
+    display: grid;
+    grid-template-columns:
+        28px minmax(0, 1fr) 34px;
+
+    align-items: center;
+    column-gap: 10px;
+}
+
+.applicationActions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+
+    margin-top: 8px;
+}
+
+.applicationActions .checkboxItem {
+    justify-content: flex-start;
+    margin: 0;
+    white-space: nowrap;
+}
+
+.applicationButtons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.applicationButtons button {
+    flex: 0 1 auto;
+}
+
+.applicationArticle {
+    padding: 28px 30px;
+
+    color: var(--space-text);
+    text-align: left;
+
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+    border-radius: 18px 34px 18px 34px;
+}
+
+.applicationArticle h2 {
+    margin: 0 0 18px;
+
+    color: var(--space-title);
+    font-size: 1.45rem;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.applicationArticle p {
+    margin: 0 0 16px;
+
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+.applicationArticle p:last-child {
+    margin-bottom: 0;
+}
+
+.orbitalPanelHeader {
+    position: absolute;
+    top: 17px;
+    left: 20px;
+    right: 20px;
+    z-index: 10;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.4rem;
+}
+
+/*
+ * Override the general .panel h2 absolute positioning.
+ */
+.panel .orbitalPanelHeader h2 {
+    position: static;
+
+    flex: 0 0 auto;
+
+    margin: 0;
+
+    color: rgba(255, 255, 255, 0.96);
+    font-size: 1rem;
+    line-height: 1.2;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-align: left;
+}
+
+.harmonicLegend.harmonicLegendPanel {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+
+    margin: 0 0 0 18px;
+
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.84rem;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+button {
+    min-height: 54px;
+    margin: 0;
+    padding: 14px 28px;
+
+    border: 1px solid transparent;
+    border-radius: 999px;
+
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 400;
+    line-height: 1.2;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.08s ease;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+input[type="range"] {
+    width: 100%;          /* keeps the same horizontal span */
+    height: 30px;          /* larger click area */
+    margin: 0;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    height: 12px;
+    border: 1px solid #a9a9a9;
+    border-radius: 999px;
+
+    background: var(
+        --slider-background,
+        var(--slider-empty)
+    );
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
+}
+
+input[type="range"]::-moz-range-track {
+    height: 12px;
+    border: 1px solid #a9a9a9;
+    border-radius: 999px;
+
+    background: var(
+        --slider-background,
+        var(--slider-empty)
+    );
+
+    box-shadow:
+        inset 0 1px 3px
+        rgba(0, 0, 0, 0.18);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 24px;
+    height: 24px;
+    margin-top: -6px;
+
+    border: 1px solid #999;
+    border-radius: 50%;
+    background: #e8e8e8;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+
+    border: 1px solid #999;
+    border-radius: 50%;
+    background: #e8e8e8;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+input[type="range"]:hover::-webkit-slider-thumb {
+    background: #ffffff;
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+    background: #ffffff;
+}
+
+#orbitalViewer,
+#supernovaViewer,
+#magneticViewer,
+.cmbCanvasWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45px;
+    bottom: 18px;
+    overflow: hidden;
+}
+
+#orbitalViewer {
+    cursor: grab;
+    touch-action: none;
+}
+
+#orbitalViewer:active {
+    cursor: grabbing;
+}
+
+#orbitalViewer canvas,
+#supernovaViewer canvas,
+#magneticViewer canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#supernovaViewer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45px;
+    bottom: 18px;
+
+    width: 100%;
+    overflow: hidden;
+}
+
+#supernovaViewer canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.cmbCanvasWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#cmbCanvas,
+#distortionCanvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border: none;
+}
+
+#explanation {
+    width: min(100%, 960px);
+    margin: 54px auto 0;
+    padding: 42px clamp(22px, 5vw, 54px);
+
+    color: var(--space-text);
+    text-align: left;
+
+    background: var(--space-panel);
+
+    border: 1px solid var(--space-border);
+    border-radius: 18px 34px 18px 34px;
+}
+
+#explanation h2 {
+    margin: 0 0 30px;
+
+    color: var(--space-title);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+#explanation p {
+    max-width: 78ch;
+    margin: 0 0 22px;
+
+    font-size: 1.25rem;
+    line-height: 1.65;
+}
+
+#explanation p:last-child {
+    margin-bottom: 0;
+}
+
+#explanation strong {
+    color: var(--so-orange);
+    font-weight: 700;
+}
+
+#explanation .closing {
+    margin-top: 34px;
+    padding: 22px 24px;
+
+    background: var(--space-panel-soft);
+    border-left: 5px solid var(--so-orange);
+    border-radius: 18px 34px 18px 34px;
+}
+
+#explanation a {
+    color: var(--so-orange);
+    font-family: inherit;
+    font-weight: inherit;
+    text-decoration: underline;        
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.14em;
+}
+
+#explanation a:visited {
+    color: var(--so-orange);
+}
+
+#explanation a:hover {
+    color: var(--space-title);
+}
+
+#explanation a:focus-visible {
+    color: var(--space-title);
+    outline: 2px solid var(--so-orange);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+footer {
+    width: 100%;
+    padding: 18px 24px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.footerInner {
+    width: min(100%, 920px);
+    margin: 0 auto;
+    color: var(--soft-text, #c7cedd);
+    font-size: 0.92rem;
+    line-height: 1.55;
+    text-align: center;
+}
+
+.menuContainer {
+    position: relative;
+    margin-left: auto;
+    padding-top: 20px;
+    z-index: 100;
+}
+
+.menuButton {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+
+    width: 50px;
+    height: 50px;
+    min-height: 0;
+    padding: 11px;
+
+    background: var(--space-panel);
+    border: 1px solid var(--space-border);
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.menuButton:hover {
+    background: var(--space-panel-soft);
+}
+
+.menuButton span {
+    display: block;
+    width: 100%;
+    height: 3px;
+
+    background: var(--space-title);
+    border-radius: 999px;
+}
+
+/*
+ * Turn the three lines into an X while open.
+ */
+.menuButton[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.menuButton[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+}
+
+.menuButton[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+.siteMenu {
+    position: absolute;
+    top: 78px;
+    right: 0;
+
+    min-width: 220px;
+    padding: 10px;
+
+    text-align: left;
+
+    background: var(--space-panel);
+    border: 1px solid var(--space-border);
+    border-radius: 14px 24px 14px 24px;
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.siteMenu[hidden] {
+    display: none;
+}
+
+.siteMenu a {
+    display: block;
+    padding: 13px 16px;
+
+    color: var(--space-title);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+
+    border-radius: 10px;
+}
+
+.siteMenu a:hover,
+.siteMenu a:focus-visible {
+    color: white;
+    background: var(--so-orange);
+    outline: none;
+}
+
+.secondHarmonicControls {
+    margin-top: 12px;
+    padding-top: 16px;
+
+    border-top: 1px solid var(--space-border);
+}
+
+.secondHarmonicToggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    color: var(--space-text);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.secondHarmonicControls .controlItem + .controlItem {
+    margin-top: 14px;
+}
+
+.secondHarmonicControl input:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.secondHarmonicControl:has(input:disabled) {
+    opacity: 0.6;
+}
+
+/* ---------- Responsive adjustments ---------- */
+
+@media (max-width: 980px) {
+
+    .applicationRow {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .applicationVisual,
+    .applicationInfo {
+        width: 100%;
+        max-width: 760px;
+        margin-inline: auto;
+    }
+
+    .applicationVisual {
+        aspect-ratio: 16 / 10;
+        min-height: 340px;
+    }
+}
+
+@media (max-width: 850px) {
+
+    body {
+        padding: 24px;
+    }
+
+    #canvasRow,
+    #controlsRow {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        max-width: 600px;
+        margin-inline: auto;
+    }
+
+    .controlColumn {
+        max-width: 600px;
+        margin-inline: auto;
+    }
+
+    .rightControls {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 560px) {
+
+    body {
+        padding: 16px;
+    }
+
+    #header {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: start;
+    }
+
+    #titleBlock {
+        align-self: start;
+    }
+
+    .harmonicLegendMagnitude {
+        white-space: normal;
+    }
+
+    .logo {
+        width: 110px;
+    }
+
+    h1 {
+        color: var(--space-title);
+    }
+
+    h3 {
+        color: var(--space-title);
+    }
+
+    .subtitle {
+        color: var(--space-muted);
+    }
+
+    .panel {
+        aspect-ratio: 500 / 360;
+    }
+
+    .panel h2 {
+        top: 14px;
+        left: 16px;
+        font-size: 0.9rem;
+    }
+
+    .leftControls .controlItem {
+        grid-template-columns: 88px minmax(0, 1fr) 28px;
+        column-gap: 6px;
+    }
+
+    .controlLabel {
+        font-size: 0.88rem;
+    }
+
+    .rightControls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .applicationRow {
+        gap: 20px;
+        margin-bottom: 34px;
+    }
+
+    .applicationVisual {
+        aspect-ratio: 4 / 3;
+        min-height: 280px;
+    }
+
+    .applicationInfo {
+        gap: 18px;
+    }
+
+    .applicationControls {
+        gap: 12px;
+    }
+
+    .applicationControls .controlItem {
+        grid-template-columns: 24px minmax(0, 1fr) 28px;
+        column-gap: 8px;
+    }
+
+    .applicationActions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .applicationActions .checkboxItem {
+        justify-content: center;
+        white-space: normal;
+        margin-right: 0;
+    }
+
+    .applicationArticle {
+        padding: 22px 20px;
+    }
+
+    .applicationArticle h2 {
+        font-size: 1.25rem;
+        margin-bottom: 14px;
+    }
+
+    .applicationArticle p {
+        font-size: 1rem;
+        line-height: 1.55;
+    }
+
+    .applicationButtons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .applicationButtons button {
+        width: 100%;
+    }
+
+    .checkboxItem {
+        justify-content: center;
+        white-space: normal;
+    }
+
+    button {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    #explanation {
+        margin-top: 32px;
+        padding: 28px 20px;
+    }
+
+    #explanation h2 {
+        font-size: 1.25rem;
+    }
+
+    #explanation p {
+        font-size: 1.05rem;
+        line-height: 1.65;
+    }
+
+    .menuContainer {
+        padding-top: 0;
+    }
+
+    .menuButton {
+        display: flex;
+        width: 44px;
+        height: 44px;
+        padding: 10px;
+    }
+
+    .siteMenu {
+        top: 58px;
+        right: 0;
+    }
+
+    .mainNav {
+        display: none;
+    }
+
+    .orbitalPanelHeader {
+        top: 14px;
+        left: 16px;
+        right: 16px;
+
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.45rem;
+    }
+
+    .panel .orbitalPanelHeader h2 {
+        font-size: 0.9rem;
+    }
+
+    .harmonicLegend.harmonicLegendPanel {
+        justify-content: flex-start;
+        gap: 6px 13px;
+
+        margin: 0 0 0 18px;
+
+        font-size: 0.75rem;
+        white-space: normal;
+    }
+
+    /*
+     * Leave room for the two-row header.
+     */
+    #orbitalViewer {
+        top: 82px;
+    }
+}
+
+/* ---------- Hidden Universe controls ---------- */
+
+.bandControls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bandSelector,
+.microwaveBandSelector {
+    width: 100%;
+    margin: 0;
+    padding: 14px 16px 12px;
+
+    border: 1px solid var(--space-border);
+    border-radius: 14px 22px 14px 22px;
+
+    color: var(--space-text);
+    background: var(--space-panel);
+}
+
+.bandSelector legend,
+.microwaveBandSelector legend {
+    padding: 0 8px;
+
+    color: var(--space-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.bandSelector,
+.microwaveBandSelector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+}
+
+.bandSelector label,
+.microwaveBandSelector label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.unitLabel {
+    color: var(--space-muted);
+    font-size: 0.9rem;
+}
+
+#microwaveControls {
+    width: 100%;
+}
+
+#microwaveControls[hidden] {
+    display: none;
+}
+
+
+/* ---------- Sky image panel ---------- */
+
+.skyImageWrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 45px;
+    bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+#skyImage {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+
+/* ---------- Spectrum panel ---------- */
+
+.spectrumCanvasWrapper {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 48px;
+    bottom: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#spectrumCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ---------- Relative Intensity control ---------- */
+
+#controlsRow > .controlColumn:last-child {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+#controlsRow > .controlColumn:last-child .checkboxItem {
+    margin-top: 8px;
+}
