@@ -2634,7 +2634,7 @@ function updateSkyImage() {
 
         skyPanelTitle.textContent =
             state.logarithmicIntensity
-                ? `Milky Way — ${state.microwaveBand} GHz — Logarithmic Intensity`
+                ? `Milky Way — ${state.microwaveBand} GHz`
                 : `Milky Way — ${state.microwaveBand} GHz`;
     }
 }
