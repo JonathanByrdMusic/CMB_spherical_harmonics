@@ -6,7 +6,7 @@
 // 2. Show/hide the Planck microwave selector.
 // 3. Track the selected Planck microwave band.
 // 4. Track Relative Intensity mode.
-//
+// 5. Track Logarithmic Intensity mode.
 // Real sky maps and the physical spectrum will be added later.
 
 const skyImages = {
@@ -83,10 +83,41 @@ const planckSkyImages = {
         "media/sky/microwave_planck_857.webp"
 };
 
+const planckLogarithmicSkyImages = {
+
+    30:
+        "media/sky/logarithmic/microwave_planck_log_30.webp",
+
+    44:
+        "media/sky/logarithmic/microwave_planck_log_44.webp",
+
+    70:
+        "media/sky/logarithmic/microwave_planck_log_70.webp",
+
+    100:
+        "media/sky/logarithmic/microwave_planck_log_100.webp",
+
+    143:
+        "media/sky/logarithmic/microwave_planck_log_143.webp",
+
+    217:
+        "media/sky/logarithmic/microwave_planck_log_217.webp",
+
+    353:
+        "media/sky/logarithmic/microwave_planck_log_353.webp",
+
+    545:
+        "media/sky/logarithmic/microwave_planck_log_545.webp",
+
+    857:
+        "media/sky/logarithmic/microwave_planck_log_857.webp"
+};
+
 const state = {
     broadbandBand: "microwave",
     microwaveBand: 143,
-    relativeIntensity: false
+    relativeIntensity: false,
+    logarithmicIntensity: false
 };
 
 let relativeIntensityScales = null;
@@ -176,6 +207,16 @@ const microwaveInputs =
 
 const microwaveControls =
     document.getElementById("microwaveControls");
+
+const broadbandControls =
+    document.getElementById(
+        "broadbandControls"
+    );
+
+const logarithmicIntensityCheckbox =
+    document.getElementById(
+        "logarithmicIntensityCheckbox"
+    );
 
 const relativeIntensityCheckbox =
     document.getElementById(
@@ -1093,11 +1134,6 @@ function getCurrentRelativeIntensityScale() {
         ?? 1
     );
 
-
-    return (
-        scales[state.broadbandBand]
-        ?? 1
-    );
 }
 
 function updateSkyIntensity() {
@@ -2445,6 +2481,22 @@ function syncStateFromControls() {
             relativeIntensityCheckbox &&
             relativeIntensityCheckbox.checked
         );
+
+    state.logarithmicIntensity =
+        Boolean(
+            logarithmicIntensityCheckbox &&
+            logarithmicIntensityCheckbox.checked
+        );
+}
+
+function updateBroadbandControls() {
+
+    if (!broadbandControls) {
+        return;
+    }
+
+    broadbandControls.hidden =
+        state.logarithmicIntensity;
 }
 
 
@@ -2459,6 +2511,7 @@ function updateMicrowaveControls() {
     }
 
     microwaveControls.hidden =
+        !state.logarithmicIntensity &&
         state.broadbandBand !== "microwave";
 }
 
@@ -2483,9 +2536,13 @@ function updatePanelTitles() {
 
     if (spectrumPanelTitle) {
 
-    if (
-        state.broadbandBand ===
-        "microwave"
+    if (state.relativeIntensity) {
+
+        spectrumPanelTitle.textContent =
+            "Present-Day Cosmic Photon Background — Relative Intensity";
+
+    } else if (
+        state.broadbandBand === "microwave"
     ) {
 
         spectrumPanelTitle.textContent =
@@ -2535,12 +2592,18 @@ function updateSkyImage() {
     ) {
 
         filename =
-            planckSkyImages[
-                state.microwaveBand
-            ];
+            state.logarithmicIntensity
+                ? planckLogarithmicSkyImages[
+                    state.microwaveBand
+                ]
+                : planckSkyImages[
+                    state.microwaveBand
+                ];
 
         skyImage.alt =
-            `Planck ${state.microwaveBand} GHz all-sky map`;
+            state.logarithmicIntensity
+                ? `Planck ${state.microwaveBand} GHz logarithmic-intensity all-sky map`
+                : `Planck ${state.microwaveBand} GHz all-sky map`;
 
     } else {
 
@@ -2564,7 +2627,16 @@ function updateSkyImage() {
     skyImage.src = filename;
     skyImage.hidden = false;
 
-    updateSkyIntensity();
+    if (
+        state.broadbandBand ===
+        "microwave"
+    ) {
+
+        skyPanelTitle.textContent =
+            state.logarithmicIntensity
+                ? `Milky Way — ${state.microwaveBand} GHz — Logarithmic Intensity`
+                : `Milky Way — ${state.microwaveBand} GHz`;
+    }
 }
 
 
@@ -2604,16 +2676,20 @@ function updatePageDataAttributes() {
 
     document.documentElement.dataset.relativeIntensity =
         String(state.relativeIntensity);
-}
 
+    document.documentElement.dataset.logarithmicIntensity =
+        String(state.logarithmicIntensity);
+}
 
 function updateExperience() {
 
     syncStateFromControls();
 
+    updateBroadbandControls();
     updateMicrowaveControls();
     updatePanelTitles();
     updateSkyImage();
+    updateSkyIntensity();
     updateSkyCredit();
     updateSpectrumPlaceholder();
     updatePageDataAttributes();
@@ -2630,6 +2706,39 @@ function updateExperience() {
 // --------------------------------------------------
 // Events
 // --------------------------------------------------
+
+if (logarithmicIntensityCheckbox) {
+
+    logarithmicIntensityCheckbox.addEventListener(
+        "change",
+        function () {
+
+            if (
+                logarithmicIntensityCheckbox.checked
+            ) {
+
+                /*
+                 * Logarithmic Intensity is
+                 * a Planck-only comparison.
+                 */
+                const microwaveBroadbandInput =
+                    document.querySelector(
+                        'input[name="broadbandBand"][value="microwave"]'
+                    );
+
+                if (microwaveBroadbandInput) {
+                    microwaveBroadbandInput.checked = true;
+                }
+
+                if (relativeIntensityCheckbox) {
+                    relativeIntensityCheckbox.checked = false;
+                }
+            }
+
+            updateExperience();
+        }
+    );
+}
 
 broadbandInputs.forEach(function (input) {
 
@@ -2653,7 +2762,18 @@ if (relativeIntensityCheckbox) {
 
     relativeIntensityCheckbox.addEventListener(
         "change",
-        updateExperience
+        function () {
+
+            if (
+                relativeIntensityCheckbox.checked &&
+                logarithmicIntensityCheckbox
+            ) {
+
+                logarithmicIntensityCheckbox.checked = false;
+            }
+
+            updateExperience();
+        }
     );
 }
 
