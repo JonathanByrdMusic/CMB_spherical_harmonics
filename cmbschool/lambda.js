@@ -114,7 +114,7 @@ const planckLogarithmicSkyImages = {
 };
 
 const state = {
-    broadbandBand: "microwave",
+    broadbandBand: "visible",
     microwaveBand: 143,
     relativeIntensity: false,
     logarithmicIntensity: false
@@ -252,7 +252,7 @@ function getSelectedBroadbandBand() {
 
     return selected
         ? selected.value
-        : "microwave";
+        : "visible";
 }
 
 
