@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-90WMD4PJQP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'G-90WMD4PJQP');
+    </script>
+
+    <title>Other Applications</title>
+
+    <link rel="icon" href="media/Simons_logo_small.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="js/three.min.js"></script>
+</head>
+
+<body>
+
+<div id="header">
+
+    <img
+        class="logo"
+        src="media/Simons_logo_small.gif"
+        alt="Simons Observatory"
+        width="190"
+    >
+
+    <div id="titleBlock">
+        <h1>Other Applications of Spherical Harmonics</h1>
+
+        <div class="subtitle">
+            Designed by Jonathan Byrd
+        </div>
+    </div>
+
+    <div class="menuContainer">
+
+        <nav class="mainNav" aria-label="Main navigation">
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="supernova.html" class="active">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Mobile navigation"
+            hidden
+        >
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="supernova.html">
+                Other Applications
+            </a>
+
+            <a href="math.html">
+                Show Me the Math
+            </a>
+        </nav>
+
+    </div>
+
+</div>
+
+<main id="pageContent">
+
+    <section
+        class="applicationRow"
+        id="supernovaApplication"
+    >
+        <div class="applicationVisual panel">
+            <h2 id="remnantTitle">
+                Tycho-type remnant: age 0 years
+            </h2>
+
+            <div id="supernovaViewer"></div>
+        </div>
+
+        <div class="applicationInfo">
+
+            <div class="applicationControls">
+
+                <label class="controlItem">
+                    <span class="controlLabel">&ell;:</span>
+
+                    <input
+                        id="lmaxSlider"
+                        type="range"
+                        min="1"
+                        max="30"
+                        value="1"
+                    >
+
+                    <span id="lmaxValue">1</span>
+                </label>
+
+                <label class="controlItem">
+                    <span class="controlLabel">m:</span>
+
+                    <input
+                        id="mSlider"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        value="0"
+                    >
+
+                    <span id="mValue">0</span>
+                </label>
+
+                <div class="applicationActions">
+
+                    <label class="checkboxItem">
+                        <input
+                            id="singleModeCheckbox"
+                            type="checkbox"
+                        >
+                        Show only current (&ell;, m)
+                    </label>
+
+                    <div class="applicationButtons">
+                        <button
+                            id="explodeButton"
+                            type="button"
+                        >
+                            EXPLODE STAR
+                        </button>
+
+                        <button
+                            id="newSeedButton"
+                            type="button"
+                        >
+                            NEW RANDOM EXPLOSION
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <article class="applicationArticle">
+
+                    <h2>Supernova remnants</h2>
+
+                    <p>
+                        This idealized Type Ia supernova begins as an
+                        approximately spherical explosion. The simulation 
+                        advances the explosion for 454 years, approximately 
+                        the present age of Tycho's supernova remnant.
+                    </p>
+
+                    <p>
+                        Check "Show only current (&ell;, m)" to see the 
+                        contribution of a single spherical harmonic mode to 
+                        the remnant's structure. Uncheck it to see the full 
+                        superposition of all modes. Random superpositions 
+                        of modes introduce large-scale asymmetry and 
+                        increasingly finer structures. Click on the model
+                        and rotate it to explore its geometry.
+                    </p>
+
+                </article>
+
+        </div>
+    </section>
+
+
+    <section
+        class="applicationRow"
+        id="magneticApplication"
+    >
+        <div class="applicationVisual panel">
+            <h2 id="magneticTitle">
+                Earth’s magnetic field: dipole
+            </h2>
+
+            <div id="magneticViewer"></div>
+        </div>
+
+        <div class="applicationInfo">
+
+            <div class="applicationControls">
+
+                <label class="controlItem">
+                    <span class="controlLabel">&ell;:</span>
+
+                    <input
+                        id="magneticLSlider"
+                        type="range"
+                        min="1"
+                        max="8"
+                        value="1"
+                    >
+
+                    <span id="magneticLValue">1</span>
+                </label>
+
+                <label class="controlItem">
+                    <span
+                        id="magneticMLabel"
+                        class="controlLabel"
+                    >
+                        m:
+                    </span>
+
+                    <input
+                        id="magneticMSlider"
+                        type="range"
+                        min="-1"
+                        max="1"
+                        value="0"
+                    >
+
+                    <span id="magneticMValue">0</span>
+                </label>
+
+                <div class="applicationActions">
+
+                    <label class="checkboxItem">
+                        <input
+                            id="magneticSingleModeCheckbox"
+                            type="checkbox"
+                        >
+                        Show only current (&ell;, m)
+                    </label>
+
+                    <div class="applicationButtons">
+                        <button
+                            id="buildMagneticFieldButton"
+                            type="button"
+                        >
+                            BUILD FIELD
+                        </button>
+
+                        <button
+                            id="earthLikeFieldButton"
+                            type="button"
+                        >
+                            EARTH-LIKE FIELD
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <article class="applicationArticle">
+
+                <h2>Earth's magnetic field</h2>
+
+                <p>
+                    Earth's magnetic field is often shown as a dipole,
+                    like the field around a bar magnet. That familiar
+                    pattern is the dominant spherical-harmonic mode with
+                    <strong>&ell; = 1</strong>.
+                </p>
+
+                <p>
+                    Higher-order modes add fine structure near the
+                    planet; the field becomes increasingly dipolar farther from Earth.
+                    Click "Show only current (&ell;, m)" to see the contributions 
+                    of different values, "BUILD FIELD" to see a random superposition
+                    of modes that simulate a real field, and "EARTH-LIKE FIELD"
+                    to see a magnetic field resembling Earth's. Click and rotate the
+                    model to explore its geometry. 
+                 
+                </p>
+                
+                <p>    
+                    <em>Visible gaps or endpoints indicate limits of the model, not 
+                    breaks in the field. Also missing is the distortion of the field 
+                    by the solar wind.</em>
+
+                </p>
+
+            </article>
+
+        </div>
+    </section>
+
+</main>
+
+<script src="supernova.js"></script>
+<script src="magnetic-field.js"></script>
+
+<script>
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const siteMenu =
+        document.getElementById("siteMenu");
+
+    function closeSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        siteMenu.hidden = true;
+    }
+
+    function openSiteMenu() {
+        menuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuButton.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        siteMenu.hidden = false;
+    }
+
+    menuButton.addEventListener("click", () => {
+        const isOpen =
+            menuButton.getAttribute("aria-expanded")
+            === "true";
+
+        if (isOpen) {
+            closeSiteMenu();
+        } else {
+            openSiteMenu();
+        }
+    });
+
+    document.addEventListener("click", event => {
+        const clickedInsideMenu =
+            event.target.closest(".menuContainer");
+
+        if (!clickedInsideMenu) {
+            closeSiteMenu();
+        }
+    });
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeSiteMenu();
+            menuButton.focus();
+        }
+    });
+</script>
+
+</body>
+
+</html>
