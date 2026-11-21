@@ -205,7 +205,13 @@ img.logo {
 
 .menuContainer {
     position: relative;
+
+    order: 3;
     margin-left: auto;
+    padding-top: 8px;
+
+    flex: 0 0 auto;
+
     z-index: 100;
 }
 
