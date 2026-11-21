@@ -72,19 +72,6 @@
             </a>
         </nav>
 
-        <button
-            id="menuButton"
-            class="menuButton"
-            type="button"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
-            aria-controls="siteMenu"
-        >
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-
     </div>
 
 </div>
@@ -251,8 +238,6 @@
 
 </div>
 
-</div>
-
 <article id="explanation">
 
     <h2>How Bright Is The CMB?</h2>
@@ -305,74 +290,10 @@
         the Fermi Large Area Telescope (Fermi-LAT). Pioneer 10/11 IPP measurements 
         provided a calibrated reference for the visible-light portion of the 
         relative intensity comparison. 
-    <div>
+    </div>
 </footer>
 
 <script src="lambda.js"></script>
-
-<script>
-    const menuButton =
-        document.getElementById("menuButton");
-
-    const siteMenu =
-        document.getElementById("siteMenu");
-
-    function closeSiteMenu() {
-        menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        menuButton.setAttribute(
-            "aria-label",
-            "Open navigation menu"
-        );
-
-        siteMenu.hidden = true;
-    }
-
-    function openSiteMenu() {
-        menuButton.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-
-        menuButton.setAttribute(
-            "aria-label",
-            "Close navigation menu"
-        );
-
-        siteMenu.hidden = false;
-    }
-
-    menuButton.addEventListener("click", () => {
-        const isOpen =
-            menuButton.getAttribute("aria-expanded")
-            === "true";
-
-        if (isOpen) {
-            closeSiteMenu();
-        } else {
-            openSiteMenu();
-        }
-    });
-
-    document.addEventListener("click", event => {
-        const clickedInsideMenu =
-            event.target.closest(".menuContainer");
-
-        if (!clickedInsideMenu) {
-            closeSiteMenu();
-        }
-    });
-
-    document.addEventListener("keydown", event => {
-        if (event.key === "Escape") {
-            closeSiteMenu();
-            menuButton.focus();
-        }
-    });
-</script>
 
 </body>
 </html>
