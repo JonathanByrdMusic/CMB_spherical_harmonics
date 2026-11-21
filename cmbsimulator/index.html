@@ -52,16 +52,57 @@
 	</div>
 
 	<div id="header">
+
     <img
-		class="logo"
-		src="Simulator/media/img/Simons_logo_small.gif"
-		alt="Simons Observatory logo"
-	>
+        class="logo"
+        src="Simulator/media/img/Simons_logo_small.gif"
+        alt="Simons Observatory logo"
+    >
 
     <h1>
         CMB Simulator
-        <span class="subtitle">Designed by Jonathan Byrd</span>
+        <span class="subtitle">
+            Designed by Jonathan Byrd
+        </span>
     </h1>
+
+    <div class="menuContainer">
+
+        <nav
+            class="mainNav"
+            aria-label="Main navigation"
+        >
+            <a href="/">
+                Home
+            </a>
+        </nav>
+
+        <button
+            id="menuButton"
+            class="menuButton"
+            type="button"
+            aria-label="Open navigation menu"
+            aria-expanded="false"
+            aria-controls="siteMenu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav
+            id="siteMenu"
+            class="siteMenu"
+            aria-label="Mobile navigation"
+            hidden
+        >
+            <a href="/">
+                Home
+            </a>
+        </nav>
+
+    </div>
+	
 </div>
 	
 	<div id="about">
