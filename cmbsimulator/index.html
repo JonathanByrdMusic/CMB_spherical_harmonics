@@ -41,6 +41,18 @@
 			'fixedscale' : true
 		});
 
+		const menu =
+			document.getElementById("menu");
+
+		const interactiveMenuSlot =
+			document.getElementById(
+				"interactiveMenuSlot"
+			);
+
+		if (menu && interactiveMenuSlot) {
+			interactiveMenuSlot.appendChild(menu);
+		}
+
 	});
 	</script>
 </head>
@@ -176,25 +188,35 @@
 		<div id="container">
 		
 			<div id="parameters" class="column">
-				 <div id="observationMode" class="observationMode">
-					<label>
-						<input
-							type="radio"
-							name="observationMode"
-							value="temperature"
-							checked
-						>
-						<span>Temperature</span>
-					</label>
 
-					<label>
-						<input
-							type="radio"
-							name="observationMode"
-							value="polarization"
-						>
-						<span>Polarization</span>
-					</label>
+				<div class="observationToolbar">
+
+					<div
+						id="observationMode"
+						class="observationMode"
+					>
+						<label>
+							<input
+								type="radio"
+								name="observationMode"
+								value="temperature"
+								checked
+							>
+							<span>Temperature</span>
+						</label>
+
+						<label>
+							<input
+								type="radio"
+								name="observationMode"
+								value="polarization"
+							>
+							<span>Polarization</span>
+						</label>
+					</div>
+
+					<div id="interactiveMenuSlot"></div>
+
 				</div>
 
 				<form id="omegas">

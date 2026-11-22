@@ -194,13 +194,34 @@ img.logo {
 
 #menu {
     display: flex;
-    order: 3;
+    align-items: center;
     gap: 8px;
 
-    margin-left: auto;
-    padding-top: 8px;
+    margin: 0;
+    padding: 0;
 
     flex: 0 0 auto;
+}
+
+.observationToolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    width: 100%;
+    margin-bottom: 34px;
+}
+
+.observationToolbar .observationMode {
+    margin-bottom: 0;
+}
+
+#interactiveMenuSlot {
+    display: flex;
+    align-items: center;
+
+    margin-left: auto;
 }
 
 .menuContainer {
@@ -1499,6 +1520,7 @@ h3 {
 }
 
 @media (max-width: 760px) {
+
     body {
         padding: 24px 20px 40px;
     }
@@ -1525,6 +1547,16 @@ h3 {
 
         width: 100%;
         margin: 18px 0 0;
+    }
+
+    .observationToolbar {
+        flex-wrap: wrap;
+    }
+
+    #interactiveMenuSlot {
+        width: 100%;
+        margin-left: 0;
+        justify-content: center;
     }
 }
 
