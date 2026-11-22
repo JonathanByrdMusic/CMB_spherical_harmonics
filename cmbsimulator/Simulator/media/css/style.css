@@ -1668,3 +1668,19 @@ h3 {
 .contactButton:hover {
     filter: brightness(1.08);
 }
+
+.siteMenu a.contactButton {
+    color: #ffffff;
+    background: var(--so-orange);
+}
+
+.siteMenu a.contactButton:visited {
+    color: #ffffff;
+}
+
+.siteMenu a.contactButton:hover,
+.siteMenu a.contactButton:focus-visible {
+    color: #ffffff;
+    background: var(--so-orange);
+    filter: brightness(1.08);
+}

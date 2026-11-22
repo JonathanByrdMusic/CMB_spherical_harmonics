@@ -1072,3 +1072,43 @@ footer {
         top: 82px;
     }
 }
+
+.contactButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 38px;
+    padding: 0 16px;
+
+    border: 1px solid var(--so-orange);
+    border-radius: 8px;
+
+    color: #ffffff;
+    background: var(--so-orange);
+
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.contactButton:hover {
+    filter: brightness(1.08);
+}
+
+.siteMenu a.contactButton {
+    color: #ffffff;
+    background: var(--so-orange);
+}
+
+.siteMenu a.contactButton:visited {
+    color: #ffffff;
+}
+
+.siteMenu a.contactButton:hover,
+.siteMenu a.contactButton:focus-visible {
+    color: #ffffff;
+    background: var(--so-orange);
+    filter: brightness(1.08);
+}

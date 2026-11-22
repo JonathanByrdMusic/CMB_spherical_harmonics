@@ -1203,7 +1203,9 @@ footer {
     margin-top: 8px;
 }
 
-.contactButton {
+/* ---------- Contact button ---------- */
+
+.mainNav a.contactButton {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1211,11 +1213,11 @@ footer {
     min-height: 38px;
     padding: 0 16px;
 
-    border: 1px solid var(--so-orange);
-    border-radius: 8px;
-
     color: #ffffff;
     background: var(--so-orange);
+
+    border: 1px solid var(--so-orange);
+    border-radius: 8px;
 
     font-size: 0.9rem;
     font-weight: 700;
@@ -1223,6 +1225,16 @@ footer {
     white-space: nowrap;
 }
 
-.contactButton:hover {
+.mainNav a.contactButton:visited {
+    color: #ffffff;
+}
+
+.mainNav a.contactButton:hover,
+.mainNav a.contactButton:focus-visible {
+    color: #ffffff;
+    background: var(--so-orange);
+    border-color: var(--so-orange);
+
     filter: brightness(1.08);
+    text-decoration: none;
 }
